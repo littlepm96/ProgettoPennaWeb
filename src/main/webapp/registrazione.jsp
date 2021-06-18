@@ -52,7 +52,7 @@
     <label for="telephone">
         Telefono :
     </label>
-    <input type="text" name="prefisso paese" id="prefix"  value="+39" size="4"/>
+    <input type="text" name="prefisso paese" id="prefix" value="+39" size="3"/>
     <input type="text" name="numero" id="telephone" size="10"/> <br> <br>
     Indirizzo
     <br>

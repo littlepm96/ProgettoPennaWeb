@@ -14,13 +14,16 @@ button {
 }
 
 a.bottone {
+    display:inline-block;
     width: 100%;
     text-underline: none;
     text-decoration: none;
-    text-decoration-color: black;
+    color: inherit;
+    text-align: center;
     padding: 15px;
     margin: 10px;
     background-color: rgba(36, 60, 114, 0.67);
+    box-sizing: border-box;
     cursor: pointer;
 }
 
