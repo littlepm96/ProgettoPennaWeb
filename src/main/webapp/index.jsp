@@ -2,21 +2,23 @@
 <html>
 <head>
     <title>Guida TV</title>
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 </head>
 <body>
 <!--INIZIO HEADER-->
 <header>
     <div>
     <h1> Guida TV</h1>
+    </div>
+    <div>
     <h1> <a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0"> bella zì </a> </h1>
-    <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">login</a>
     </div>
     <!--INIZIO NAVIGAZIONE-->
     <nav>
         <div class="topnav">
             <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
             <a href="${pageContext.request.contextPath}/fasce-orarie.jsp">Fasce orarie</a>
+            <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">login</a>
         </div>
     </nav>
     <!--FINE NAVIGAZIONE-->
@@ -37,7 +39,7 @@
                 <div class="programma-in-onda">
                     <a href="${pageContext.request.contextPath}/programma.jsp?id=2353">
                         <h2>TG1</h2>
-                        <img src="images/tg1.jpg" alt="TG1" >
+                        <img src="images/tg1.jpg" alt="TG1" width="125" height="111">
                     </a>
                 </div>
                 <div class="descrizione-programma">Informazione delle 20:00</div>

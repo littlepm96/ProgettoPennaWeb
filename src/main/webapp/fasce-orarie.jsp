@@ -1,16 +1,12 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: marcoposcente
-  Date: 15/06/21
-  Time: 17:43
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
-</head>
-<body>
+    <title>Fasce Orarie</title>
+</head> </body>body>
+        <div>
+            <h1>Fasce Orarie</h1>
+        </div>
+</header>
+<main>
 
-</body>
-</html>
+    </div>body>
