@@ -10,7 +10,7 @@
     <div>
     <h1> Guida TV</h1>
     <h1> <a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0"> bella zì </a> </h1>
-    <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">Login</a>
+    <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">login</a>
     </div>
     <!--INIZIO NAVIGAZIONE-->
     <nav>
