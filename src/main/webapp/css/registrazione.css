@@ -2,7 +2,6 @@ body {
     font-family: Calibri, Helvetica, sans-serif;
     background-color: #c0e8ff;
 }
-
 button {
     background-color: rgba(36, 60, 114, 0.67);
     width: 100%;
@@ -12,8 +11,7 @@ button {
     border: none;
     cursor: pointer;
 }
-
-a.bottone {
+a.bottone{
     width: 100%;
     text-underline: none;
     text-decoration: none;
@@ -23,25 +21,18 @@ a.bottone {
     background-color: rgba(36, 60, 114, 0.67);
     cursor: pointer;
 }
-
-a.bottone:hover {
+a.bottone:hover{
     opacity: 0.7;
 }
 
-.testo-grande {
-    font-size: 20px;
-}
-
-h1.title {
+h1.title{
     text-align: center;
 }
-
-div.space {
+div.space{
     min-width: 0;
     width: 40%;
 }
-
-.flex-container {
+.flex-container{
     display: flex;
     flex-flow: row nowrap;
     justify-content: center;
@@ -54,7 +45,6 @@ form {
     padding: 25px;
     background-color: lightblue;
 }
-
 input[type=text], input[type=password] {
     width: 100%;
     margin: 8px 0;
@@ -63,7 +53,6 @@ input[type=text], input[type=password] {
     border: 2px solid green;
     box-sizing: border-box;
 }
-
 button:hover {
     opacity: 0.7;
 }
