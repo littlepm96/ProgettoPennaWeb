@@ -27,4 +27,12 @@
         <servlet-name>CanaleController</servlet-name>
         <url-pattern>/dettaglio-canale.jsp</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>FasceOrarieController</servlet-name>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.FasceOrarieController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FasceOrarieController</servlet-name>
+        <url-pattern>/fasce-orarie</url-pattern>
+    </servlet-mapping>
 </web-app>
