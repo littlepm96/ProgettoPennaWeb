@@ -19,13 +19,25 @@ public class FasceOrarieController extends HttpServlet {
         processRequest(request, response);
     }
 
-
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 
         response.setContentType("text/html;charset=utf-8");
-
         String parametroGet = request.getParameter("fascia-oraria");
-        String fasciaSelezionata = parametroGet == null ? parametroGet : "mattina";
+        String fasciaSelezionata;
+        switch (parametroGet) {
+            default:
+            case "mattina":
+                fasciaSelezionata = "mattina";
+                break;
+            case "pomeriggio":
+                fasciaSelezionata = "pomeriggio";
+                break;
+            case "sera":
+                fasciaSelezionata = "sera";
+                break;
+            case "notte":
+                fasciaSelezionata = "notte";
+        }
 
         request.setAttribute("fascia-selezionata",fasciaSelezionata);
 

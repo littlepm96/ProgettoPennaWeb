@@ -25,7 +25,7 @@
 <!--INIZIO CONTENUTO PRINCIPALE-->
 <main>
 
-    <h1>Programmi in onda di <%=request.getAttribute("fascia-selezionata")%></h1>
+    <h1>Programmi in onda di <%=request.getAttribute("fascia-selezionata")==null?"mattina":request.getAttribute("fascia-selezionata")%></h1>
     <!--INIZIO SELETTORE FASCIA ORARIA-->
     <form action="${pageContext.request.contextPath}/fasce-orarie" method="get">
         <div>
