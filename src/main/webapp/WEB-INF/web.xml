@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
+
     <servlet>
         <servlet-name>TemplateServlet</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.TemplateServlet</servlet-class>
@@ -11,6 +12,8 @@
         <servlet-name>TemplateServlet</servlet-name>
         <url-pattern>/template-test-servlet</url-pattern>
     </servlet-mapping>
+
+
     <servlet>
         <servlet-name>HelloServlet</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.HelloServlet</servlet-class>
@@ -19,6 +22,8 @@
         <servlet-name>HelloServlet</servlet-name>
         <url-pattern>/hello-servlet</url-pattern>
     </servlet-mapping>
+
+
     <servlet>
         <servlet-name>CanaleController</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.controller.CanaleController</servlet-class>
@@ -27,6 +32,8 @@
         <servlet-name>CanaleController</servlet-name>
         <url-pattern>/dettaglio-canale.jsp</url-pattern>
     </servlet-mapping>
+
+
     <servlet>
         <servlet-name>FasceOrarieController</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.controller.FasceOrarieController</servlet-class>
@@ -35,4 +42,6 @@
         <servlet-name>FasceOrarieController</servlet-name>
         <url-pattern>/fasce-orarie</url-pattern>
     </servlet-mapping>
+
+
 </web-app>
