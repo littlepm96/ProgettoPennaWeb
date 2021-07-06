@@ -19,12 +19,12 @@
 <main>
     <div class="flex-container">
         <div class="space"></div>
-        <form method="POST">
+        <form method="POST" action="login">
             <div id="sezione-credenziali">
                 <label for="username">Username : </label>
-                <input type="text" placeholder="Enter Username" id="username" name="username" required>
+                <input type="text" placeholder="Enter Username" id="username" name="email" required>
                 <label for="password">Password : </label>
-                <input type="password" placeholder="Enter Password" id="password" name="password" required>
+                <input type="password" placeholder="Enter Password" id="password" name="pass" required>
                 <input type="checkbox" id="remember">
                 <label for="remember"> Remember me</label>
                 <button type="submit" class="testo-grande"> Login</button>
