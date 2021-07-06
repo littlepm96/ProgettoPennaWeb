@@ -12,14 +12,14 @@ public class CanaleController extends HttpServlet {
         //La URL contiene il numero del canale selezionato (?canale=<numero>)
         String canale = request.getParameter("numero");
         //QUERY AL DATABASE
-        try{
+        try {
             //mi connetto qui al DB
 
             //query JDBC qui
 
             //programmi della giornata ritornati dalla query
-            Object[][] result = new Object[][]{{"123","titolo1","descrizione1","immagine1"},{"124","titolo2","descrizione2","immagine2"}};
-        }catch (Exception e){
+            Object[][] result = new Object[][]{{"123", "titolo1", "descrizione1", "immagine1"}, {"124", "titolo2", "descrizione2", "immagine2"}};
+        } catch (Exception e) {
 
         }
     }

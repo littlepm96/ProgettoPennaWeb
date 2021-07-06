@@ -1,11 +1,11 @@
 /*Header pagina*/
-header{
+header {
     background-color: khaki;
 
 }
 
 /*Pulsante per aprire la pagina di login*/
-.login-page-button{
+.login-page-button {
 
 }
 
@@ -45,7 +45,7 @@ header{
 }
 
 /*Un canale*/
-.canale{
+.canale {
     min-height: 300px;
     height: 400px;
     display: flex;
@@ -62,20 +62,22 @@ header{
 }
 
 /*Informazioni del canale (nome e icona)*/
-.canale > .info-canale{
+.canale > .info-canale {
     background-color: antiquewhite;
-   width: 20%;
+    width: 20%;
     min-width: 145px;
     font-size: 30px;
 }
+
 /*Nome e icona del programma in onda*/
-.canale > .programma-in-onda{
+.canale > .programma-in-onda {
     background-color: lightgreen;
     min-width: 145px;
     width: 20%;
 }
+
 /*Descrizione programma in onda*/
-.canale > .descrizione-programma{
+.canale > .descrizione-programma {
     width: 60%;
     min-width: 200px;
     background-color: #707edb;

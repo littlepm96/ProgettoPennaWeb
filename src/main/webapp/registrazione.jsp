@@ -9,7 +9,7 @@
     <h1 class="title"> Registrazione </h1>
     <!--INIZIO NAVIGAZIONE-->
     <nav>
-        <a href="${pageContext.request.contextPath}/login.jsp" > indietro </a>
+        <a href="${pageContext.request.contextPath}/login.jsp"> indietro </a>
     </nav>
     <!--FINE NAVIGAZIONE-->
 </header>
@@ -36,16 +36,16 @@
     <br>
     <p>Genere:</p>
     <div>
-    <input type="radio" name="gender" value="uomo" id="uomo"/>
-    <label for="uomo">Uomo</label>
+        <input type="radio" name="gender" value="uomo" id="uomo"/>
+        <label for="uomo">Uomo</label>
     </div>
     <div>
-    <input type="radio" name="gender" value="donna" id="donna"/>
-    <label for="donna">Donna</label>
+        <input type="radio" name="gender" value="donna" id="donna"/>
+        <label for="donna">Donna</label>
     </div>
     <div>
-    <input type="radio" name="gender" value="altro" id="altro"/>
-    <label for="altro">Altro</label>
+        <input type="radio" name="gender" value="altro" id="altro"/>
+        <label for="altro">Altro</label>
     </div>
     <br>
 

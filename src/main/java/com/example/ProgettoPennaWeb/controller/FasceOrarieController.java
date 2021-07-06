@@ -19,7 +19,7 @@ public class FasceOrarieController extends HttpServlet {
         processRequest(request, response);
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html;charset=utf-8");
         String parametroGet = request.getParameter("fascia-oraria");
@@ -39,22 +39,22 @@ public class FasceOrarieController extends HttpServlet {
                 fasciaSelezionata = "notte";
         }
 
-        request.setAttribute("fascia-selezionata",fasciaSelezionata);
+        request.setAttribute("fascia-selezionata", fasciaSelezionata);
 
         ServletContext context = getServletContext();
         RequestDispatcher dispatcher = context.getRequestDispatcher("/fasce-orarie.jsp");
         try {
             dispatcher.forward(request, response);
-        }catch (IOException ex){
+        } catch (IOException ex) {
             PrintWriter out = response.getWriter();
             out.println("Si è verificato un errore nel trasferimento dei dati");
             ex.printStackTrace();
 
-        }catch (ServletException ex){
+        } catch (ServletException ex) {
             PrintWriter out = response.getWriter();
             out.println("Si è verificato un errore nella servlet");
             ex.printStackTrace();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             PrintWriter out = response.getWriter();
             out.println("Si è verificato un errore sconosciuto");
             ex.printStackTrace();
