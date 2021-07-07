@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profilo-utente.css">
 <body>
 <div class="main-content">
-    <!-- Top navbar -->
+    <!-- Navigazione -->
     <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
         <div class="container-fluid">
             <!-- Brand -->
@@ -10,14 +10,11 @@
             <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
                 <div class="form-group mb-0">
                     <div class="input-group input-group-alternative">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-search"></i></span>
-                        </div>
-                        <input class="form-control" placeholder="Search" type="text">
+                        <input class="form-control" placeholder="Cerca" type="text">
                     </div>
                 </div>
             </form>
-            <!-- User -->
+            <!-- Utente -->
             <ul class="navbar-nav align-items-center d-none d-md-flex">
                 <li class="nav-item dropdown">
                     <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -75,7 +72,7 @@
             </div>
         </div>
     </div>
-    <!-- Page content -->
+    <!-- Pagina -->
     <div class="container-fluid mt--7">
         <div class="row">
             <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
@@ -100,7 +97,7 @@
                         </div>
                         <div class="text-center">
                             <h3>
-                                tizio caio<span class="font-weight-light">, 99 anni</span>
+                                tizio caio<span class="font-weight-light">, 99 anni </span>
                             </h3>
                             <div class="h5 font-weight-300">
                                 <i class="ni location_pin mr-2"></i>vivo mediocremente
@@ -122,16 +119,16 @@
                     <div class="card-header bg-white border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">My account</h3>
+                                <h3 class="mb-0">Mio Account</h3>
                             </div>
                             <div class="col-4 text-right">
-                                <a href="#!" class="btn btn-sm btn-primary">Settings</a>
+                                <a href="non c'è al momento" class="btn btn-sm btn-primary">Impostazioni</a>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
                         <form>
-                            <h6 class="heading-small text-muted mb-4">User information</h6>
+                            <h6 class="heading-small text-muted mb-4">Dettagli utente</h6>
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
@@ -163,7 +160,7 @@
                                 </div>
                             </div>
                             <hr class="my-4">
-                            <!-- Address -->
+                            <!-- Indirizzo -->
                             <h6 class="heading-small text-muted mb-4">Contatti</h6>
                             <div class="pl-lg-4">
                                 <div class="row">
