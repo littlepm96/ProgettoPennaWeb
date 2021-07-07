@@ -27,7 +27,7 @@
                 <input type="password" placeholder="Enter Password" id="password" name="pass" required>
                 <input type="checkbox" id="remember">
                 <label for="remember"> Remember me</label>
-                <button type="submit" class="testo-grande"> Login</button>
+                <button type="submit" class="testo-grande"> Login </button>
             </div>
             <div id="link-secondari">
                 <a href="${pageContext.request.contextPath}/registrazione.jsp" class="testo-grande bottone"> Non

@@ -21,7 +21,7 @@ public class Login extends HttpServlet {
         String pass = request.getParameter("pass");
 
         if (Validate.checkUser(email, pass)) {
-            RequestDispatcher rs = request.getRequestDispatcher("Welcome");
+            RequestDispatcher rs = request.getRequestDispatcher("profilo-utente.jsp");
             rs.forward(request, response);
         } else {
             out.println("Username or Password incorretto");
