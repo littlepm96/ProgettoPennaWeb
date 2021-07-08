@@ -13,8 +13,8 @@ public class Validate {
             //loading drivers for mysql
             Class.forName("com.mysql.jdbc.Driver");
             //creating connection with the database
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/employee", "root", "Admin_96");
-            PreparedStatement ps = con.prepareStatement("select * from register where email=? and pass=?");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pennaweb?ServerTimezone=UTC", "root", "Admin_96");
+            PreparedStatement ps = con.prepareStatement("select * from pennaweb.utente where email=? and password=?");
             ps.setString(1, email);
             ps.setString(2, pass);
             ResultSet rs = ps.executeQuery();
