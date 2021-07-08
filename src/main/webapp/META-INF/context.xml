@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/ProgettoWE"> <!--http://localhost/ProgettoWE è il root-->
+    <!--Pool di connessioni al database-->
+
+    <!--
+    - maxIdle: minimo di connessioni che saranno tenute aperte in pool
+    - maxWait: tempo in millisecondi in cui il pooler attenda che si liberi una connessione prima di generare
+                un'eccezione
+    - name: nome con cui riferirsi dal codice a questa risorsa
+    -->
+    <Resource auth="Container"
+              driverClassName="com.mysql.cj.jdbc.Driver"
+              maxActive="10"
+              maxIdle="5"
+              maxWait="10000"
+              name="jdbc/pennaweb"
+              password="Admin_96"
+              username="root"
+              type="javax.sql.DataSource"
+              url="jdbc:mysql://localhost:3306/pennaweb?ServerTimezone=UTC" />
+</Context>
