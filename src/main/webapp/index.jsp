@@ -19,6 +19,7 @@
             <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
             <a href="${pageContext.request.contextPath}/fasce-orarie.jsp">Fasce orarie</a>
             <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">login</a>
+            <a href="${pageContext.request.contextPath}/cerca.jsp">Cerca</a>
         </div>
     </nav>
     <!--FINE NAVIGAZIONE-->
