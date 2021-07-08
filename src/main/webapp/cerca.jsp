@@ -7,13 +7,13 @@
 
 <body>
 <div class="search-container">
-  <input type="text" id="myinput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+  <input type="text" id="myinput" onkeyup="cerca()" placeholder="scrivi qualcosa.." title="Type in a name">
   <a href="#" class="search-btn">
     <i class="fas fa-search"></i>
   </a>
 </div>
 
-<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+<input type="text" id="myInput" onkeyup="cerca()" placeholder="scrivi qualcosa.." title="Type in a name">
 
 <ul id="myUL">
   <li><a href="#">sta</a></li>
