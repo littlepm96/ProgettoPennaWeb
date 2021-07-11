@@ -64,6 +64,15 @@
         <url-pattern>/Welcome</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>DettaglioCanaleController</servlet-name>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.DettaglioCanaleController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DettaglioCanaleController</servlet-name>
+        <url-pattern>/dettaglio-canale</url-pattern>
+    </servlet-mapping>
+
     <!--riferimento al pooler configurato in META-INF/context.xml-->
     <resource-ref>
         <res-ref-name>jdbc/pennaweb</res-ref-name>

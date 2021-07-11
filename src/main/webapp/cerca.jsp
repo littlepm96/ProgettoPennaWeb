@@ -23,7 +23,7 @@
   <li><a href="#">roba</a></li>
 
   <li><a href="#">va</a></li>
-  <li><a href="#">presa</a></li>
+  <li><a href="#">press</a></li>
 
   <li><a href="#">dal</a></li>
   <li><a href="#">db</a></li>

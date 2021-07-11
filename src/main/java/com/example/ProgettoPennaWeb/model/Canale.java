@@ -1,13 +1,13 @@
 package com.example.ProgettoPennaWeb.model;
 
 public class Canale {
-    private long id;
-    private short numero;
+    private Long id;
+    private Short numero;
     private String nome;
 
     public Canale(){}
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -15,7 +15,7 @@ public class Canale {
         this.id = id;
     }
 
-    public short getNumero() {
+    public Short getNumero() {
         return numero;
     }
 
