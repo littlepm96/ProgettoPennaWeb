@@ -11,13 +11,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class CanaleDAO implements DAO<Canale> {
+public class CanaleDAO{
 
-    @Override
-    public Optional<Canale> get(String id) throws SQLException, NamingException{
+    //query strings
+    private final String SELECT_BY_ID = "select * from pennaweb.canale WHERE ID = ?";
+
+    public Optional<Canale> getCanaleById(long id) throws SQLException, NamingException{
         try(Connection con = DatabaseManager.getInstance().getConnection();
-            PreparedStatement st = con.prepareStatement("select * from pennaweb.canale WHERE ID = ?")){
-            st.setString(1, id);
+            PreparedStatement st = con.prepareStatement(SELECT_BY_ID)){
+            st.setLong(1, id);
 
             ResultSet resultSet = st.executeQuery();
             if(resultSet.next()){
@@ -35,12 +37,10 @@ public class CanaleDAO implements DAO<Canale> {
 
     }
 
-    @Override
     public List<Canale> getAll(String[] params) {
         return null;
     }
 
-    @Override
     public void save(Canale canale) throws SQLException, NamingException{
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement("Insert into pennaweb.canale values(?,?,?,?)")) {
@@ -52,7 +52,7 @@ public class CanaleDAO implements DAO<Canale> {
         }
     }
 
-    @Override
+
     public void update(Canale canale, String id) throws SQLException, NamingException{
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement ("Update pennaweb.canale SET ID = ?, nome = ?, numero = ? where ID = ?")) {
@@ -65,7 +65,7 @@ public class CanaleDAO implements DAO<Canale> {
         }
     }
 
-    @Override
+
     public void update(Canale canale) throws NamingException, SQLException {
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement ("Update pennaweb.canale SET ID = ?, nome = ?, numero = ? where ID = ?")) {
@@ -77,7 +77,7 @@ public class CanaleDAO implements DAO<Canale> {
         }
     }
 
-    @Override
+
     public void delete(Canale canale) throws NamingException, SQLException {
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement ("Delete from pennaweb.canale where ID = ?")) {

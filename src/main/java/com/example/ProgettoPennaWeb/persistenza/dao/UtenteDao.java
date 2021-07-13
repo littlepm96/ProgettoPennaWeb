@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class UtenteDao implements DAO<Utente> {
+public class UtenteDao  {
     private final String INSERT_QUERY = "Insert into pennaweb.utente values(?,?,?,?)";
     private final String UPDATE_QUERY = "Update pennaweb.utente SET email = ?, nome = ?, cognome = ?, password = ? WHERE email = ?";
     private final String DELETE_QUERY = "Insert into pennaweb.utente values(?,?,?,?)";
@@ -18,7 +18,6 @@ public class UtenteDao implements DAO<Utente> {
     private final String SELECT_QUERY_TOTALE = "Insert into pennaweb.utente values(?,?,?,?)";
 
 
-    @Override
     public Optional<Utente> get(String email) throws SQLException, NamingException {
 
         try(Connection con = DatabaseManager.getInstance().getConnection();
@@ -30,12 +29,10 @@ public class UtenteDao implements DAO<Utente> {
         return Optional.empty();
     }
 
-    @Override
     public List<Utente> getAll(String[] params) {
         return null;
     }
 
-    @Override
     public void save(Utente utente) throws SQLException, NamingException{
         try(Connection con = DatabaseManager.getInstance().getConnection();
         PreparedStatement st = con.prepareStatement(INSERT_QUERY)) {
@@ -49,7 +46,6 @@ public class UtenteDao implements DAO<Utente> {
 
     }
 
-    @Override
     public void update(Utente utente, String id) throws SQLException, NamingException{
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement (UPDATE_QUERY)) {
@@ -63,7 +59,6 @@ public class UtenteDao implements DAO<Utente> {
         }
     }
 
-    @Override
     public void update(Utente utente) throws NamingException, SQLException {
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement (UPDATE_QUERY)) {
@@ -77,7 +72,6 @@ public class UtenteDao implements DAO<Utente> {
         }
     }
 
-    @Override
     public void delete(Utente utente) throws NamingException, SQLException {
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement (DELETE_QUERY)) {

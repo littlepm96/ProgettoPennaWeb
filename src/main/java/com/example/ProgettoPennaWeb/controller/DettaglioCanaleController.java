@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -46,12 +45,13 @@ public class DettaglioCanaleController extends HttpServlet {
         CanaleDAO dao = new CanaleDAO();
         try {
             System.out.println("Sto effettuando la query");
-            Optional<Canale> risultato = dao.get(idCanale.toString());
+            Optional<Canale> risultato = dao.getCanaleById(idCanale);
             if(risultato.isPresent()) {
-                request.setAttribute("nome_canale", risultato);
+                request.setAttribute("nomeCanale", risultato.get().getNome());
             }else{
-                request.setAttribute("nome_canale", "ERRORE");
+                request.setAttribute("nomeCanale", "ERRORE");
             }
+
             if(risultato.isPresent())
             System.out.println(risultato);
             else
