@@ -10,12 +10,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Optional;
 
 public class DettaglioCanaleController extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("doGet");
@@ -31,10 +33,16 @@ public class DettaglioCanaleController extends HttpServlet {
 
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    private void processRequest(HttpServletRequest request, HttpServletResponse response){
         System.out.println("processRequest");
-        //Da usare quando passeremo ai template con Freemarker
-        Integer idCanale = Integer.parseInt(request.getParameter("id"));
+        Integer idCanale;
+        try{
+            idCanale = Integer.parseInt(request.getParameter("id"));
+        }catch (NumberFormatException nfe){
+            System.err.println("L'id passato non è valido");
+            nfe.printStackTrace();
+            return;
+        }
         CanaleDAO dao = new CanaleDAO();
         try {
             System.out.println("Sto effettuando la query");
@@ -54,8 +62,6 @@ public class DettaglioCanaleController extends HttpServlet {
             sqe.printStackTrace();
         } catch (NamingException ne) {
             ne.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
 
 
@@ -66,16 +72,31 @@ public class DettaglioCanaleController extends HttpServlet {
             System.out.println("Sto effettuando il dispatch");
             dispatcher.forward(request, response);
         } catch (IOException ex) {
-            PrintWriter out = response.getWriter();
+            PrintWriter out = null;
+            try {
+                out = response.getWriter();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             out.println("Si è verificato un errore nel trasferimento dei dati");
             ex.printStackTrace();
 
         } catch (ServletException ex) {
-            PrintWriter out = response.getWriter();
+            PrintWriter out = null;
+            try {
+                out = response.getWriter();
+            } catch (IOException e) {
+                //niente
+            }
             out.println("Si è verificato un errore nella servlet");
             ex.printStackTrace();
         } catch (Exception ex) {
-            PrintWriter out = response.getWriter();
+            PrintWriter out = null;
+            try {
+                out = response.getWriter();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             out.println("Si è verificato un errore sconosciuto");
             ex.printStackTrace();
 

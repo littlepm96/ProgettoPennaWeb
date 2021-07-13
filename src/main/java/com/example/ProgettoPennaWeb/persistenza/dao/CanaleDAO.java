@@ -6,6 +6,7 @@ import com.example.ProgettoPennaWeb.persistenza.DatabaseManager;
 import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -13,14 +14,25 @@ import java.util.Optional;
 public class CanaleDAO implements DAO<Canale> {
 
     @Override
-    public Optional<Canale> get(String id) throws SQLException, NamingException, ClassNotFoundException {
+    public Optional<Canale> get(String id) throws SQLException, NamingException{
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement("select * from pennaweb.canale WHERE ID = ?")){
             st.setString(1, id);
 
-            st.executeQuery();
+            ResultSet resultSet = st.executeQuery();
+            if(resultSet.next()){
+                Canale c = new Canale();
+                c.setId(resultSet.getLong("ID"));
+                c.setNumero(resultSet.getShort("numero"));
+                c.setNome(resultSet.getString("nome"));
+
+                return Optional.of(c);
+            }else
+            {
+                return Optional.empty();
+            }
         }
-        return Optional.empty();
+
     }
 
     @Override
@@ -29,7 +41,7 @@ public class CanaleDAO implements DAO<Canale> {
     }
 
     @Override
-    public void save(Canale canale) throws SQLException, NamingException, ClassNotFoundException {
+    public void save(Canale canale) throws SQLException, NamingException{
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement("Insert into pennaweb.canale values(?,?,?,?)")) {
             st.setString(1, canale.getId().toString());
@@ -41,7 +53,7 @@ public class CanaleDAO implements DAO<Canale> {
     }
 
     @Override
-    public void update(Canale canale, String id) throws SQLException, NamingException, ClassNotFoundException {
+    public void update(Canale canale, String id) throws SQLException, NamingException{
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement ("Update pennaweb.canale SET ID = ?, nome = ?, numero = ? where ID = ?")) {
             st.setString(1, canale.getId().toString());
@@ -54,7 +66,7 @@ public class CanaleDAO implements DAO<Canale> {
     }
 
     @Override
-    public void update(Canale canale) throws NamingException, ClassNotFoundException, SQLException {
+    public void update(Canale canale) throws NamingException, SQLException {
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement ("Update pennaweb.canale SET ID = ?, nome = ?, numero = ? where ID = ?")) {
             st.setString(1, canale.getId().toString());
@@ -66,7 +78,7 @@ public class CanaleDAO implements DAO<Canale> {
     }
 
     @Override
-    public void delete(Canale canale) throws NamingException, ClassNotFoundException, SQLException {
+    public void delete(Canale canale) throws NamingException, SQLException {
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement ("Delete from pennaweb.canale where ID = ?")) {
             st.setString(1, canale.getId().toString());

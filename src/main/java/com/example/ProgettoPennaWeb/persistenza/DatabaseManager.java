@@ -17,14 +17,14 @@ public class DatabaseManager {
     private InitialContext ctx;
     private DataSource ds;
 
-    //Inizializzzo il data source e apro le connessioni ad esso
-    private DatabaseManager() throws NamingException, ClassNotFoundException, SQLException {
+    //Inizializzo il data source e apro le connessioni ad esso
+    private DatabaseManager() throws NamingException{
         ctx = new InitialContext();
         ds = (DataSource) ctx.lookup(POOLER_RESOURCE_NAME);
 
     }
 
-    public static DatabaseManager getInstance() throws NamingException, SQLException, ClassNotFoundException{
+    public static DatabaseManager getInstance() throws NamingException{
         if(instance == null){
             instance = new DatabaseManager();
         }
