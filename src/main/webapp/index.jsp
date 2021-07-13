@@ -47,7 +47,7 @@
         </div>
         <div class="canale">
             <div class="info-canale">
-                <a href="${pageContext.request.contextPath}/dettaglio-canale?id=1">
+                <a href="${pageContext.request.contextPath}/dettaglio-canale?id=2">
                     <h1>Rai 2</h1>
                     <img src="images/lolle.jpg" alt="lolle" width="125" height="111">
                 </a>
@@ -62,7 +62,7 @@
         </div>
         <div class="canale">
             <div class="info-canale">
-                <a href="${pageContext.request.contextPath}/dettaglio-canale?id=2">
+                <a href="${pageContext.request.contextPath}/dettaglio-canale?id=3">
                     <h1>Rai 3</h1>
                     <img src="images/lolle.jpg" alt="lolle" width="125" height="111">
                 </a>
