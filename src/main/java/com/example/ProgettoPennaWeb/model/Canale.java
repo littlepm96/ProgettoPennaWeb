@@ -5,7 +5,8 @@ public class Canale {
     private Short numero;
     private String nome;
 
-    public Canale(){}
+    public Canale() {
+    }
 
     public Long getId() {
         return id;

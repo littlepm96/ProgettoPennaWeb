@@ -11,21 +11,20 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class UtenteDao  {
+public class UtenteDao {
     private final String INSERT_QUERY = "Insert into pennaweb.utente values(?,?,?,?)";
     private final String UPDATE_QUERY = "Update pennaweb.utente SET email = ?, nome = ?, cognome = ?, password = ? WHERE email = ?";
     private final String DELETE_QUERY = "Insert into pennaweb.utente values(?,?,?,?)";
     private final String SELECT_QUERY_CON_EMAIL = "select * from pennaweb.utente WHERE email = ?";
     private final String SELECT_QUERY_TOTALE = "Insert into pennaweb.utente values(?,?,?,?)";
 
-
     public Optional<Utente> getUtenteByEmail(String email) throws SQLException, NamingException {
 
-        try(Connection con = DatabaseManager.getInstance().getConnection();
-            PreparedStatement st = con.prepareStatement(SELECT_QUERY_CON_EMAIL)){
+        try (Connection con = DatabaseManager.getInstance().getConnection();
+             PreparedStatement st = con.prepareStatement(SELECT_QUERY_CON_EMAIL)) {
             st.setString(1, email);
 
-            try(ResultSet resultSet = st.executeQuery()) {
+            try (ResultSet resultSet = st.executeQuery()) {
                 if (resultSet.next()) {
                     Utente u = new Utente();
                     u.setEmail(resultSet.getString("email"));
@@ -46,51 +45,52 @@ public class UtenteDao  {
         return null;
     }
 
-    public void save(Utente utente) throws SQLException, NamingException{
-        try(Connection con = DatabaseManager.getInstance().getConnection();
-        PreparedStatement st = con.prepareStatement(INSERT_QUERY)) {
+    public boolean save(Utente utente) throws SQLException, NamingException {
+        try (Connection con = DatabaseManager.getInstance().getConnection();
+             PreparedStatement st = con.prepareStatement(INSERT_QUERY)) {
             st.setString(1, utente.getEmail());
             st.setString(2, utente.getNome());
             st.setString(3, utente.getCognome());
             st.setString(4, utente.getPassword());
 
-            st.executeQuery();
+            int i = st.executeUpdate();
+            return (i > 0);
         }
 
     }
 
-    public void update(Utente utente, String id) throws SQLException, NamingException{
-        try(Connection con = DatabaseManager.getInstance().getConnection();
-            PreparedStatement st = con.prepareStatement (UPDATE_QUERY)) {
+    public void update(Utente utente, String id) throws SQLException, NamingException {
+        try (Connection con = DatabaseManager.getInstance().getConnection();
+             PreparedStatement st = con.prepareStatement(UPDATE_QUERY)) {
             st.setString(1, utente.getEmail());
             st.setString(2, utente.getNome());
             st.setString(3, utente.getCognome());
             st.setString(4, utente.getPassword());
             st.setString(5, id);
 
-            st.executeQuery();
+            st.executeUpdate();
         }
     }
 
     public void update(Utente utente) throws NamingException, SQLException {
-        try(Connection con = DatabaseManager.getInstance().getConnection();
-            PreparedStatement st = con.prepareStatement (UPDATE_QUERY)) {
+        try (Connection con = DatabaseManager.getInstance().getConnection();
+             PreparedStatement st = con.prepareStatement(UPDATE_QUERY)) {
             st.setString(1, utente.getEmail());
             st.setString(2, utente.getNome());
             st.setString(3, utente.getCognome());
             st.setString(4, utente.getPassword());
             st.setString(5, utente.getEmail());
 
-            st.executeQuery();
+            st.executeUpdate();
         }
     }
 
     public void delete(Utente utente) throws NamingException, SQLException {
-        try(Connection con = DatabaseManager.getInstance().getConnection();
-            PreparedStatement st = con.prepareStatement (DELETE_QUERY)) {
+        try (Connection con = DatabaseManager.getInstance().getConnection();
+             PreparedStatement st = con.prepareStatement(DELETE_QUERY)) {
             st.setString(1, utente.getEmail());
 
-            st.executeQuery();
+            st.executeUpdate();
         }
     }
 }
