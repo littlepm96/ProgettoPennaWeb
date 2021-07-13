@@ -1,4 +1,8 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<html>
+<head>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profilo-utente.css">
+</head>
 <body>
 <div class="main-content">
     <!-- Navigazione -->
@@ -209,3 +213,4 @@
     </div>
 </div>
 </body>
+</html>

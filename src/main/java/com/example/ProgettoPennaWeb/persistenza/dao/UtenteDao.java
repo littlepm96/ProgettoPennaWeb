@@ -6,6 +6,7 @@ import com.example.ProgettoPennaWeb.persistenza.DatabaseManager;
 import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -18,15 +19,27 @@ public class UtenteDao  {
     private final String SELECT_QUERY_TOTALE = "Insert into pennaweb.utente values(?,?,?,?)";
 
 
-    public Optional<Utente> get(String email) throws SQLException, NamingException {
+    public Optional<Utente> getUtenteByEmail(String email) throws SQLException, NamingException {
 
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement(SELECT_QUERY_CON_EMAIL)){
             st.setString(1, email);
 
-            st.executeQuery();
+            try(ResultSet resultSet = st.executeQuery()) {
+                if (resultSet.next()) {
+                    Utente u = new Utente();
+                    u.setEmail(resultSet.getString("email"));
+                    u.setNome(resultSet.getString("nome"));
+                    u.setCognome(resultSet.getString("cognome"));
+                    u.setPassword(resultSet.getString("password"));
+
+                    return Optional.of(u);
+                } else {
+                    return Optional.empty();
+                }
+            }
         }
-        return Optional.empty();
+
     }
 
     public List<Utente> getAll(String[] params) {

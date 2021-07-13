@@ -12,21 +12,37 @@ import java.io.PrintWriter;
 
 public class Login extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+        processRequest(request, response);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        processRequest(request, response);
+    }
+
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter out = response.getWriter();
 
         String email = request.getParameter("email");
         String pass = request.getParameter("pass");
 
         if (Validate.checkUser(email, pass)) {
             RequestDispatcher rs = request.getRequestDispatcher("profilo-utente.jsp");
-            rs.forward(request, response);
+            try {
+                rs.forward(request, response);
+            } catch (ServletException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
-            out.println("Username or Password incorretto");
-            RequestDispatcher rs = request.getRequestDispatcher("index.html");
-            rs.include(request, response);
+            PrintWriter out = null;
+            try {
+                out = response.getWriter();
+                out.println("Username or Password incorretto");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
