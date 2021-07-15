@@ -8,6 +8,7 @@ import java.time.LocalTime;
 
 public class ProgrammaTelevisivo {
     private long id;
+    private String titolo;
     private GenereProgramma genere;
     private String descrizione;
     private LocalDate dataTrasmissione;
@@ -20,12 +21,34 @@ public class ProgrammaTelevisivo {
 
     public ProgrammaTelevisivo(){}
 
+    public ProgrammaTelevisivo(long id, String titolo, GenereProgramma genere, String descrizione, LocalDate dataTrasmissione, LocalTime orarioInizio, LocalTime orarioFine) {
+        this.id = id;
+        this.titolo = titolo;
+        this.genere = genere;
+        this.descrizione = descrizione;
+        this.dataTrasmissione = dataTrasmissione;
+        this.orarioInizio = orarioInizio;
+        this.orarioFine = orarioFine;
+        this.urlRelativoImmagine= "";
+        this.urlApprofondimento = null;
+        this.stagione = 1;
+        this.episodio = 1;
+    }
+
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getTitolo() {
+        return titolo;
+    }
+
+    public void setTitolo(String titolo) {
+        this.titolo = titolo;
     }
 
     public GenereProgramma getGenere() {

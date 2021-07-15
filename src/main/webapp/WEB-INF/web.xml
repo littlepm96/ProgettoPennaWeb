@@ -70,6 +70,15 @@
         <servlet-name>DettaglioCanaleController</servlet-name>
         <url-pattern>/dettaglio-canale</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>CercaController</servlet-name>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.CercaController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CercaController</servlet-name>
+        <url-pattern>/cerca</url-pattern>
+    </servlet-mapping>
 
     <!--riferimento al pooler configurato in META-INF/context.xml-->
     <resource-ref>
