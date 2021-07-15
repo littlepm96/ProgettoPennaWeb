@@ -50,8 +50,6 @@ public class Registrazione extends HttpServlet {
             u.setCognome(surname);
             boolean isSuccess = dao.save(u);
 
-
-
             PrintWriter out = response.getWriter();
             if (isSuccess) {
                 out.println("correttamente registrato");
@@ -59,7 +57,7 @@ public class Registrazione extends HttpServlet {
 
         } catch (IOException ioe) {
             ioe.printStackTrace();
-        } catch (SQLException sqe){
+        } catch (SQLException sqe) {
             sqe.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

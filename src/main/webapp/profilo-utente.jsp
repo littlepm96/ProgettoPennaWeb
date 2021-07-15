@@ -1,15 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/profilo-utente.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profilo-utente.css">
 </head>
 <body>
 <div class="main-content">
     <!-- Navigazione -->
     <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+        <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
         <div class="container-fluid">
             <!-- Brand -->
-            <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="non c'è al momento" target="_blank">Mio Account</a>
+            <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="non c'è al momento"
+               target="_blank">Mio Account</a>
             <!-- Form -->
             <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
                 <div class="form-group mb-0">
@@ -21,13 +23,15 @@
             <!-- Utente -->
             <ul class="navbar-nav align-items-center d-none d-md-flex">
                 <li class="nav-item dropdown">
-                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
                         <div class="media align-items-center">
                 <span class="avatar avatar-sm rounded-circle">
-                  <img alt="Image placeholder" src="https://demos.creative-tim.com/argon-dashboard/assets/img/theme/team-4.jpg">
+                  <img alt="Image placeholder"
+                       src="https://demos.creative-tim.com/argon-dashboard/assets/img/theme/team-4.jpg">
                 </span>
                             <div class="media-body ml-2 d-none d-lg-block">
-                                <span class="mb-0 text-sm  font-weight-bold">tizio</span>
+                                <span class="mb-0 text-sm  font-weight-bold">nome</span>
                             </div>
                         </div>
                     </a>
@@ -62,7 +66,8 @@
         </div>
     </nav>
     <!-- Header -->
-    <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style="min-height: 600px; background-image: url(https://romeartweek.com/images/artist/CA1545_0.jpg); background-size: cover; background-position: center top;">
+    <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+         style="min-height: 600px; background-image: url(https://romeartweek.com/images/artist/CA1545_0.jpg); background-size: cover; background-position: center top;">
         <!-- Mask -->
         <span class="mask bg-gradient-default opacity-8"></span>
         <!-- Header container -->
@@ -85,7 +90,8 @@
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#">
-                                    <img src="https://www.giovaniartisti.it/sites/default/files/styles/artisti_full/public/artisti/ilaria95/img2576.jpg?h=2a58c8d9&itok=ufdp9h63" class="rounded-circle">
+                                    <img src="https://www.giovaniartisti.it/sites/default/files/styles/artisti_full/public/artisti/ilaria95/img2576.jpg?h=2a58c8d9&itok=ufdp9h63"
+                                         class="rounded-circle">
                                 </a>
                             </div>
                         </div>
@@ -96,12 +102,12 @@
                     <div class="card-body pt-0 pt-md-4">
                         <div class="row">
                             <div class="col">
-                                <div class="card-profile-stats d-flex justify-content-center mt-md-5"> </div>
+                                <div class="card-profile-stats d-flex justify-content-center mt-md-5"></div>
                             </div>
                         </div>
                         <div class="text-center">
                             <h3>
-                                tizio caio<span class="font-weight-light">, 99 anni </span>
+                                utente <span class="font-weight-light">, 99 anni </span>
                             </h3>
                             <div class="h5 font-weight-300">
                                 <i class="ni location_pin mr-2"></i>vivo mediocremente
@@ -138,13 +144,17 @@
                                     <div class="col-lg-6">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-username">Username</label>
-                                            <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="Username" value="nome a caso">
+                                            <input type="text" id="input-username"
+                                                   class="form-control form-control-alternative" placeholder="Username"
+                                                   value="nome a caso">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-email">Email</label>
-                                            <input type="email" id="input-email" class="form-control form-control-alternative" placeholder="email@libero.it">
+                                            <input type="email" id="input-email"
+                                                   class="form-control form-control-alternative"
+                                                   placeholder="email@libero.it">
                                         </div>
                                     </div>
                                 </div>
@@ -152,13 +162,17 @@
                                     <div class="col-lg-6">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-first-name">Nome</label>
-                                            <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="First name" value="dio">
+                                            <input type="text" id="input-first-name"
+                                                   class="form-control form-control-alternative"
+                                                   placeholder="First name" value="dio">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-last-name">Cognome</label>
-                                            <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Last name" value="cane">
+                                            <input type="text" id="input-last-name"
+                                                   class="form-control form-control-alternative" placeholder="Last name"
+                                                   value="cane">
                                         </div>
                                     </div>
                                 </div>
@@ -171,7 +185,8 @@
                                     <div class="col-md-12">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-address">Indirizzo</label>
-                                            <input id="input-address" class="form-control form-control-alternative" placeholder="Home Address" value="la via della verità" type="text">
+                                            <input id="input-address" class="form-control form-control-alternative"
+                                                   placeholder="Home Address" value="la via della verità" type="text">
                                         </div>
                                     </div>
                                 </div>
@@ -179,19 +194,24 @@
                                     <div class="col-lg-4">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-city">Città</label>
-                                            <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="City" bestia="New York">
+                                            <input type="text" id="input-city"
+                                                   class="form-control form-control-alternative" placeholder="City"
+                                                   bestia="New York">
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group focused">
                                             <label class="form-control-label" for="input-country">Paese</label>
-                                            <input type="text" id="input-country" class="form-control form-control-alternative" placeholder="Country" value="divina">
+                                            <input type="text" id="input-country"
+                                                   class="form-control form-control-alternative" placeholder="Country"
+                                                   value="divina">
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-country">CAP</label>
-                                            <input type="number" id="input-postal-code" class="form-control form-control-alternative" placeholder="02013">
+                                            <input type="number" id="input-postal-code"
+                                                   class="form-control form-control-alternative" placeholder="02013">
                                         </div>
                                     </div>
                                 </div>
@@ -202,7 +222,8 @@
                             <div class="pl-lg-4">
                                 <div class="form-group focused">
                                     <label>Su di me...</label>
-                                    <textarea rows="4" class="form-control form-control-alternative" placeholder="A few words about you ...">scrivi se ti va.</textarea>
+                                    <textarea rows="4" class="form-control form-control-alternative"
+                                              placeholder="A few words about you ...">scrivi se ti va.</textarea>
                                 </div>
                             </div>
                         </form>

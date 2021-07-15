@@ -4,7 +4,6 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
-
     <servlet>
         <servlet-name>TemplateServlet</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.TemplateServlet</servlet-class>
@@ -13,7 +12,6 @@
         <servlet-name>TemplateServlet</servlet-name>
         <url-pattern>/template-test-servlet</url-pattern>
     </servlet-mapping>
-
 
     <servlet>
         <servlet-name>HelloServlet</servlet-name>
@@ -24,7 +22,6 @@
         <url-pattern>/hello-servlet</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
         <servlet-name>FasceOrarieController</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.controller.FasceOrarieController</servlet-class>
@@ -34,7 +31,6 @@
         <url-pattern>/fasce-orarie</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
         <servlet-name>login</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.Login</servlet-class>
@@ -43,6 +39,7 @@
         <servlet-name>login</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
+
     <servlet>
         <servlet-name>Registrazione</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.Registrazione</servlet-class>
@@ -51,7 +48,6 @@
         <servlet-name>Registrazione</servlet-name>
         <url-pattern>/registrazione</url-pattern>
     </servlet-mapping>
-
 
     <servlet>
         <servlet-name>Welcome</servlet-name>
@@ -87,6 +83,5 @@
         <res-auth>Container</res-auth>
         <res-sharing-scope>Shareable</res-sharing-scope>
     </resource-ref>
-
 
 </web-app>
