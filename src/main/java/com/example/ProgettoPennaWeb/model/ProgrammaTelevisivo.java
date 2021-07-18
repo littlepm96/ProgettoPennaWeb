@@ -6,7 +6,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ProgrammaTelevisivo {
+public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
     private long id;
     private String titolo;
     private GenereProgramma genere;
@@ -122,4 +122,17 @@ public class ProgrammaTelevisivo {
     public void setEpisodio(short episodio) {
         this.episodio = episodio;
     }
+
+    /**
+     * Ordinamento naturale dei programmi televisivi: Confrontiamo gli ID numerici.
+     * @param other l'altro programma televisivo da comparare
+     * @return 1 se questo programma ha un id minore dell'altro, -1 altrimenti. 0 Se hanno lo stesso ID (sono lo stesso programma).
+     */
+    @Override
+    public int compareTo(ProgrammaTelevisivo other) {
+        return Long.compare(this.id, other.id);
+    }
+
+
+
 }

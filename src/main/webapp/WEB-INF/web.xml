@@ -4,6 +4,11 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
+    <context-param>
+        <param-name>MAX_PROGRAMMI_IN_SEARCH_RESULT</param-name>
+        <param-value>15</param-value>
+    </context-param>
+
     <servlet>
         <servlet-name>TemplateServlet</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.TemplateServlet</servlet-class>

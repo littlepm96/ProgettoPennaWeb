@@ -1,6 +1,8 @@
 package com.example.ProgettoPennaWeb.controller;
 
+import com.example.ProgettoPennaWeb.model.Canale;
 import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
+import com.example.ProgettoPennaWeb.model.comparators.TrasmissioneProgrammaComparator;
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
 import com.example.ProgettoPennaWeb.model.utility.FasciaOraria;
 import com.example.ProgettoPennaWeb.model.utility.MalformedFasciaOrariaException;
@@ -8,23 +10,38 @@ import com.example.ProgettoPennaWeb.model.utility.MalformedFasciaOrariaException
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class CercaController extends HttpServlet {
-
-    private List<ProgrammaTelevisivo> programmi = new ArrayList<ProgrammaTelevisivo>(20);
+    private final List<Canale> canali = new ArrayList<>(2);
+    private final List<ProgrammaTelevisivo> programmi = new ArrayList<ProgrammaTelevisivo>(20);
 
     @Override
     public void init() throws ServletException {
         super.init();
+        //canali
+        Canale c1 = new Canale();
+        c1.setId(0);
+        c1.setNome("Rai1");
+        c1.setNumero((short)1);
+        Canale c2 = new Canale();
+        c2.setId(1);
+        c2.setNome("Rai2");
+        c1.setNumero((short)2);
+        canali.add(c1);
+        canali.add(c2);
         //Genero dei programmi fasulli per il testing (Da rimuovere dopo aver implementato il Dao)
         Random r = new Random();
         String[] names = new String[]{"Programma1", "Programma2", "Programma3", "Programma4"};
         String[] descriptions = new String[]{"ass","gtrhrg","efuweoad","aaaaaaaaaaaaaaaaaaaaaaaaaaaaa","ooooooooooooooooooooooooo"};
+        //Programmi disponibili in un canale (associamo usando gli id, come si farebbe in un db relazionale)
+        final Map<Long,List<Long>> programmiDiUnCanale = new TreeMap<>();
+        for(int i=0; i < canali.size();i++){
+            programmiDiUnCanale.put(canali.get(i).getId(),new ArrayList<>());
+        }
         for(int i=0; i < 20; i++) {
             LocalTime curr_fine = LocalTime.of(r.nextInt(24), r.nextInt(60));
             LocalTime curr_inizio = LocalTime.of(r.nextInt(curr_fine.getHour()), r.nextInt(60));
@@ -37,7 +54,11 @@ public class CercaController extends HttpServlet {
                     curr_inizio,
                     curr_fine);
             programmi.add(p);
+            programmiDiUnCanale.get(canali.get(r.nextInt(canali.size())).getId()).add(p.getId()); //associo il programma ad un canale casuale
+
         }
+        programmi.sort(new TrasmissioneProgrammaComparator());
+
     }
 
     @Override
@@ -50,32 +71,91 @@ public class CercaController extends HttpServlet {
         processRequest(request,response);
     }
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response){
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //parametri di ricerca
         String titolo=request.getParameter("titolo");
         String genere=request.getParameter("genere");
         String numeroCanale=request.getParameter("numero_canale");
         String fasciaOraria=request.getParameter("fascia_oraria");
-        boolean cercaAltriGiorni = request.getParameter("cerca_altri_giorni")!=null;
+        Boolean cercaAltriGiorni = request.getParameter("cerca_altri_giorni")!=null;
+        List<ProgrammaTelevisivo> result = null; //risultato della ricerca
         //verifichiamo se abbiamo parametri di ricerca in ingresso (abbiamo avviato la ricerca oppure siamo arrivati da una ricerca salvata)
         if(titolo!=null||genere!=null||numeroCanale!=null||fasciaOraria!=null){
+            //Compiliamo una lista dei parametri in ingresso
+            Map<String,String> parametriDiRicerca = new TreeMap<>();
+            if(titolo!= null){
+                parametriDiRicerca.put("titolo",titolo);
+            }
+            if(genere!= null){
+                parametriDiRicerca.put("genere",genere);
+            }
+            if(numeroCanale!= null){
+                parametriDiRicerca.put("numero_canale",numeroCanale);
+            }
+            if(fasciaOraria!= null){
+                parametriDiRicerca.put("fascia_oraria",fasciaOraria);
+            }
+            parametriDiRicerca.put("cerca_altri_giorni",cercaAltriGiorni.toString());
+            //allego la lista alla request
+            request.setAttribute("parametri_di_ricerca", parametriDiRicerca);
             //riempiamo il form con i parametri forniti
             //compileForm(request,response);
-            //ricerchiamo sul database i risultati
-            //search(request,response);
-        }else{
-            //Mostra i primi 15 programmi presi dal database, ordinati rispetto al canale (quindi Rai1 sarà il primo) e poi rispetto all'ora di inizio (anche giorno di trasmissione se specificato nel form).
+            //ricerchiamo sul database i risultati (AD ORA USIAMO LISTE GENERATE)
             try {
-                defaultSearch(request,response);
+                result = search(request,response);
+                //INSERIRE QUI
+            } catch (MalformedFasciaOrariaException mfoe) {
+                System.err.println(mfoe.getMessage());
+                mfoe.printStackTrace();
+            }
+        }else{//default senza parametri
+            //Mostra i primi 15 programmi presi dal database, ordinati rispetto all'ora di inizio (anche giorno di trasmissione se specificato nel form).
+            try {
+                result = defaultSearch(request,response);
             } catch (MalformedFasciaOrariaException mfoe) {
                 System.err.println(mfoe.getMessage());
                 mfoe.printStackTrace();
             }
         }
+
+        //alleghiamo la lista dei programmi alla request
+        request.setAttribute("risultato_ricerca", result);
+
+        //alleghiamo la lista dei generi selezionabili nel form
+        GenereProgramma[] generiValues = GenereProgramma.values();
+        String[] generi = new String[generiValues.length-1];
+        for(int i=0;i<generi.length;i++){
+            generi[i] = generiValues[i+1].toString(); //prendiamo i+1 così escludiamo "non assegnato" tra i valori selezionabili nel form
+        }
+        request.setAttribute("generi_disponibili", generi);
+
+        //DISPATCH AL JSP
+        ServletContext context = getServletContext();
+        RequestDispatcher dispatcher = context.getRequestDispatcher("/cerca.jsp");
+        try {
+            dispatcher.forward(request, response);
+        } catch (IOException ex) {
+            PrintWriter out = response.getWriter();
+            out.println("Si è verificato un errore nel trasferimento dei dati");
+            ex.printStackTrace();
+
+        } catch (ServletException ex) {
+            PrintWriter out = response.getWriter();
+            out.println("Si è verificato un errore nella servlet");
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            PrintWriter out = response.getWriter();
+            out.println("Si è verificato un errore sconosciuto");
+            ex.printStackTrace();
+
+        }
     }
 
     private List<ProgrammaTelevisivo> defaultSearch(HttpServletRequest request, HttpServletResponse response) throws MalformedFasciaOrariaException {
+        final int MAX_PROGRAMMI_IN_SEARCH_RESULT = Integer.parseInt(getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
         //Ritorna una lista fasulla (vedi metodo Init()), da rimuovere quando implementiamo il dao
-        return programmi;
+        List<ProgrammaTelevisivo> result = programmi.subList(0,MAX_PROGRAMMI_IN_SEARCH_RESULT-1);
+        return result;
 
         //ProgrammaTelevisivoDAO dao = new ProgrammaTelevisivoDAO();
         //...
