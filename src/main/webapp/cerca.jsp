@@ -6,9 +6,12 @@
 <%@ page import="java.time.LocalTime" %>
 <%@ page import="com.example.ProgettoPennaWeb.model.utility.FasciaOraria" %>
 <%@ page import="com.example.ProgettoPennaWeb.model.utility.MalformedFasciaOrariaException" %>
+<%@ page import="java.util.TreeMap" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <!--CSS-->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cerca.css">
 <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
@@ -93,7 +96,8 @@
   <!--Fine del form-->
   <!--Pagina dei risultati.-->
   <div id="risultati-ricerca" class="canale-flex-container">
-      <%Map<String,Object> data = (Map<String,Object>) request.getAttribute("data");
+      <%
+        Map<String,Object> data = (Map<String,Object>) request.getAttribute("data");
         List<ProgrammaTelevisivo> risultatiRicerca = (List<ProgrammaTelevisivo>) data.get("risultati_ricerca");
         List<Canale> canali = (List<Canale>) data.get("canali");
         Map<ProgrammaTelevisivo,Canale> canaleDiUnProgramma = (Map<ProgrammaTelevisivo, Canale>) data.get("canale_di_un_programma");

@@ -3,6 +3,7 @@
 <head>
     <title>Guida TV - Fasce orarie</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/fasce-orarie.css">
 </head>
 <body>
 <!--INIZIO HEADER-->

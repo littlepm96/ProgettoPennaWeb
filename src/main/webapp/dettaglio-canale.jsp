@@ -3,6 +3,7 @@
 <head>
     <title>Programmi odierni di <%=request.getAttribute("nomeCanale")%>
     </title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dettaglio-canale.css">
 </head>
 <body>
