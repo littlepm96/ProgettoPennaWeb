@@ -1,4 +1,11 @@
+<%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo" %>
+<%@ page import="com.example.ProgettoPennaWeb.model.Canale" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.time.LocalTime" %>
+<%@ page import="com.example.ProgettoPennaWeb.model.utility.FasciaOraria" %>
+<%@ page import="com.example.ProgettoPennaWeb.model.utility.MalformedFasciaOrariaException" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <!--CSS-->
@@ -35,7 +42,7 @@
 <!--FINE HEADER-->
 <!--INIZIO CONTENUTO PRINCIPALE-->
 <main>
-  <!--Form con i parametri di ricerca. Offre suggerimenti per l'input dopo aver digitato un certo numero di caratteri-->
+  <!--Form con i parametri di ricerca-->
   <form autocomplete="off" action="${pageContext.request.contextPath}/cerca" method="get">
     <div class="form-row">
       <!--Titolo programma-->
@@ -81,7 +88,61 @@
         </div>
       </div><!--form-column-->
     </div> <!--form-row-->
+    <button type="button" id="submit" value="Cerca" onclick="validate()"></button>
   </form>
+  <!--Fine del form-->
+  <!--Pagina dei risultati.-->
+  <div id="risultati-ricerca" class="canale-flex-container">
+      <%Map<String,Object> data = (Map<String,Object>) request.getAttribute("data");
+        List<ProgrammaTelevisivo> risultatiRicerca = (List<ProgrammaTelevisivo>) data.get("risultati_ricerca");
+        List<Canale> canali = (List<Canale>) data.get("canali");
+        Map<ProgrammaTelevisivo,Canale> canaleDiUnProgramma = (Map<ProgrammaTelevisivo, Canale>) data.get("canale_di_un_programma");
+        for(ProgrammaTelevisivo programma : risultatiRicerca){
+          Canale canaleDelProgramma = canaleDiUnProgramma.get(programma);
+          Long idCanale = canaleDelProgramma.getId(); //Ci serve per ottenere il riferimento all'immagine del canale
+          String nomeCanale = canaleDelProgramma.getNome();
+          Long idProgramma = programma.getId(); //Ci server per ottenere il riferimento all'immagine del programma (se c'è)
+          String titolo = programma.getTitolo();
+          String genere =  programma.getGenere().toString();
+          LocalDate dataTrasmissione = programma.getDataTrasmissione();
+          LocalTime oraInizio = programma.getOrarioInizio();
+          LocalTime oraFine = programma.getOrarioFine();
+          String fasciaOraria = "ERRORE";
+          try {
+             fasciaOraria = FasciaOraria.encode(oraInizio,oraFine);
+          } catch (MalformedFasciaOrariaException e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+          }
+          String descrizione = programma.getDescrizione();
+
+      %>
+    <!--Inizio del for loop-->
+    <div id="<%=programma.getId()%>" class="programma">
+      <div class="info-canale">
+        <a href="${pageContext.request.contextPath}/dettaglio-canale?id=<%=idCanale%>">
+          <h1><%=nomeCanale%></h1>
+          <img src="${pageContext.request.contextPath}/images/canale_<%=idCanale%>.jpg" alt="canale_<%=idCanale%>.jpg" width="125" height="111">
+        </a>
+      </div>
+      <div class="info-programma">
+        <a href="${pageContext.request.contextPath}/dettaglio-programma?id=<%=idProgramma%>>">
+          <h2><%=titolo%>></h2>
+          <img src="images/programma_<%=idProgramma%>.jpg" alt="programma_<%=idProgramma%>.jpg" width="125" height="111">
+        </a>
+        <a class="tag-genere" href="cerca?genere=<%=genere%>"><%=genere%></a>
+        <span class="data-trasmissione"><%=dataTrasmissione.toString()%></span>
+        <span class="ora-trasmissione"><%=fasciaOraria%></span>
+      </div>
+      <div class="descrizione-programma"><%=descrizione%></div>
+    </div>
+    <!--Fine del for loop-->
+    <%
+      }
+    %>
+  </div>
+
+  </div>
 </main>
 <!--FINE CONTENUTO PRINCIPALE-->
 <!--INIZIO FOOTER-->
@@ -92,6 +153,7 @@
 <script type="text/javascript">
   function validate(){
     var form = document.forms[0];
+    var isValid = true;
     if(form) {
       var elems = form.elements;
       for (var i = 0;i < elems.length;i++){
@@ -100,12 +162,27 @@
           case "fascia-oraria-inizio-ore":
             let value = elems[i].value;
             if(value < 0 || value > 23){
-              elems[i]
-              return;
+              elems[i].setCustomValidity("Inserisca un orario valido.");
+              isValid = false;
+            }else{
+              elems[i].setCustomValidity("");
             }
-        }
+            break;
+            case "fascia-oraria-fine-minuti":
+            case "fascia-oraria-inizio-minuti":
+              if(value < 0 || value > 59){
+                elems[i].setCustomValidity("Inserisca un orario valido.");
+                isValid = false;
+              }else{
+                elems[i].setCustomValidity("");
+              }
+
+        } //switch
+      } //for loop
+      if(isValid){
+        form.submit();
       }
-    }
+    } //if(form)
   }
 
 //Inizializziamo l'autocompletamento sui campi che ne fanno uso

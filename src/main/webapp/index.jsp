@@ -38,7 +38,7 @@
                 </a>
             </div>
             <div class="programma-in-onda">
-                <a href="${pageContext.request.contextPath}/programma?id=2353">
+                <a href="${pageContext.request.contextPath}/dettaglio-programma?id=2353">
                     <h2>TG1</h2>
                     <img src="images/tg1.jpg" alt="TG1" width="125" height="111">
                 </a>
@@ -53,7 +53,7 @@
                 </a>
             </div>
             <div class="programma-in-onda">
-                <a href="${pageContext.request.contextPath}/programma?id=2354">
+                <a href="${pageContext.request.contextPath}/dettaglio-programma?id=2354">
                     <h2>NCIS</h2>
                     <img src="images/ncis.jpg" alt="NCIS">
                 </a>
@@ -68,7 +68,7 @@
                 </a>
             </div>
             <div class="programma-in-onda">
-                <a href="${pageContext.request.contextPath}/programma?id=2355">
+                <a href="${pageContext.request.contextPath}/dettaglio-programma?id=2355">
                     <h2>Report</h2>
                     <img src="images/report.jpg" alt="Report">
                 </a>

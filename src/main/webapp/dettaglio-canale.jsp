@@ -31,11 +31,9 @@
         <!--INIZIO LISTA PROGRAMMI-->
         <div class="channels">
 
-
             <section class="channel ">
                 <header class="channel-header">
                     <a href="https://guidatv.quotidiano.net/rai_1/" title="Programmi RaiUno">
-
             <span class="channel-logo">
     <picture>
         <source data-srcset="https://immagini.quotidiano.net/?url=https%3A%2F%2Fs3.eu-west-1.amazonaws.com%2Fstatic.guidatv.quotidiano.net%2Fimg%2Floghi_tv%2Frai_1.png&amp;w=100&amp;h=30&amp;fmt=webp&amp;mode=fill&amp;bg=ffffff"
@@ -68,7 +66,6 @@
         <path d="M6.73,8.79A1.45,1.45,0,1,0,8.79,6.73l-2-2A1.45,1.45,0,1,0,4.7,6.75Z"></path>
     </g>
 </svg>
-
                         </span>
                         <span class="channel-schedule-text">Programmi TV mattina</span>
                     </div>

@@ -35,7 +35,16 @@
         <servlet-name>FasceOrarieController</servlet-name>
         <url-pattern>/fasce-orarie</url-pattern>
     </servlet-mapping>
-
+    
+    <servlet>
+        <servlet-name>DettaglioProgrammaController</servlet-name>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.DettaglioProgrammaController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DettaglioProgrammaController</servlet-name>
+        <url-pattern>/dettaglio-programma</url-pattern>
+    </servlet-mapping>
+    
     <servlet>
         <servlet-name>login</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.Login</servlet-class>

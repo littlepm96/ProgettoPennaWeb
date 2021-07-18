@@ -16,8 +16,10 @@ import java.time.LocalTime;
 import java.util.*;
 
 public class CercaController extends HttpServlet {
+    private final Map<String,Object> data = new TreeMap<>();
     private final List<Canale> canali = new ArrayList<>(2);
     private final List<ProgrammaTelevisivo> programmi = new ArrayList<ProgrammaTelevisivo>(20);
+    private final Map<ProgrammaTelevisivo,Canale> canaleDiUnProgramma = new TreeMap<>();
 
     @Override
     public void init() throws ServletException {
@@ -37,13 +39,10 @@ public class CercaController extends HttpServlet {
         Random r = new Random();
         String[] names = new String[]{"Programma1", "Programma2", "Programma3", "Programma4"};
         String[] descriptions = new String[]{"ass","gtrhrg","efuweoad","aaaaaaaaaaaaaaaaaaaaaaaaaaaaa","ooooooooooooooooooooooooo"};
-        //Programmi disponibili in un canale (associamo usando gli id, come si farebbe in un db relazionale)
-        final Map<Long,List<Long>> programmiDiUnCanale = new TreeMap<>();
-        for(int i=0; i < canali.size();i++){
-            programmiDiUnCanale.put(canali.get(i).getId(),new ArrayList<>());
-        }
+
         for(int i=0; i < 20; i++) {
             LocalTime curr_fine = LocalTime.of(r.nextInt(24), r.nextInt(60));
+            System.out.println(curr_fine.getHour());
             LocalTime curr_inizio = LocalTime.of(r.nextInt(curr_fine.getHour()), r.nextInt(60));
             ProgrammaTelevisivo p = new ProgrammaTelevisivo(
                     r.nextLong(),
@@ -54,7 +53,7 @@ public class CercaController extends HttpServlet {
                     curr_inizio,
                     curr_fine);
             programmi.add(p);
-            programmiDiUnCanale.get(canali.get(r.nextInt(canali.size())).getId()).add(p.getId()); //associo il programma ad un canale casuale
+            canaleDiUnProgramma.put(p,canali.get(r.nextInt(canali.size()))); //associo il programma ad un canale casuale
 
         }
         programmi.sort(new TrasmissioneProgrammaComparator());
@@ -103,7 +102,7 @@ public class CercaController extends HttpServlet {
             //ricerchiamo sul database i risultati (AD ORA USIAMO LISTE GENERATE)
             try {
                 result = search(request,response);
-                //INSERIRE QUI
+
             } catch (MalformedFasciaOrariaException mfoe) {
                 System.err.println(mfoe.getMessage());
                 mfoe.printStackTrace();
@@ -118,14 +117,18 @@ public class CercaController extends HttpServlet {
             }
         }
 
-        //alleghiamo la lista dei programmi alla request
-        request.setAttribute("risultato_ricerca", result);
+        //alleghiamo i dati dei programmi e dei canali alla request
+        data.put("risultato_ricerca",result);
+        data.put("canali",canali);
+        data.put("canale_di_un_programma", canaleDiUnProgramma);
+        request.setAttribute("data", data);
 
         //alleghiamo la lista dei generi selezionabili nel form
         GenereProgramma[] generiValues = GenereProgramma.values();
         String[] generi = new String[generiValues.length-1];
         for(int i=0;i<generi.length;i++){
             generi[i] = generiValues[i+1].toString(); //prendiamo i+1 così escludiamo "non assegnato" tra i valori selezionabili nel form
+            System.out.println(generi[i]);
         }
         request.setAttribute("generi_disponibili", generi);
 
