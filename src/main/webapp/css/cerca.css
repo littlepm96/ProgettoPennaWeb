@@ -14,11 +14,51 @@ body {
     padding: 0;
     background-color: #b2e0df;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /*display: flex;
+    justify-content: center; (Sformattano tutto)
+    align-items: center;*/
 }
 
+form{
+    display: block;
+    background: lightsalmon;
+    margin: 0;
+    padding: 5px;
+    height: 8em;
+    width: 100%;
+}
+
+form.hidden{
+    display: none;
+}
+
+#form-container #error-message{
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 5px;
+    background: pink;
+    border: indianred solid 2px;
+    font-weight: bold;
+}
+
+form .form-row{
+    padding-top: 5px;
+    height: 95px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-row > .form-column{
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#fascia-oraria-fine label:first-child{
+    padding-right: 10px;
+}
 .autocomplete {
     /*the container must be positioned relative:*/
     position: relative;
@@ -26,11 +66,7 @@ body {
     box-sizing: border-box;
 }
 
-.autocomplete {
-
-}
-
-input {
+input, select {
     border: 1px solid transparent;
     background-color: #f1f1f1;
     padding: 10px;
@@ -39,12 +75,21 @@ input {
 
 input[type=text] {
     background-color: #f1f1f1;
-    width: 100%;
 }
 
-input[type=submit] {
+input.invalid{
+    background-color: pink;
+    border-color: indianred;
+}
+
+#numero-canale, #fascia-oraria-inizio > input, #fascia-oraria-fine > input{
+    width: 5em;
+}
+
+form button {
     background-color: DodgerBlue;
     color: #fff;
+    padding: 1em;
 }
 
 .autocomplete-items {
@@ -75,6 +120,19 @@ input[type=submit] {
     /*when navigating through the items using the arrow keys:*/
     background-color: DodgerBlue !important;
     color: #ffffff;
+}
+#form-toggle{
+    display: inline-block;
+    width: 100%;
+    child-align: top;
+    text-align: center;
+}
+
+#form-toggle button{
+    width: 4em;
+    height: 2em;
+    background: white;
+    padding: 1px 6px 1px 6px;
 }
 
 /*

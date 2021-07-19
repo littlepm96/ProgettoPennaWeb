@@ -45,13 +45,14 @@
 <!--FINE HEADER-->
 <!--INIZIO CONTENUTO PRINCIPALE-->
 <main>
+  <div id="form-container">
   <!--Form con i parametri di ricerca-->
-  <form autocomplete="off" action="${pageContext.request.contextPath}/cerca" method="get">
+  <form autocomplete="off" id="form-ricerca" action="${pageContext.request.contextPath}/cerca" method="get">
     <div class="form-row">
       <!--Titolo programma-->
       <div class="autocomplete">
-        <label for="titolo">Titolo programma: </label>
-        <input type="text" id="titolo" name="titolo" placeholder="titolo" title="Titolo del programma da cercare">
+        <label for="titolo">Titolo: </label>
+        <input type="text" id="titolo" name="titolo" placeholder="titolo programma" title="Titolo del programma da cercare">
       </div>
       <!--Genere programma-->
       <div id="genere-select">
@@ -72,28 +73,33 @@
       <!--Numero canale-->
       <div class="autocomplete">
         <label for="numero-canale">Canale: </label>
-        <input type="number" id="numero-canale" name="numero_canale" placeholder="titolo" title="Titolo del programma da cercare">
+        <input type="number" id="numero-canale" name="numero_canale" placeholder="es.: 1" title="Titolo del programma da cercare">
       </div>
       <!--Fascia oraria-->
       <div class="form-column">
         <input type="hidden" id="fascia-oraria" name="fascia_oraria"> <!--Campo effettivamente passato al server-->
         <div id="fascia-oraria-inizio">
           <label for="fascia-oraria-inizio-ore">Da: </label>
-          <input type="number" id="fascia-oraria-inizio-ore" class="time-selector">
+          <input type="number" id="fascia-oraria-inizio-ore" placeholder="(0-23)" class="time-selector">
           <label for="fascia-oraria-inizio-minuti"><strong> : </strong></label>
-          <input type="number" id="fascia-oraria-inizio-minuti" class="time-selector">
+          <input type="number" id="fascia-oraria-inizio-minuti" placeholder="(0-59)" class="time-selector">
         </div>
         <div id="fascia-oraria-fine">
           <label for="fascia-oraria-fine-ore">A:  </label>
-          <input type="number" id="fascia-oraria-fine-ore" class="time-selector">
+          <input type="number" id="fascia-oraria-fine-ore" placeholder="(0-23)" class="time-selector">
           <label for="fascia-oraria-fine-minuti"><strong> : </strong></label>
-          <input type="number" id="fascia-oraria-fine-minuti" class="time-selector">
+          <input type="number" id="fascia-oraria-fine-minuti" placeholder="(0-59)" class="time-selector">
         </div>
       </div><!--form-column-->
+      <button type="button" id="submit" onclick="validate()">Cerca</button>
     </div> <!--form-row-->
-    <button type="button" id="submit" value="Cerca" onclick="validate()"></button>
   </form>
   <!--Fine del form-->
+    <!--Pulsante per mostrare/nascondere il form di ricerca-->
+    <div id="form-toggle">
+    <button type="button" onclick="toggleForm(this)">x</button>
+    </div>
+  </div>
   <!--Pagina dei risultati.-->
   <div id="risultati-ricerca" class="canale-flex-container">
       <%
@@ -145,8 +151,6 @@
       }
     %>
   </div>
-
-  </div>
 </main>
 <!--FINE CONTENUTO PRINCIPALE-->
 <!--INIZIO FOOTER-->
@@ -155,36 +159,76 @@
 <!--FINE FOOTER-->
 <!--SCRIPT-->
 <script type="text/javascript">
+  //Toggle del form
+  function toggleForm(button) {
+    var x = document.getElementById("form-ricerca");
+    if (x.classList.contains("hidden")) {
+      x.classList.remove("hidden");
+      button.innerHTML="x";
+    } else {
+      x.classList.add("hidden");
+      button.innerHTML="+";
+
+    }
+  }
+  //Validazione del form
   function validate(){
+    const INVALID_CLASS = "invalid";
     var form = document.forms[0];
     var isValid = true;
+    var inizio_ore, inizio_minuti, fine_ore, fine_minuti;
     if(form) {
       var elems = form.elements;
-      for (var i = 0;i < elems.length;i++){
-        switch (elems[i].id){
-          case "fascia-oraria-fine-ore":
-          case "fascia-oraria-inizio-ore":
-            let value = elems[i].value;
-            if(value < 0 || value > 23){
-              elems[i].setCustomValidity("Inserisca un orario valido.");
-              isValid = false;
-            }else{
-              elems[i].setCustomValidity("");
-            }
-            break;
-            case "fascia-oraria-fine-minuti":
-            case "fascia-oraria-inizio-minuti":
-              if(value < 0 || value > 59){
-                elems[i].setCustomValidity("Inserisca un orario valido.");
-                isValid = false;
-              }else{
-                elems[i].setCustomValidity("");
-              }
+      var current;
 
-        } //switch
-      } //for loop
+      //Inizio (ore)
+      current = elems.namedItem("fascia-oraria-inizio-ore");
+      inizio_ore = current.value;
+      if(inizio_ore < 0 || inizio_ore > 23){
+        current.classList.add(INVALID_CLASS);
+        isValid = false;
+      }else{
+        current.classList.remove(INVALID_CLASS);
+      }
+      //Inizio (minuti)
+      current = elems.namedItem("fascia-oraria-inizio-minuti");
+      inizio_minuti = current.value;
+      if(inizio_minuti < 0 || inizio_minuti > 59){
+        current.classList.add(INVALID_CLASS);
+        isValid = false;
+      }else{
+        current.classList.remove(INVALID_CLASS);
+      }
+      //Fine(ore)
+      current = elems.namedItem("fascia-oraria-fine-ore");
+      fine_ore = current.value;
+      if(fine_ore < 0 || fine_ore > 23){
+        current.classList.add(INVALID_CLASS);
+        isValid = false;
+      }else{
+        current.classList.remove(INVALID_CLASS);
+      }
+      //Fine (minuti)
+      current = elems.namedItem("fascia-oraria-fine-minuti");
+      fine_minuti = current.value;
+      if(fine_minuti < 0 || fine_minuti > 59){
+        current.classList.add(INVALID_CLASS);
+        isValid = false;
+      }else{
+        current.classList.remove(INVALID_CLASS);
+      }
+      //Controllo che il form sia validato
       if(isValid){
+        //compilo la fascia oraria da mandare al server usando il campo hidden
+        form.elements.namedItem("fascia_oraria").value = inizio_ore+":"+inizio_minuti+"-"+fine_ore+":"+fine_minuti;
+        alert(form.elements.namedItem("fascia_oraria").value);
         form.submit();
+      }else{
+        //Form invalido, mostra il messaggio di errore corrispondente
+        let error_element = document.createElement("div");
+        error_element.id = "error-message";
+        error_element.innerHTML = "Inserisca un orario valido.";
+        form.parentElement.insertBefore(error_element,form);
       }
     } //if(form)
   }
