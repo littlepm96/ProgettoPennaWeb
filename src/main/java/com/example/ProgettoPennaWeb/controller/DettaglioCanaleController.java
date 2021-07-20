@@ -19,21 +19,18 @@ public class DettaglioCanaleController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("doGet");
 
         processRequest(request,response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("doPost");
 
         processRequest(request,response);
 
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response){
-        System.out.println("processRequest");
         Integer idCanale;
         try{
             idCanale = Integer.parseInt(request.getParameter("id"));

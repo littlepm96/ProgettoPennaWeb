@@ -10,29 +10,31 @@ public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
     private long id;
     private String titolo;
     private GenereProgramma genere;
+    private long idCanale;
     private String descrizione;
     private LocalDate dataTrasmissione;
     private LocalTime orarioInizio;
     private LocalTime orarioFine;
     private String urlRelativoImmagine; //essendo un url relativo, usiamo la classe String
     private URL urlApprofondimento;
-    private short stagione; //valore speciale -1 se non si tratta di una serie
-    private short episodio; //valore speciale -1 se non si tratta di una serie
+    private short stagione; //valore speciale 0 se non si tratta di una serie
+    private short episodio; //valore speciale 0 se non si tratta di una serie
 
     public ProgrammaTelevisivo(){}
 
-    public ProgrammaTelevisivo(long id, String titolo, GenereProgramma genere, String descrizione, LocalDate dataTrasmissione, LocalTime orarioInizio, LocalTime orarioFine) {
+    public ProgrammaTelevisivo(long id, String titolo, GenereProgramma genere, long idCanale, String descrizione, LocalDate dataTrasmissione, LocalTime orarioInizio, LocalTime orarioFine) {
         this.id = id;
         this.titolo = titolo;
         this.genere = genere;
+        this.idCanale = idCanale;
         this.descrizione = descrizione;
         this.dataTrasmissione = dataTrasmissione;
         this.orarioInizio = orarioInizio;
         this.orarioFine = orarioFine;
         this.urlRelativoImmagine= "";
         this.urlApprofondimento = null;
-        this.stagione = 1;
-        this.episodio = 1;
+        this.stagione = 0;
+        this.episodio = 0;
     }
 
     public long getId() {
@@ -57,6 +59,14 @@ public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
 
     public void setGenere(GenereProgramma genere) {
         this.genere = genere;
+    }
+
+    public long getIdCanale() {
+        return idCanale;
+    }
+
+    public void setIdCanale(long idCanale) {
+        this.idCanale = idCanale;
     }
 
     public String getDescrizione() {

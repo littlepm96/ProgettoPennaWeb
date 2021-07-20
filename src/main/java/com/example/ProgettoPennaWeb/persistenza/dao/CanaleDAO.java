@@ -39,7 +39,6 @@ public class CanaleDAO{
                 }
             }
         }
-
     }
 
     public List<Canale> getAll() throws SQLException, NamingException{

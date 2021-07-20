@@ -48,16 +48,18 @@ public class CercaController extends HttpServlet {
             LocalTime curr_fine = LocalTime.of(r.nextInt(24), r.nextInt(60));
             int bound = curr_fine.getHour() == 0 ? 23 : curr_fine.getHour();
             LocalTime curr_inizio = LocalTime.of(r.nextInt(bound), r.nextInt(60));
+            Canale canaleAssegnato = canali.get(r.nextInt(canali.size()));
             ProgrammaTelevisivo p = new ProgrammaTelevisivo(
                     r.nextLong(),
                     names[r.nextInt(names.length)],
                     GenereProgramma.values()[r.nextInt(GenereProgramma.values().length)],
+                    canaleAssegnato.getId(),
                     descriptions[r.nextInt(descriptions.length)],
                     LocalDate.now(),
                     curr_inizio,
                     curr_fine);
             programmi.add(p);
-            canaleDiUnProgramma.put(p, canali.get(r.nextInt(canali.size()))); //associo il programma ad un canale casuale
+            canaleDiUnProgramma.put(p, canaleAssegnato); //associo il programma ad un canale casuale
 
         }
         programmi.sort(new TrasmissioneProgrammaComparator());
@@ -82,27 +84,37 @@ public class CercaController extends HttpServlet {
         String fasciaOraria = request.getParameter("fascia_oraria");
         Boolean cercaAltriGiorni = request.getParameter("cerca_altri_giorni") != null;
         List<ProgrammaTelevisivo> result = null; //risultato della ricerca
+
+        //alleghiamo la lista dei generi selezionabili nel form
+        GenereProgramma[] generiValues = GenereProgramma.values();
+        String[] generi = new String[generiValues.length];
+        generi[0] = "Tutti";
+        for (int i = 1; i < generi.length; i++) {
+            generi[i] = generiValues[i].toString(); //prendiamo i+1 così sostituamo "non assegnato" con "Tutti" tra i valori selezionabili nel form
+        }
+        request.setAttribute("generi_disponibili", generi);
+
         //verifichiamo se abbiamo parametri di ricerca in ingresso (abbiamo avviato la ricerca oppure siamo arrivati da una ricerca salvata)
         if (titolo != null || genere != null || numeroCanale != null || fasciaOraria != null) {
             //Compiliamo una lista dei parametri in ingresso
             Map<String, String> parametriDiRicerca = new TreeMap<>();
-            if (titolo != null) {
+            if (titolo != null && !titolo.isEmpty()) {
                 parametriDiRicerca.put("titolo", titolo);
             }else{
                 parametriDiRicerca.put("titolo", null);
             }
-            if (genere != null) {
+            if (genere != null && !genere.isEmpty()) {
                 parametriDiRicerca.put("genere", genere);
             }else{
                 parametriDiRicerca.put("genere", null);
 
             }
-            if (numeroCanale != null) {
+            if (numeroCanale != null && !numeroCanale.isEmpty()) {
                 parametriDiRicerca.put("numero_canale", numeroCanale);
             }else{
                 parametriDiRicerca.put("numero_canale", null);
             }
-            if (fasciaOraria != null) {
+            if (fasciaOraria != null && !"-".equals(fasciaOraria)) {
                 parametriDiRicerca.put("fascia_oraria", fasciaOraria);
             }else{
                 parametriDiRicerca.put("fascia_oraria", null);
@@ -137,16 +149,6 @@ public class CercaController extends HttpServlet {
         data.put("canale_di_un_programma", canaleDiUnProgramma);
         request.setAttribute("data", data);
 
-        //alleghiamo la lista dei generi selezionabili nel form
-        GenereProgramma[] generiValues = GenereProgramma.values();
-        String[] generi = new String[generiValues.length];
-        generi[0] = "Tutti";
-        for (int i = 1; i < generi.length; i++) {
-            generi[i] = generiValues[i].toString(); //prendiamo i+1 così sostituamo "non assegnato" con "Tutti" tra i valori selezionabili nel form
-            System.out.println(generi[i]);
-        }
-        request.setAttribute("generi_disponibili", generi);
-
         //DISPATCH AL JSP
         ServletContext context = getServletContext();
         RequestDispatcher dispatcher = context.getRequestDispatcher("/cerca.jsp");
@@ -180,7 +182,7 @@ public class CercaController extends HttpServlet {
     }
 
     private List<ProgrammaTelevisivo> search(HttpServletRequest request, HttpServletResponse response) throws MalformedFasciaOrariaException {
-
+        final int MAX_PROGRAMMI_IN_SEARCH_RESULT = 15; //Integer.parseInt(getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
         Map<String,String> parametriDiRicerca = (Map<String,String>) request.getAttribute("parametri_di_ricerca");
         if(parametriDiRicerca==null){
             throw new NullPointerException("parametri di ricerca sono null");
@@ -200,7 +202,7 @@ public class CercaController extends HttpServlet {
                         //Filtriamo per titolo
                         //Creamo il pattern
                         Pattern titoloRegex = Pattern.compile(".*"+entry.getValue()+".*");
-//iteriamo sul result corrente per filtrare
+                        //iteriamo sul result corrente per filtrare
                         for(ProgrammaTelevisivo p : result){
                             //creamo il matcher dell'espressione regolare
                             Matcher titoloMatcher = titoloRegex.matcher(p.getTitolo());
@@ -208,7 +210,36 @@ public class CercaController extends HttpServlet {
                                 temp.add(p);
                             }
                         }
+                        result = temp;
                     }
+
+                    break;
+                case "genere":
+                    if (entry.getValue()!=null){
+                        //Filtriamo per genere
+                        String genereSelezionato = entry.getValue();
+                        if("Tutti".equalsIgnoreCase(genereSelezionato)){
+                            break;
+                        }
+                        for(ProgrammaTelevisivo p : result){
+                            if(p.getGenere().toString().equalsIgnoreCase(genereSelezionato)){
+                                temp.add(p);
+                            }
+                        }
+                        result = temp;
+                    }
+
+                    break;
+                /*case "numero_canale":
+                    if(entry.getValue()!=null){
+                        for(ProgrammaTelevisivo p : result){
+                            if(p.){
+                                temp.add(p);
+                            }
+                        }
+                    }
+
+                    break;*/
             }
         }
 

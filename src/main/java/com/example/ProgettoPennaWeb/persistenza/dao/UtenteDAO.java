@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public class UtenteDao {
+public class UtenteDAO {
     private final String INSERT_QUERY = "Insert into pennaweb.utente values(?,?,?,?)";
     private final String UPDATE_QUERY = "Update pennaweb.utente SET email = ?, nome = ?, cognome = ?, password = ? WHERE email = ?";
     private final String DELETE_QUERY = "Insert into pennaweb.utente values(?,?,?,?)";

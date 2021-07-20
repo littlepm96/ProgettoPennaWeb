@@ -1,7 +1,7 @@
 package com.example.ProgettoPennaWeb;
 
 import com.example.ProgettoPennaWeb.model.Utente;
-import com.example.ProgettoPennaWeb.persistenza.dao.UtenteDao;
+import com.example.ProgettoPennaWeb.persistenza.dao.UtenteDAO;
 
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServlet;
@@ -42,7 +42,7 @@ public class Registrazione extends HttpServlet {
             Connection con = DriverManager.getConnection
                     ("jdbc:mysql://localhost:3306/PennaWeb", "root", "Admin_96");
 
-            UtenteDao dao = new UtenteDao();
+            UtenteDAO dao = new UtenteDAO();
             Utente u = new Utente();
             u.setEmail(email);
             u.setPassword(pass);

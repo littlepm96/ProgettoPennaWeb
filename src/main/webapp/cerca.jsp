@@ -90,6 +90,8 @@
           <label for="fascia-oraria-fine-minuti"><strong> : </strong></label>
           <input type="number" id="fascia-oraria-fine-minuti" placeholder="(0-59)" class="time-selector">
         </div>
+        <label for="cerca-altri-giorni">Cerca negli altri giorni</label>
+        <input type="checkbox" id="cerca-altri-giorni" name="cerca_altri_giorni" value="true" alt="">
       </div><!--form-column-->
       <button type="button" id="submit" onclick="validate()">Cerca</button>
     </div> <!--form-row-->
@@ -219,10 +221,12 @@
       }
       //Controllo che il form sia validato
       if(isValid){
+        //controllo quali campi sono vuoti
+
         //compilo la fascia oraria da mandare al server usando il campo hidden
         form.elements.namedItem("fascia_oraria").value = inizio_ore+":"+inizio_minuti+"-"+fine_ore+":"+fine_minuti;
         alert(form.elements.namedItem("fascia_oraria").value);
-        form.submit();
+        form.requestSubmit();
       }else{
         //Form invalido, mostra il messaggio di errore corrispondente
         let error_element = document.createElement("div");

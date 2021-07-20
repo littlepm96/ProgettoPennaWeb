@@ -37,14 +37,8 @@
                     <a href="https://guidatv.quotidiano.net/rai_1/" title="Programmi RaiUno">
             <span class="channel-logo">
     <picture>
-        <source data-srcset="https://immagini.quotidiano.net/?url=https%3A%2F%2Fs3.eu-west-1.amazonaws.com%2Fstatic.guidatv.quotidiano.net%2Fimg%2Floghi_tv%2Frai_1.png&amp;w=100&amp;h=30&amp;fmt=webp&amp;mode=fill&amp;bg=ffffff"
-                type="image/webp"
-                srcset="https://immagini.quotidiano.net/?url=https%3A%2F%2Fs3.eu-west-1.amazonaws.com%2Fstatic.guidatv.quotidiano.net%2Fimg%2Floghi_tv%2Frai_1.png&amp;w=100&amp;h=30&amp;fmt=webp&amp;mode=fill&amp;bg=ffffff">
-        <source data-srcset="https://immagini.quotidiano.net/?url=https%3A%2F%2Fs3.eu-west-1.amazonaws.com%2Fstatic.guidatv.quotidiano.net%2Fimg%2Floghi_tv%2Frai_1.png&amp;w=100&amp;h=30&amp;mode=fill&amp;bg=ffffff"
-                srcset="https://immagini.quotidiano.net/?url=https%3A%2F%2Fs3.eu-west-1.amazonaws.com%2Fstatic.guidatv.quotidiano.net%2Fimg%2Floghi_tv%2Frai_1.png&amp;w=100&amp;h=30&amp;mode=fill&amp;bg=ffffff">
-        <img src="./quotidiano.net - palinsesto_files/saved_resource(17)"
-             data-src="https://immagini.quotidiano.net/?url=https%3A%2F%2Fs3.eu-west-1.amazonaws.com%2Fstatic.guidatv.quotidiano.net%2Fimg%2Floghi_tv%2Frai_1.png&amp;w=100&amp;h=30&amp;mode=fill&amp;bg=ffffff"
-             class=" lazyloaded" title="RaiUno" alt="RaiUno" width="100" height="30">
+        <img src="${pageContext.request.contextPath}/images/img_canale_1.jpg"
+             class=" lazyloaded" title="RaiUno" alt="RaiUno" width="30" height="30">
     </picture>
             </span>
                         <span class="channel-name">RaiUno</span>
@@ -70,7 +64,7 @@
                         </span>
                         <span class="channel-schedule-text">Programmi TV mattina</span>
                     </div>
-
+                    <!--Template di un singolo programma-->
                     <a class="program"
                        href="https://guidatv.quotidiano.net/rainews24-previsioni-sulla-viabilita-cciss-viaggiare-informati/28-05-2021/rai_1/14950281/"
                        title="RaiNews24 - Previsioni sulla viabilità CCISS Viaggiare informati">
@@ -98,219 +92,7 @@
                             </div>
                         </div>
                     </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/unomattina/28-05-2021/rai_1/14950282/"
-                       title="Unomattina">
-                        <div class="program-time">
-
-
-                            <div class="hour">06:45</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-                            <div class="program-category">PROGRAMMA TV</div>
-
-                            <div class="program-title">Unomattina</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1-che-tempo-fa/28-05-2021/rai_1/14950283/"
-                       title="TG1 - Che tempo fa">
-                        <div class="program-time">
-
-
-                            <div class="hour">07:00</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">TG1 - Che tempo fa</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1-lis-che-tempo-fa/28-05-2021/rai_1/14950284/"
-                       title="TG1 L.I.S. - Che tempo fa">
-                        <div class="program-time">
-
-
-                            <div class="hour">07:30</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">TG1 L.I.S. - Che tempo fa</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1-che-tempo-fa/28-05-2021/rai_1/14950285/"
-                       title="TG1 - Che tempo fa">
-                        <div class="program-time">
-
-
-                            <div class="hour">08:00</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">TG1 - Che tempo fa</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1-flash/28-05-2021/rai_1/14950287/"
-                       title="TG1 Flash">
-                        <div class="program-time">
-
-
-                            <div class="hour">09:30</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">TG1 Flash</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/rai-parlamento-telegiornale/28-05-2021/rai_1/14950288/"
-                       title="Rai Parlamento Telegiornale">
-                        <div class="program-time">
-
-
-                            <div class="hour">09:35</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-                            <div class="program-category">PROGRAMMA TV</div>
-
-                            <div class="program-title">Rai Parlamento Telegiornale</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1/28-05-2021/rai_1/14950289/"
-                       title="TG1">
-                        <div class="program-time">
-
-
-                            <div class="hour">09:50</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">TG1</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/storie-italiane/28-05-2021/rai_1/14950290/"
-                       title="Storie Italiane">
-                        <div class="program-time">
-
-
-                            <div class="hour live">IN ONDA</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-                            <div class="program-category">PROGRAMMA TV</div>
-
-                            <div class="program-title">Storie Italiane</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/e-sempre-mezzogiorno/28-05-2021/rai_1/14950291/"
-                       title="E&#39; sempre mezzogiorno">
-                        <div class="program-time">
-
-
-                            <div class="hour">11:55</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Show</div>
-
-
-                            <div class="program-title">E' sempre mezzogiorno</div>
-                        </div>
-                    </a>
+                    <!--Fine template programma-->
 
 
                     <div class="channel-schedule-divider pomeriggio">
@@ -326,6 +108,7 @@
                         <span class="channel-schedule-text">Programmi TV pomeriggio</span>
                     </div>
 
+                    <!--Template singolo programma-->
                     <a class="program"
                        href="https://guidatv.quotidiano.net/tg1/28-05-2021/rai_1/14950292/"
                        title="TG1">
@@ -351,150 +134,7 @@
                             <div class="program-title">TG1</div>
                         </div>
                     </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/oggi-e-un-altro-giorno/28-05-2021/rai_1/14950293/"
-                       title="Oggi è un altro giorno">
-                        <div class="program-time">
-
-
-                            <div class="hour">14:00</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-                            <div class="program-category">PROGRAMMA TV</div>
-
-                            <div class="program-title">Oggi è un altro giorno</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/il-paradiso-delle-signore-daily-terza-stagione-160a-puntata/28-05-2021/rai_1/14950295/"
-                       title="Il paradiso delle signore - Daily-Terza stagione, 160a puntata">
-                        <div class="program-time">
-
-
-                            <div class="hour">15:55</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Serie TV</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-                                <span class="year">2018</span>
-                            </div>
-
-
-                            <div class="program-title">Il paradiso delle signore - Daily-Terza
-                                stagione, 160a puntata
-                            </div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/la-prima-donna-che/28-05-2021/rai_1/14950294/"
-                       title="La prima donna che">
-                        <div class="program-time">
-
-
-                            <div class="hour">16:40</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">rubrica</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">La prima donna che</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1-tg1-economia-che-tempo-fa-previsioni-sulla-viabilita-cciss-viaggiare-informati/28-05-2021/rai_1/14950296/"
-                       title="TG1 - TG1 Economia - Che tempo fa - Previsioni sulla viabilità CCISS Viaggiare informati">
-                        <div class="program-time">
-
-
-                            <div class="hour">16:45</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">TG1 - TG1 Economia - Che tempo fa -
-                                Previsioni sulla viabilità CCISS Viaggiare informati
-                            </div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/la-vita-in-diretta/28-05-2021/rai_1/14950297/"
-                       title="La vita in diretta">
-                        <div class="program-time">
-
-
-                            <div class="hour">17:05</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-                            <div class="program-category">PROGRAMMA TV</div>
-
-                            <div class="program-title">La vita in diretta</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/leredita/28-05-2021/rai_1/14950298/"
-                       title="L&#39;eredità">
-                        <div class="program-time">
-
-
-                            <div class="hour">18:45</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Gioco a quiz</div>
-
-
-                            <div class="program-title">L'eredità</div>
-                        </div>
-                    </a>
+                    <!--Fine template singolo programma-->
 
 
                     <div class="channel-schedule-divider sera">
@@ -510,6 +150,7 @@
                         <span class="channel-schedule-text">Programmi TV sera</span>
                     </div>
 
+                    <!--Template singolo programma-->
                     <a class="program"
                        href="https://guidatv.quotidiano.net/tg1/28-05-2021/rai_1/14950299/"
                        title="TG1">
@@ -535,81 +176,7 @@
                             <div class="program-title">TG1</div>
                         </div>
                     </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/incontro-amichevole-italia-san-marino-da-cagliari/28-05-2021/rai_1/14950300/"
-                       title="Incontro amichevole-Italia - San Marino (da Cagliari)">
-                        <div class="program-time">
-
-
-                            <div class="hour">20:30</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">sport</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">Incontro amichevole-Italia - San Marino (da
-                                Cagliari)
-                            </div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1-sera/28-05-2021/rai_1/14950275/"
-                       title="TG1 Sera">
-                        <div class="program-time">
-
-
-                            <div class="hour">23:00</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">TG1 Sera</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/tv7/28-05-2021/rai_1/14950276/"
-                       title="TV7">
-                        <div class="program-time">
-
-
-                            <div class="hour">23:05</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-                            <div class="program-category">PROGRAMMA TV</div>
-
-                            <div class="program-title">TV7</div>
-                        </div>
-                    </a>
+                    <!--Fine template singolo programma-->
 
 
                     <div class="channel-schedule-divider notte">
@@ -625,6 +192,7 @@
                         <span class="channel-schedule-text">Programmi TV notte</span>
                     </div>
 
+                    <!--Template singolo programma-->
                     <a class="program"
                        href="https://guidatv.quotidiano.net/tg1-sera/29-05-2021/rai_1/14963868/"
                        title="TG1 Sera">
@@ -650,189 +218,7 @@
                             <div class="program-title">TG1 Sera</div>
                         </div>
                     </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/alida-alida-valli-lantidiva/29-05-2021/rai_1/14950335/"
-                       title="Alida - Alida Valli l&#39;antidiva">
-                        <div class="program-time">
-
-
-                            <div class="hour">00:15</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Film</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-                                <span class="year">2020</span>
-                            </div>
-
-
-                            <div class="program-title">Alida - Alida Valli l'antidiva</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/rainews24-che-tempo-fa/29-05-2021/rai_1/14950306/"
-                       title="RaiNews24 - Che tempo fa">
-                        <div class="program-time">
-
-
-                            <div class="hour">02:05</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">RaiNews24 - Che tempo fa</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/sottovoce/29-05-2021/rai_1/14950307/"
-                       title="Sottovoce">
-                        <div class="program-time">
-
-
-                            <div class="hour">02:40</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">rubrica</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">Sottovoce</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/mille-e-un-libro/29-05-2021/rai_1/14950308/"
-                       title="Mille e un Libro">
-                        <div class="program-time">
-
-
-                            <div class="hour">03:10</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">rubrica</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">Mille e un Libro</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/rainews24/29-05-2021/rai_1/14950309/"
-                       title="RaiNews24">
-                        <div class="program-time">
-
-
-                            <div class="hour">04:10</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">RaiNews24</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/a-sua-immagine/29-05-2021/rai_1/14950310/"
-                       title="A sua immagine">
-                        <div class="program-time">
-
-
-                            <div class="hour">05:45</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">Religione</div>
-
-
-                            <div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>
-
-
-                            <div class="program-title">A sua immagine</div>
-                        </div>
-                    </a>
-
-
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/il-caffe-di-raiuno/29-05-2021/rai_1/14950311/"
-                       title="Il caffè di Raiuno">
-                        <div class="program-time">
-
-
-                            <div class="hour">06:00</div>
-
-
-                        </div>
-                        <div class="program-info">
-
-
-                            <div class="program-category">rubrica</div>
-
-
-                            <div class="program-title">Il caffè di Raiuno</div>
-                        </div>
-                    </a>
+                    <!--Fine template singolo programma-->
 
 
                 </div>
