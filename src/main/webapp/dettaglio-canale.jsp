@@ -1,3 +1,7 @@
+<%@ page import="com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo" %>
+<%@ page import="java.util.List" %>
+<%@ page import="com.example.ProgettoPennaWeb.model.utility.FasciaOraria" %>
+<%@ page import="java.time.LocalTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -48,7 +52,8 @@
 
                 <div class="programs">
 
-
+                    <!--INIZIO FASCIA MATTUTINA-->
+                    <!--HEADER FASCIA-->
                     <div class="channel-schedule-divider mattina">
                         <span class="channel-schedule-icon">
                             <svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 17.45" role="img"
@@ -64,37 +69,54 @@
                         </span>
                         <span class="channel-schedule-text">Programmi TV mattina</span>
                     </div>
+                    <!--FINE HEADER FASCIA-->
+                    <%
+                        List<ProgrammaTelevisivo> programmiDiMattina = (List<ProgrammaTelevisivo>) request.getAttribute("programmiDiMattina");
+                        Long idProgramma;
+                        String titoloProgramma;
+                        String genereProgramma;
+                        LocalTime oraInizio;
+                        LocalTime oraFine;
+
+
+                        for (ProgrammaTelevisivo programmaDiMattina : programmiDiMattina) {
+
+                            idProgramma = programmaDiMattina.getId();
+                            titoloProgramma = programmaDiMattina.getTitolo();
+                            genereProgramma = programmaDiMattina.getGenere().toString();
+                            oraInizio = programmaDiMattina.getOrarioInizio();
+                            oraFine = programmaDiMattina.getOrarioFine();
+
+                    %>
                     <!--Template di un singolo programma-->
                     <a class="program"
-                       href="https://guidatv.quotidiano.net/rainews24-previsioni-sulla-viabilita-cciss-viaggiare-informati/28-05-2021/rai_1/14950281/"
-                       title="RaiNews24 - Previsioni sulla viabilità CCISS Viaggiare informati">
+                       href="${pageContext.request.contextPath}/dettaglio-programma?id=<%=idProgramma%>"
+                       title="<%=titoloProgramma%>">
                         <div class="program-time">
 
-
-                            <div class="hour">06:00</div>
-
+                            <div class="hour"><%=FasciaOraria.encode(oraInizio,oraFine)%> </div>
 
                         </div>
                         <div class="program-info">
 
+                            <div class="program-category"><%=genereProgramma%></div>
 
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
+                            <!--<div class="program-rating">
                                 <span class="stars"></span>
 
-                            </div>
+                            </div>-->
 
-
-                            <div class="program-title">RaiNews24 - Previsioni sulla viabilità CCISS
-                                Viaggiare informati
+                            <div class="program-title"><%=titoloProgramma%>>
                             </div>
                         </div>
                     </a>
                     <!--Fine template programma-->
-
-
+                    <%
+                        } //Fine ciclo for dei programmi mattutini
+                    %>
+                    <!--FINE FASCIA MATTUTINA-->
+                    <!--INIZIO FASCIA POMERIDIANA-->
+                    <!--HEADER FASCIA-->
                     <div class="channel-schedule-divider pomeriggio">
                         <span class="channel-schedule-icon">
                             <svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img"
@@ -107,36 +129,51 @@
                         </span>
                         <span class="channel-schedule-text">Programmi TV pomeriggio</span>
                     </div>
+                    <!--FINE HEADER FASCIA-->
+                    <%
+                        List<ProgrammaTelevisivo> programmiDiPomeriggio = (List<ProgrammaTelevisivo>) request.getAttribute("programmiDiPomerigggio");
+                        //DICHIARAZIONI FATTE IN MATTINA. VENGONO LETTE PER TUTTE LE FASCE
 
-                    <!--Template singolo programma-->
+                        for (ProgrammaTelevisivo programmaDiPomeriggio : programmiDiPomeriggio) {
+
+                            idProgramma = programmaDiPomeriggio.getId();
+                            titoloProgramma = programmaDiPomeriggio.getTitolo();
+                            genereProgramma = programmaDiPomeriggio.getGenere().toString();
+                            oraInizio = programmaDiPomeriggio.getOrarioInizio();
+                            oraFine = programmaDiPomeriggio.getOrarioFine();
+
+                    %>
+                    <!--Template di un singolo programma-->
                     <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1/28-05-2021/rai_1/14950292/"
-                       title="TG1">
+                       href="${pageContext.request.contextPath}/dettaglio-programma?id=<%=idProgramma%>"
+                       title="<%=titoloProgramma%>">
                         <div class="program-time">
 
-
-                            <div class="hour">13:30</div>
+                            <div class="hour"><%=FasciaOraria.encode(oraInizio,oraFine)%></div>
 
 
                         </div>
                         <div class="program-info">
 
 
-                            <div class="program-category">Informazione</div>
+                            <div class="program-category"><%=genereProgramma%></div>
 
 
-                            <div class="program-rating">
+                            <!-- <div class="program-rating">
                                 <span class="stars"></span>
 
-                            </div>
+                            </div>-->
 
-
-                            <div class="program-title">TG1</div>
+                            <div class="program-title"><%=titoloProgramma%></div>
                         </div>
                     </a>
                     <!--Fine template singolo programma-->
-
-
+                    <%
+                        } //Fine ciclo for dei programmi pomeridiani
+                    %>
+                    <!--FINE FASCIA POMERIDIANA-->
+                    <!--INIZIO FASCIA SERALE-->
+                    <!--HEADER FASCIA-->
                     <div class="channel-schedule-divider sera">
                         <span class="channel-schedule-icon">
                             <svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23.7 24.5" role="img"
@@ -149,36 +186,50 @@
                         </span>
                         <span class="channel-schedule-text">Programmi TV sera</span>
                     </div>
+                    <!--FINE HEADER FASCIA-->
+                    <%
+                        List<ProgrammaTelevisivo> programmiDiSera = (List<ProgrammaTelevisivo>) request.getAttribute("programmiDiSera");
+                        //DICHIARAZIONI FATTE IN MATTINA. VENGONO LETTE PER TUTTE LE FASCE
 
+                        for (ProgrammaTelevisivo programmaDiSera : programmiDiSera){
+                            idProgramma = programmaDiSera.getId();
+                            titoloProgramma = programmaDiSera.getTitolo();
+                            genereProgramma = programmaDiSera.getGenere().toString();
+                            oraInizio = programmaDiSera.getOrarioInizio();
+                            oraFine = programmaDiSera.getOrarioFine();
+
+                    %>
                     <!--Template singolo programma-->
-                    <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1/28-05-2021/rai_1/14950299/"
-                       title="TG1">
+                        <a class="program"
+                       href="${pageContext.request.contextPath}/dettaglio-programma?id=<%=idProgramma%>"
+                       title="<%=titoloProgramma%>">
                         <div class="program-time">
 
-
-                            <div class="hour">20:00</div>
-
+                            <div class="hour"><%=FasciaOraria.encode(oraInizio,oraFine)%> </div>
 
                         </div>
                         <div class="program-info">
 
+                            <div class="program-category"><%=genereProgramma%></div>
 
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
+                            <!--<div class="program-rating">
                                 <span class="stars"></span>
 
+                            </div>-->
+
+                            <div class="program-title"><%=titoloProgramma%>>
                             </div>
-
-
-                            <div class="program-title">TG1</div>
                         </div>
                     </a>
+
                     <!--Fine template singolo programma-->
+                    <%
+                        } //fine ciclo for per i programmi serali
+                    %>
 
-
+                    <!--FINE FASCIA SERALE-->
+                    <!--INIZIO FASCIA NOTTURNA-->
+                    <!--HEADER FASCIA-->
                     <div class="channel-schedule-divider notte">
                         <span class="channel-schedule-icon">
                             <svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23.83 23.83" role="img"
@@ -191,36 +242,47 @@
                         </span>
                         <span class="channel-schedule-text">Programmi TV notte</span>
                     </div>
+                    <!--FINE HEADER FASCIA-->
+                    <%
+                        List<ProgrammaTelevisivo> programmiDiNotte = (List<ProgrammaTelevisivo>) request.getAttribute("programmiDiNotte");
+                        //DICHIARAZIONI FATTE IN MATTINA. VENGONO LETTE PER TUTTE LE FASCE
 
-                    <!--Template singolo programma-->
+                        for (ProgrammaTelevisivo programmaDiNotte : programmiDiNotte) {
+
+                            idProgramma = programmaDiNotte.getId();
+                            titoloProgramma = programmaDiNotte.getTitolo();
+                            genereProgramma = programmaDiNotte.getGenere().toString();
+                            oraInizio = programmaDiNotte.getOrarioInizio();
+                            oraFine = programmaDiNotte.getOrarioFine();
+
+                    %>
+                    <!--Template di un singolo programma-->
                     <a class="program"
-                       href="https://guidatv.quotidiano.net/tg1-sera/29-05-2021/rai_1/14963868/"
-                       title="TG1 Sera">
+                       href="${pageContext.request.contextPath}/dettaglio-programma?id=<%=idProgramma%>"
+                       title="<%=titoloProgramma%>">
                         <div class="program-time">
 
-
-                            <div class="hour">00:00</div>
-
+                            <div class="hour"><%=FasciaOraria.encode(oraInizio,oraFine)%> </div>
 
                         </div>
                         <div class="program-info">
 
+                            <div class="program-category"><%=genereProgramma%></div>
 
-                            <div class="program-category">Informazione</div>
-
-
-                            <div class="program-rating">
+                            <!--<div class="program-rating">
                                 <span class="stars"></span>
 
+                            </div>-->
+
+                            <div class="program-title"><%=titoloProgramma%>>
                             </div>
-
-
-                            <div class="program-title">TG1 Sera</div>
                         </div>
                     </a>
-                    <!--Fine template singolo programma-->
-
-
+                    <!--Fine template programma-->
+                    <%
+                        } //Fine del ciclo for per i programmi notturni
+                    %>
+                    <!--FINE FASCIA NOTTURNA-->
                 </div>
 
             </section>

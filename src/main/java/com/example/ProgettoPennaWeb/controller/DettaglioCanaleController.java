@@ -1,7 +1,11 @@
 package com.example.ProgettoPennaWeb.controller;
 
 import com.example.ProgettoPennaWeb.model.Canale;
+import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
+import com.example.ProgettoPennaWeb.model.utility.FasciaOraria;
+import com.example.ProgettoPennaWeb.model.utility.MalformedFasciaOrariaException;
 import com.example.ProgettoPennaWeb.persistenza.dao.CanaleDAO;
+import com.example.ProgettoPennaWeb.persistenza.dao.ProgrammaTelevisivoDAO;
 
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
@@ -13,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class DettaglioCanaleController extends HttpServlet {
@@ -29,8 +35,8 @@ public class DettaglioCanaleController extends HttpServlet {
         processRequest(request,response);
 
     }
+ private void processRequest(HttpServletRequest request, HttpServletResponse response){
 
-    private void processRequest(HttpServletRequest request, HttpServletResponse response){
         Integer idCanale;
         try{
             idCanale = Integer.parseInt(request.getParameter("id"));
@@ -39,12 +45,16 @@ public class DettaglioCanaleController extends HttpServlet {
             nfe.printStackTrace();
             return;
         }
-        CanaleDAO dao = new CanaleDAO();
+        //Inizializziamo i dao
+        CanaleDAO canaleDAO = new CanaleDAO();
+        ProgrammaTelevisivoDAO programmaTelevisivoDAO = new ProgrammaTelevisivoDAO();
         try {
-            System.out.println("Sto effettuando la query");
-            Optional<Canale> risultato = dao.getCanaleById(idCanale);
+            //informazione del canale
+            System.out.println("Sto effettuando la query per le informazioni del canale");
+            Optional<Canale> risultato = canaleDAO.getCanaleById(idCanale);
             if(risultato.isPresent()) {
                 request.setAttribute("nomeCanale", risultato.get().getNome());
+                request.setAttribute("numeroCanale", risultato.get().getNumero());
             }else{
                 request.setAttribute("nomeCanale", "ERRORE");
             }
@@ -54,15 +64,25 @@ public class DettaglioCanaleController extends HttpServlet {
             else
                 System.out.println("la query non ha trovato il canale");
 
+            //Lista dei programmi televisivi in onda oggi
+            List <ProgrammaTelevisivo> programmi = programmaTelevisivoDAO.getByCanale(idCanale,true);
+            if(programmi.size()>0){
+                request.setAttribute("programmi", programmi);
+                separaProgrammiPerFascia(request,response);
+            }else{
+                System.out.println("La lista dei programmi è vuota!");
+            }
 
         } catch (SQLException sqe) {
             sqe.printStackTrace();
         } catch (NamingException ne) {
             ne.printStackTrace();
+        } catch (MalformedFasciaOrariaException e) {
+            e.printStackTrace();
         }
 
 
-        //Usare solo con le JSP
+     //Usare solo con le JSP
         ServletContext context = getServletContext();
         RequestDispatcher dispatcher = context.getRequestDispatcher("/dettaglio-canale.jsp");
         try {
@@ -98,5 +118,69 @@ public class DettaglioCanaleController extends HttpServlet {
             ex.printStackTrace();
 
         }
+    }
+
+    private void separaProgrammiPerFascia(HttpServletRequest request, HttpServletResponse response) throws MalformedFasciaOrariaException {
+        final String FASCIA_ORARIA_MATTINA = "6:00-11:59";
+        final String FASCIA_ORARIA_POMERIGGIO = "12:00-17:59";
+        final String FASCIA_ORARIA_SERA = "18:00-23:59";
+        final String FASCIA_ORARIA_NOTTE = "0:00-5:59";
+
+        //Ripeschiamo la lista dai attribute
+        List<ProgrammaTelevisivo> programmi = (List<ProgrammaTelevisivo>) request.getAttribute("programmi");
+
+        //Andiamo a suddividere i programmi nelle 4 fasce orarie (mattina, pomeriggio, sera e notte)
+        List<ProgrammaTelevisivo> programmiDiMattina = new ArrayList<>();
+        List<ProgrammaTelevisivo> programmiDiPomeriggio = new ArrayList<>();
+        List<ProgrammaTelevisivo> programmiDiSera = new ArrayList<>();
+        List<ProgrammaTelevisivo> programmiDiNotte = new ArrayList<>();
+
+        int count = 0;
+        ProgrammaTelevisivo p;
+        //Programmi di mattina
+        for(;;count++){
+            p = programmi.get(count);
+            if(FasciaOraria.isContained(p.getOrarioInizio(),FASCIA_ORARIA_MATTINA)){
+                programmiDiMattina.add(p);
+            }else{
+                //Dal momento che la lista è ordinata per orario di messa in onda direttamente nella query al database, se finiamo fuori la fascia oraria possiamo chiudere il ciclo
+                break;
+            }
+        }
+        //Programmi di pomeriggio
+        for(;;count++){
+            p = programmi.get(count);
+            if(FasciaOraria.isContained(p.getOrarioInizio(),FASCIA_ORARIA_POMERIGGIO)){
+                programmiDiPomeriggio.add(p);
+            }else{
+                //Dal momento che la lista è ordinata per orario di messa in onda direttamente nella query al database, se finiamo fuori la fascia oraria possiamo chiudere il ciclo
+                break;
+            }
+        }//Programmi di sera
+        for(;;count++){
+            p = programmi.get(count);
+            if(FasciaOraria.isContained(p.getOrarioInizio(),FASCIA_ORARIA_SERA)){
+                programmiDiSera.add(p);
+            }else{
+                //Dal momento che la lista è ordinata per orario di messa in onda direttamente nella query al database, se finiamo fuori la fascia oraria possiamo chiudere il ciclo
+                break;
+            }
+        }//Programmi di notte
+        for(;;count++){
+            p = programmi.get(count);
+            if(FasciaOraria.isContained(p.getOrarioInizio(),FASCIA_ORARIA_NOTTE)){
+                programmiDiNotte.add(p);
+            }else{
+                //Dal momento che la lista è ordinata per orario di messa in onda direttamente nella query al database, se finiamo fuori la fascia oraria possiamo chiudere il ciclo
+                break;
+            }
+        }
+
+        //Alleghiamo le 4 liste alla request
+        request.setAttribute("programmiDiMattina", programmiDiMattina);
+        request.setAttribute("programmiDiPomeriggio", programmiDiPomeriggio);
+        request.setAttribute("programmiDiSera", programmiDiSera);
+        request.setAttribute("programmiDiMattina", programmiDiMattina);
+
     }
 }

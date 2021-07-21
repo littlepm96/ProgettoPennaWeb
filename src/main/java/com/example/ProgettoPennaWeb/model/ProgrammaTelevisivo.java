@@ -6,7 +6,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
+public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo> {
     private long id;
     private String titolo;
     private GenereProgramma genere;
@@ -20,7 +20,8 @@ public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
     private short stagione; //valore speciale 0 se non si tratta di una serie
     private short episodio; //valore speciale 0 se non si tratta di una serie
 
-    public ProgrammaTelevisivo(){}
+    public ProgrammaTelevisivo() {
+    }
 
     public ProgrammaTelevisivo(long id, String titolo, GenereProgramma genere, long idCanale, String descrizione, LocalDate dataTrasmissione, LocalTime orarioInizio, LocalTime orarioFine) {
         this.id = id;
@@ -31,7 +32,7 @@ public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
         this.dataTrasmissione = dataTrasmissione;
         this.orarioInizio = orarioInizio;
         this.orarioFine = orarioFine;
-        this.urlRelativoImmagine= "";
+        this.urlRelativoImmagine = "";
         this.urlApprofondimento = null;
         this.stagione = 0;
         this.episodio = 0;
@@ -82,6 +83,7 @@ public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
     }
 
     public void setDataTrasmissione(LocalDate dataTrasmissione) {
+
         this.dataTrasmissione = dataTrasmissione;
     }
 
@@ -90,6 +92,7 @@ public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
     }
 
     public void setOrarioInizio(LocalTime orarioInizio) {
+
         this.orarioInizio = orarioInizio;
     }
 
@@ -135,6 +138,7 @@ public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
 
     /**
      * Ordinamento naturale dei programmi televisivi: Confrontiamo gli ID numerici.
+     *
      * @param other l'altro programma televisivo da comparare
      * @return 1 se questo programma ha un id minore dell'altro, -1 altrimenti. 0 Se hanno lo stesso ID (sono lo stesso programma).
      */
@@ -142,7 +146,6 @@ public class ProgrammaTelevisivo implements Comparable<ProgrammaTelevisivo>{
     public int compareTo(ProgrammaTelevisivo other) {
         return Long.compare(this.id, other.id);
     }
-
 
 
 }

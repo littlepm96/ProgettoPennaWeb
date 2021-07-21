@@ -67,4 +67,17 @@ public class FasciaOraria {
             throw new MalformedFasciaOrariaException("Si sta tentando di decodificare una fascia oraria di lunghezza errata! (lunghezza: "+stringaFasciaOraria.length()+", valore atteso: "+LUNGHEZZA_STRINGA_DI_ENCODING_SINGOLA+").");
         }
     }
+
+    public static boolean isContained(LocalTime orario, String fasciaOrariaCodificata) throws MalformedFasciaOrariaException {
+        //decodifichiamo la fascia oraria in inizio e fine
+        LocalTime[] fasciaOraria = decode(fasciaOrariaCodificata);
+
+        //controlliamo che l'orario passato cadi dentro questa fascia oraria
+        if(orario.compareTo(fasciaOraria[0])>= 0 && orario.compareTo(fasciaOraria[1])<=0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }
