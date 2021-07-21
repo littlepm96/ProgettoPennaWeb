@@ -8,6 +8,7 @@ import javax.naming.NamingException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,10 +49,10 @@ public class ProgrammaTelevisivoDAO {
                     p.setDataTrasmissione(localD);
                     //Convertiamo da sql.Time a LocalTime
                     Time time = resultSet.getTime("ora_inizio");
-                    LocalTime localT = time.toLocalTime();
+                    LocalTime localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
                     p.setOrarioInizio(localT);
                     time = resultSet.getTime("ora_fine");
-                    localT = time.toLocalTime();
+                    localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
                     p.setOrarioFine(localT);
                     p.setUrlRelativoImmagine(resultSet.getString("url_immagine"));
                     p.setUrlApprofondimento(resultSet.getURL("url_approfondimento"));
@@ -94,10 +95,10 @@ public class ProgrammaTelevisivoDAO {
                         p.setDataTrasmissione(localD);
                         //Convertiamo da sql.Time a LocalTime
                         Time time = resultSet.getTime("ora_inizio");
-                        LocalTime localT = time.toLocalTime();
+                        LocalTime localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
                         p.setOrarioInizio(localT);
                         time = resultSet.getTime("ora_fine");
-                        localT = time.toLocalTime();
+                        localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
                         p.setOrarioFine(localT);
                         p.setUrlRelativoImmagine(resultSet.getString("url_immagine"));
                         p.setUrlApprofondimento(resultSet.getURL("url_approfondimento"));
@@ -143,10 +144,10 @@ public class ProgrammaTelevisivoDAO {
                 p.setDataTrasmissione(localD);
                 //Convertiamo da sql.Time a LocalTime
                 Time time = resultSet.getTime("ora_inizio");
-                LocalTime localT = time.toLocalTime();
+                LocalTime localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
                 p.setOrarioInizio(localT);
                 time = resultSet.getTime("ora_fine");
-                localT = time.toLocalTime();
+                localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
                 p.setOrarioFine(localT);
                 p.setUrlRelativoImmagine(resultSet.getString("url_immagine"));
                 p.setUrlApprofondimento(resultSet.getURL("url_approfondimento"));

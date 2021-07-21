@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dettaglio-canale.css">
 </head>
 <body>
-</h1>
 <!--INIZIO HEADER-->
 <header>
     <div>
@@ -38,16 +37,7 @@
 
             <section class="channel ">
                 <header class="channel-header">
-                    <a href="https://guidatv.quotidiano.net/rai_1/" title="Programmi RaiUno">
-            <span class="channel-logo">
-    <picture>
-        <img src="${pageContext.request.contextPath}/images/img_canale_1.jpg"
-             class=" lazyloaded" title="RaiUno" alt="RaiUno" width="30" height="30">
-    </picture>
-            </span>
-                        <span class="channel-name">RaiUno</span>
-
-                    </a>
+                    <a href="${pageContext.request.contextPath}/dettaglio-canale?id=<%=request.getParameter("id")%>" title="Programmi <%=request.getAttribute("nomeCanale")%>>"><span class="channel-logo"><picture><img src="${pageContext.request.contextPath}/images/img_canale_<%=request.getParameter("id")%>>.jpg" class=" lazyloaded" title="<%=request.getAttribute("nomeCanale")%>" alt="<%=request.getAttribute("nomeCanale")%>" width="30" height="30"></picture></span><span class="channel-name"><%=request.getAttribute("nomeCanale")%></span></a>
                 </header>
 
                 <div class="programs">
@@ -131,7 +121,7 @@
                     </div>
                     <!--FINE HEADER FASCIA-->
                     <%
-                        List<ProgrammaTelevisivo> programmiDiPomeriggio = (List<ProgrammaTelevisivo>) request.getAttribute("programmiDiPomerigggio");
+                        List<ProgrammaTelevisivo> programmiDiPomeriggio = (List<ProgrammaTelevisivo>) request.getAttribute("programmiDiPomeriggio");
                         //DICHIARAZIONI FATTE IN MATTINA. VENGONO LETTE PER TUTTE LE FASCE
 
                         for (ProgrammaTelevisivo programmaDiPomeriggio : programmiDiPomeriggio) {

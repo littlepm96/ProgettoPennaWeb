@@ -121,10 +121,10 @@ public class DettaglioCanaleController extends HttpServlet {
     }
 
     private void separaProgrammiPerFascia(HttpServletRequest request, HttpServletResponse response) throws MalformedFasciaOrariaException {
-        final String FASCIA_ORARIA_MATTINA = "6:00-11:59";
+        final String FASCIA_ORARIA_MATTINA = "06:00-11:59";
         final String FASCIA_ORARIA_POMERIGGIO = "12:00-17:59";
         final String FASCIA_ORARIA_SERA = "18:00-23:59";
-        final String FASCIA_ORARIA_NOTTE = "0:00-5:59";
+        final String FASCIA_ORARIA_NOTTE = "00:00-05:59";
 
         //Ripeschiamo la lista dai attribute
         List<ProgrammaTelevisivo> programmi = (List<ProgrammaTelevisivo>) request.getAttribute("programmi");
@@ -138,7 +138,7 @@ public class DettaglioCanaleController extends HttpServlet {
         int count = 0;
         ProgrammaTelevisivo p;
         //Programmi di mattina
-        for(;;count++){
+        for(;count<programmi.size();count++){
             p = programmi.get(count);
             if(FasciaOraria.isContained(p.getOrarioInizio(),FASCIA_ORARIA_MATTINA)){
                 programmiDiMattina.add(p);
@@ -148,7 +148,7 @@ public class DettaglioCanaleController extends HttpServlet {
             }
         }
         //Programmi di pomeriggio
-        for(;;count++){
+        for(;count<programmi.size();count++){
             p = programmi.get(count);
             if(FasciaOraria.isContained(p.getOrarioInizio(),FASCIA_ORARIA_POMERIGGIO)){
                 programmiDiPomeriggio.add(p);
@@ -157,7 +157,7 @@ public class DettaglioCanaleController extends HttpServlet {
                 break;
             }
         }//Programmi di sera
-        for(;;count++){
+        for(;count<programmi.size();count++){
             p = programmi.get(count);
             if(FasciaOraria.isContained(p.getOrarioInizio(),FASCIA_ORARIA_SERA)){
                 programmiDiSera.add(p);
@@ -166,7 +166,7 @@ public class DettaglioCanaleController extends HttpServlet {
                 break;
             }
         }//Programmi di notte
-        for(;;count++){
+        for(;count<programmi.size();count++){
             p = programmi.get(count);
             if(FasciaOraria.isContained(p.getOrarioInizio(),FASCIA_ORARIA_NOTTE)){
                 programmiDiNotte.add(p);
@@ -180,7 +180,7 @@ public class DettaglioCanaleController extends HttpServlet {
         request.setAttribute("programmiDiMattina", programmiDiMattina);
         request.setAttribute("programmiDiPomeriggio", programmiDiPomeriggio);
         request.setAttribute("programmiDiSera", programmiDiSera);
-        request.setAttribute("programmiDiMattina", programmiDiMattina);
+        request.setAttribute("programmiDiNotte", programmiDiNotte);
 
     }
 }
