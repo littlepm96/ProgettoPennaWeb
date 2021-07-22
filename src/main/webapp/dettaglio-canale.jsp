@@ -66,7 +66,7 @@
                     </div>
                     <!--FINE HEADER FASCIA-->
                     <%
-                        List<ProgrammaTelevisivo> programmiDiMattina = (List<ProgrammaTelevisivo>) request.getAttribute("programmiDiMattina");
+                        List <ProgrammaTelevisivo> programmiDiMattina = (List<ProgrammaTelevisivo>) request.getAttribute("programmiDiMattina");
                         Long idProgramma;
                         String titoloProgramma;
                         String genereProgramma;
