@@ -37,7 +37,12 @@
 
             <section class="channel ">
                 <header class="channel-header">
-                    <a href="${pageContext.request.contextPath}/dettaglio-canale?id=<%=request.getParameter("id")%>" title="Programmi <%=request.getAttribute("nomeCanale")%>>"><span class="channel-logo"><picture><img src="${pageContext.request.contextPath}/images/img_canale_<%=request.getParameter("id")%>>.jpg" class=" lazyloaded" title="<%=request.getAttribute("nomeCanale")%>" alt="<%=request.getAttribute("nomeCanale")%>" width="30" height="30"></picture></span><span class="channel-name"><%=request.getAttribute("nomeCanale")%></span></a>
+                    <a href="${pageContext.request.contextPath}/dettaglio-canale?id=<%=request.getParameter("id")%>"
+                       title="Programmi <%=request.getAttribute("nomeCanale")%>>"><span class="channel-logo"><picture><img
+                            src="${pageContext.request.contextPath}/images/img_canale_<%=request.getParameter("id")%>>.jpg"
+                            class=" lazyloaded" title="<%=request.getAttribute("nomeCanale")%>"
+                            alt="<%=request.getAttribute("nomeCanale")%>" width="30" height="30"></picture></span><span
+                            class="channel-name"><%=request.getAttribute("nomeCanale")%></span></a>
                 </header>
 
                 <div class="programs">
@@ -68,7 +73,6 @@
                         LocalTime oraInizio;
                         LocalTime oraFine;
 
-
                         for (ProgrammaTelevisivo programmaDiMattina : programmiDiMattina) {
 
                             idProgramma = programmaDiMattina.getId();
@@ -84,12 +88,14 @@
                        title="<%=titoloProgramma%>">
                         <div class="program-time">
 
-                            <div class="hour"><%=FasciaOraria.encode(oraInizio,oraFine)%> </div>
+                            <div class="hour"><%=FasciaOraria.encode(oraInizio, oraFine)%>
+                            </div>
 
                         </div>
                         <div class="program-info">
 
-                            <div class="program-category"><%=genereProgramma%></div>
+                            <div class="program-category"><%=genereProgramma%>
+                            </div>
 
                             <!--<div class="program-rating">
                                 <span class="stars"></span>
@@ -139,14 +145,16 @@
                        title="<%=titoloProgramma%>">
                         <div class="program-time">
 
-                            <div class="hour"><%=FasciaOraria.encode(oraInizio,oraFine)%></div>
+                            <div class="hour"><%=FasciaOraria.encode(oraInizio, oraFine)%>
+                            </div>
 
 
                         </div>
                         <div class="program-info">
 
 
-                            <div class="program-category"><%=genereProgramma%></div>
+                            <div class="program-category"><%=genereProgramma%>
+                            </div>
 
 
                             <!-- <div class="program-rating">
@@ -154,7 +162,8 @@
 
                             </div>-->
 
-                            <div class="program-title"><%=titoloProgramma%></div>
+                            <div class="program-title"><%=titoloProgramma%>
+                            </div>
                         </div>
                     </a>
                     <!--Fine template singolo programma-->
@@ -181,7 +190,7 @@
                         List<ProgrammaTelevisivo> programmiDiSera = (List<ProgrammaTelevisivo>) request.getAttribute("programmiDiSera");
                         //DICHIARAZIONI FATTE IN MATTINA. VENGONO LETTE PER TUTTE LE FASCE
 
-                        for (ProgrammaTelevisivo programmaDiSera : programmiDiSera){
+                        for (ProgrammaTelevisivo programmaDiSera : programmiDiSera) {
                             idProgramma = programmaDiSera.getId();
                             titoloProgramma = programmaDiSera.getTitolo();
                             genereProgramma = programmaDiSera.getGenere().toString();
@@ -190,17 +199,19 @@
 
                     %>
                     <!--Template singolo programma-->
-                        <a class="program"
+                    <a class="program"
                        href="${pageContext.request.contextPath}/dettaglio-programma?id=<%=idProgramma%>"
                        title="<%=titoloProgramma%>">
                         <div class="program-time">
 
-                            <div class="hour"><%=FasciaOraria.encode(oraInizio,oraFine)%> </div>
+                            <div class="hour"><%=FasciaOraria.encode(oraInizio, oraFine)%>
+                            </div>
 
                         </div>
                         <div class="program-info">
 
-                            <div class="program-category"><%=genereProgramma%></div>
+                            <div class="program-category"><%=genereProgramma%>
+                            </div>
 
                             <!--<div class="program-rating">
                                 <span class="stars"></span>
@@ -252,12 +263,14 @@
                        title="<%=titoloProgramma%>">
                         <div class="program-time">
 
-                            <div class="hour"><%=FasciaOraria.encode(oraInizio,oraFine)%> </div>
+                            <div class="hour"><%=FasciaOraria.encode(oraInizio, oraFine)%>
+                            </div>
 
                         </div>
                         <div class="program-info">
 
-                            <div class="program-category"><%=genereProgramma%></div>
+                            <div class="program-category"><%=genereProgramma%>
+                            </div>
 
                             <!--<div class="program-rating">
                                 <span class="stars"></span>
