@@ -76,6 +76,7 @@ public class Registrazione extends HttpServlet {
         //apriamo uno stream su un nuovo file, per simulare l'email
 
         File pathEmail = new File(getServletContext().getContextPath()+File.separator+"test"+File.separator+email+".txt");
+        pathEmail.getParentFile().mkdirs();
         boolean isCreated = pathEmail.createNewFile();
         if(isCreated) {
             PrintWriter writer = new PrintWriter(pathEmail);
