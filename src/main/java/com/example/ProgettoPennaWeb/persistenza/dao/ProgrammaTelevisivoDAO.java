@@ -2,20 +2,23 @@ package com.example.ProgettoPennaWeb.persistenza.dao;
 
 import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
+import com.example.ProgettoPennaWeb.model.enums.ParametriDiRicerca;
+import com.example.ProgettoPennaWeb.model.utility.FasciaOraria;
+import com.example.ProgettoPennaWeb.model.utility.MalformedFasciaOrariaException;
+import com.example.ProgettoPennaWeb.model.utility.Ricerca;
 import com.example.ProgettoPennaWeb.persistenza.DatabaseManager;
 
 import javax.naming.NamingException;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ProgrammaTelevisivoDAO {
 
-    private final String INSERT_QUERY="Insert into pennaweb.programma_televisivo values(?,?,?,?,?,?,?,?,?,?,?)";
+    private final String INSERT_QUERY="Insert into pennaweb.programma_televisivo values(?,?,?,?,?,?,?,?,?,?,?,?)";
     private final String SELECT_BY_ID_QUERY = "select * from pennaweb.programma_televisivo WHERE ID = ?";
     private final String SELECT_BY_ID_JOIN_CANALE_QUERY = "select * from pennaweb.programma_televisivo JOIN pennaweb.p ON programma_televisivo.p = p.ID WHERE ID = ?";
     private final String SELECT_BY_CANALE_TODAY_QUERY = "select * from pennaweb.programma_televisivo join pennaweb.canale on programma_televisivo.canale = canale.ID where canale = ? and data_trasmissione = ? order by ora_inizio";
@@ -23,6 +26,19 @@ public class ProgrammaTelevisivoDAO {
     private final String UPDATE_BY_ID_QUERY = "Update pennaweb.programma_televisivo SET ID = ?, genere = ?, canale = ?, descrizione = ?, data_trasmissione = ?, ora_inizio = ?, ora_fine = ?, url_immagine = ?, " +
             "url_approfondimento =?, stagione = ?, episodio =? where ID = ?";
     private final String DELETE_BY_ID_QUERY = "Delete from pennaweb.programma_televisivo where ID = ?";
+
+
+    //Query di select usata nella pagina di ricerca: viene costruita dinamicamente in base ai parametri di ricerca usati
+    private final String SELECT_SEARCH_PAGE_QUERY_BASE = "select * from pennaweb.programma_televisivo join pennaweb.canale on programma_televisivo.canale = canale.ID";
+    //mappa con gli spezzoni della clausola WHERE della query
+    private final Map<ParametriDiRicerca,String> SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES = new TreeMap<>(){{
+        put(ParametriDiRicerca.TITOLO_PROGRAMMA, "programma_televisivo.titolo LIKE ?");
+        put(ParametriDiRicerca.GENERE_PROGRAMMA, "programma_televisivo.genere = ?");
+        put(ParametriDiRicerca.NUMERO_CANALE, "canale.numero = ?");
+        put(ParametriDiRicerca.FASCIA_ORARIA, "programma_televisivo.ora_inizio >= ? and programma_televisivo.ora_inizio <= ?");
+        put(ParametriDiRicerca.CERCA_ALTRI_GIORNI, "programma_televisivo.data_trasmissione = ?");
+    }};
+
 
     public Optional<ProgrammaTelevisivo> getCanaleById(long id) throws SQLException, NamingException {
         try (Connection con = DatabaseManager.getInstance().getConnection();
@@ -34,14 +50,8 @@ public class ProgrammaTelevisivoDAO {
                     ProgrammaTelevisivo p = new ProgrammaTelevisivo();
                     p.setId(resultSet.getLong("ID"));
                     p.setTitolo(resultSet.getString("titolo"));
-                    String genere = resultSet.getString("genere");
                     //ricaviamo il genere dalla rappresentazione in stringa
-                    for(GenereProgramma g : GenereProgramma.values()){
-                        String rappresentazione = g.toString();
-                        if(rappresentazione.equalsIgnoreCase(genere)){
-                            p.setGenere(g);
-                        }
-                    }
+                    p.setGenere(GenereProgramma.fromString(resultSet.getString("genere")));
                     p.setDescrizione(resultSet.getString("descrizione"));
                     //Convertiamo da sql.Date a LocalDate
                     Date date = resultSet.getDate("data_trasmissione");
@@ -80,14 +90,8 @@ public class ProgrammaTelevisivoDAO {
                         ProgrammaTelevisivo p = new ProgrammaTelevisivo();
                         p.setId(resultSet.getLong("ID"));
                         p.setTitolo(resultSet.getString("titolo"));
-                        String genere = resultSet.getString("genere");
                         //ricaviamo il genere dalla rappresentazione in stringa
-                        for(GenereProgramma g : GenereProgramma.values()){
-                            String rappresentazione = g.toString();
-                            if(rappresentazione.equalsIgnoreCase(genere)){
-                                p.setGenere(g);
-                            }
-                        }
+                        p.setGenere(GenereProgramma.fromString(resultSet.getString("genere")));
                         p.setDescrizione(resultSet.getString("descrizione"));
                         //Convertiamo da sql.Date a LocalDate
                         Date date = resultSet.getDate("data_trasmissione");
@@ -119,6 +123,103 @@ public class ProgrammaTelevisivoDAO {
         }
     }
 
+    /**
+     * Ritorna i canali che soddisfano i parametri passati.
+     * @param params i parametri di ricerca
+     * @return una lista (eventualmente vuota) che contiene tutti i programmi televisivi che hanno soddisfatto i parametri di ricerca.
+     */
+    public List<ProgrammaTelevisivo> getBySearchParameters(Ricerca params) throws NamingException, SQLException, MalformedFasciaOrariaException {
+        //Costruiamo la query al database in base ai parametri passati.
+        int parametriRimanenti = params.getParametriSettati();
+        StringBuilder sb = new StringBuilder(SELECT_SEARCH_PAGE_QUERY_BASE);
+        sb.append(" where"); //appendo la clausola where
+        //titolo programma
+        String titolo = params.getTitolo();
+        if(titolo!=null){
+            sb.append(" ");
+            sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.TITOLO_PROGRAMMA));
+            if(parametriRimanenti > 0){
+                sb.append(" and");
+                parametriRimanenti--;
+            }
+        }
+
+        //Genere programma
+        GenereProgramma genere = params.getGenere();
+        if(genere!=null){
+            sb.append(" ");
+            sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.GENERE_PROGRAMMA));
+            if(parametriRimanenti > 0){
+                sb.append(" and");
+                parametriRimanenti--;
+            }
+        }
+
+        //Numero canale
+        Short numeroCanale = params.getNumeroCanale();
+        if(numeroCanale!=null){
+            sb.append(" ");
+            sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.NUMERO_CANALE));
+            if(parametriRimanenti > 0){
+                sb.append(" and");
+                parametriRimanenti--;
+            }
+        }
+
+        //Fascia oraria
+        String fasciaOraria = params.getFasciaOraria();
+        if(fasciaOraria!=null){
+            sb.append(" ");
+            sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.FASCIA_ORARIA));
+
+            //"and" nella query viene aggiunto dal controllo sul flag "cercaAltriGiorni" se serve
+        }
+
+        //Flag per ottenere anche i programmi degli altri giorni
+        Boolean cercaAltriGiorni = params.getCercaAltriGiorni();
+        if(cercaAltriGiorni){
+            sb.append(" and ");
+            sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.CERCA_ALTRI_GIORNI));
+        }
+
+
+        //Ora possiamo procedere con la preparazione dello statement
+        String queryCompleta = sb.toString();
+        try(Connection con = DatabaseManager.getInstance().getConnection();
+        PreparedStatement st = con.prepareStatement(queryCompleta)){
+            //Ora settiamo i parametri giusti
+            int nextParameter = 1;
+            if(titolo!=null){
+                st.setString(nextParameter++,titolo);
+            }
+            if(genere!=null){
+                st.setString(nextParameter++,genere.toString());
+            }
+            if(numeroCanale!=null){
+                st.setShort(nextParameter++,numeroCanale);
+            }
+            if(fasciaOraria!=null){
+                //decodifichiamo, convertiamo e settiamo
+                LocalTime[] fascia = FasciaOraria.decode(fasciaOraria);
+                Time t = Time.valueOf(fascia[0]);
+                st.setTime(nextParameter++, t);
+                t = Time.valueOf(fascia[1]);
+                st.setTime(nextParameter++, t);
+            }
+            //Se l'utente vuole solo i programmi odierni
+            if(!cercaAltriGiorni){
+                //settiamo la data di oggi per parametro
+                st.setDate(nextParameter++, Date.valueOf(LocalDate.now()));
+            }
+
+            //Finalmente possiamo eseguire la query
+            try(ResultSet resultSet = st.executeQuery()){
+
+            }
+        }
+        return null;
+    }
+
     public List<ProgrammaTelevisivo> getAll() throws SQLException, NamingException{
         try(Connection con = DatabaseManager.getInstance().getConnection();
             PreparedStatement st = con.prepareStatement(SELECT_ALL_QUERY);
@@ -129,14 +230,8 @@ public class ProgrammaTelevisivoDAO {
                 ProgrammaTelevisivo p = new ProgrammaTelevisivo();
                 p.setId(resultSet.getLong("ID"));
                 p.setTitolo(resultSet.getString("titolo"));
-                String genere = resultSet.getString("genere");
                 //ricaviamo il genere dalla rappresentazione in stringa
-                for(GenereProgramma g : GenereProgramma.values()){
-                    String rappresentazione = g.toString();
-                    if(rappresentazione.equalsIgnoreCase(genere)){
-                        p.setGenere(g);
-                    }
-                }
+                p.setGenere(GenereProgramma.fromString(resultSet.getString("genere")));
                 p.setDescrizione(resultSet.getString("descrizione"));
                 //Convertiamo da sql.Date a LocalDate
                 Date date = resultSet.getDate("data_trasmissione");
@@ -179,6 +274,7 @@ public class ProgrammaTelevisivoDAO {
             st.setURL(9,p.getUrlApprofondimento()); //url assoluto all'approfondimento
             st.setShort(10,p.getStagione()); //stagione (0 se non è una serie)
             st.setShort(11, p.getEpisodio()); //episodio (0 se non è una serie)
+            st.setLong(12,p.getIdCanale()); //canale su cui viene trasmesso
 
             st.executeUpdate();
         }

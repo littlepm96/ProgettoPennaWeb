@@ -53,25 +53,23 @@ public class DettaglioCanaleController extends HttpServlet {
             System.out.println("Sto effettuando la query per le informazioni del canale");
             Optional<Canale> risultato = canaleDAO.getCanaleById(idCanale);
             if(risultato.isPresent()) {
+                System.out.println(risultato);
                 request.setAttribute("nomeCanale", risultato.get().getNome());
                 request.setAttribute("numeroCanale", risultato.get().getNumero());
             }else{
+                System.out.println("la query non ha trovato il canale");
                 request.setAttribute("nomeCanale", "ERRORE");
             }
 
-            if(risultato.isPresent())
-            System.out.println(risultato);
-            else
-                System.out.println("la query non ha trovato il canale");
-
             //Lista dei programmi televisivi in onda oggi
             List <ProgrammaTelevisivo> programmi = programmaTelevisivoDAO.getByCanale(idCanale,true);
-            if(programmi.size()>0){
-                request.setAttribute("programmi", programmi);
-                separaProgrammiPerFascia(request,response);
-            }else{
+            if(programmi.size()==0){
                 System.out.println("La lista dei programmi è vuota!");
             }
+            request.setAttribute("programmi", programmi);
+            separaProgrammiPerFascia(request,response);
+
+
 
         } catch (SQLException sqe) {
             sqe.printStackTrace();
@@ -82,7 +80,7 @@ public class DettaglioCanaleController extends HttpServlet {
         }
 
 
-     //Usare solo con le JSP
+        //Usare solo con le JSP
         ServletContext context = getServletContext();
         RequestDispatcher dispatcher = context.getRequestDispatcher("/dettaglio-canale.jsp");
         try {
@@ -121,6 +119,7 @@ public class DettaglioCanaleController extends HttpServlet {
     }
 
     private void separaProgrammiPerFascia(HttpServletRequest request, HttpServletResponse response) throws MalformedFasciaOrariaException {
+        //ATTENZIONE: I LocalTime sono sempre formattati come "hh:mm". Le ore che vanno da 0 a 9 vanno scritte con lo zero davanti (00:00,01:00,...,09:00)
         final String FASCIA_ORARIA_MATTINA = "06:00-11:59";
         final String FASCIA_ORARIA_POMERIGGIO = "12:00-17:59";
         final String FASCIA_ORARIA_SERA = "18:00-23:59";
@@ -130,12 +129,13 @@ public class DettaglioCanaleController extends HttpServlet {
         List<ProgrammaTelevisivo> programmi = (List<ProgrammaTelevisivo>) request.getAttribute("programmi");
 
         //Andiamo a suddividere i programmi nelle 4 fasce orarie (mattina, pomeriggio, sera e notte)
+        //NOTA: La query al database ordina i programmi televisivi per ora d'inizio, perciò possiamo suddividerli usando un contatore singolo
         List<ProgrammaTelevisivo> programmiDiMattina = new ArrayList<>();
         List<ProgrammaTelevisivo> programmiDiPomeriggio = new ArrayList<>();
         List<ProgrammaTelevisivo> programmiDiSera = new ArrayList<>();
         List<ProgrammaTelevisivo> programmiDiNotte = new ArrayList<>();
 
-        int count = 0;
+        int count = 0; //tiene conto del programma corrente
         ProgrammaTelevisivo p;
         //Programmi di mattina
         for(;count<programmi.size();count++){
