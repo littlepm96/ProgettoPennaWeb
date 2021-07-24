@@ -8,15 +8,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 import java.util.Optional;
 
 public class UtenteDAO {
-    private final String INSERT_QUERY = "Insert into pennaweb.utente values(?,?,?,?)";
-    private final String UPDATE_QUERY = "Update pennaweb.utente SET email = ?, nome = ?, cognome = ?, password = ? WHERE email = ?";
-    private final String DELETE_QUERY = "Insert into pennaweb.utente values(?,?,?,?)";
+    private final String INSERT_QUERY = "Insert into pennaweb.utente values(?,?,?,?,?)";
+    private final String UPDATE_QUERY = "Update pennaweb.utente SET email = ?, nome = ?, cognome = ?, password = ?, verificato = ? WHERE email = ?";
+    private final String DELETE_QUERY = "Delete from pennaweb.utente where email = ?";
     private final String SELECT_QUERY_CON_EMAIL = "select * from pennaweb.utente WHERE email = ?";
-    private final String SELECT_QUERY_TOTALE = "Insert into pennaweb.utente values(?,?,?,?)";
+    private final String SELECT_ALL_QUERY = "select * from pennaweb.utente";
 
     public Optional<Utente> getUtenteByEmail(String email) throws SQLException, NamingException {
 
@@ -41,8 +41,25 @@ public class UtenteDAO {
 
     }
 
-    public List<Utente> getAll(String[] params) {
-        return null;
+    public List<Utente> getAll(String[] params) throws SQLException, NamingException{
+        try (Connection con = DatabaseManager.getInstance().getConnection();
+             PreparedStatement st = con.prepareStatement(SELECT_ALL_QUERY)) {
+
+            try (ResultSet resultSet = st.executeQuery()) {
+                List<Utente> result = new Arraylist<Utente>();
+                while(resultSet.next()) {
+                    Utente u = new Utente();
+                    u.setEmail(resultSet.getString("email"));
+                    u.setNome(resultSet.getString("nome"));
+                    u.setCognome(resultSet.getString("cognome"));
+                    u.setPassword(resultSet.getString("password"));
+
+                   result.add(u);
+                }
+                return  result;
+            }
+        }
+
     }
 
     public boolean save(Utente utente) throws SQLException, NamingException {
@@ -52,11 +69,11 @@ public class UtenteDAO {
             st.setString(2, utente.getNome());
             st.setString(3, utente.getCognome());
             st.setString(4, utente.getPassword());
+            st.setBoolean(5, utente.getVerificato());
 
             int i = st.executeUpdate();
             return (i > 0);
         }
-
     }
 
     public void update(Utente utente, String id) throws SQLException, NamingException {

@@ -5,6 +5,7 @@ public class Utente {
     private String nome;
     private String cognome;
     private String password;
+    private Boolean verificato;
 
     public Utente(){}
 
@@ -39,6 +40,10 @@ public class Utente {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setVerificato(Boolean verificato) { this.verificato = verificato; }
+
+    public Boolean getVerificato() { return verificato; }
 
 
 }
