@@ -75,7 +75,6 @@
             <div class="row">
                 <div class="col-lg-7 col-md-10">
                     <h1 class="display-2 text-white">Ciao nome</h1>
-                    <p class="text-white mt-0 mb-5">La tua cazzo di pagina utente di merda</p>
                     <a href="#!" class="btn btn-info">modifica</a>
                 </div>
             </div>
@@ -104,23 +103,6 @@
                             <div class="col">
                                 <div class="card-profile-stats d-flex justify-content-center mt-md-5"></div>
                             </div>
-                        </div>
-                        <div class="text-center">
-                            <h3>
-                                tizio
-                                <span class="font-weight-light">, 99 anni </span>
-                            </h3>
-                            <div class="h5 font-weight-300">
-                                <i class="ni location_pin mr-2"></i>vivo mediocremente
-                            </div>
-                            <div class="h5 mt-4">
-                                <i class="ni business_briefcase-24 mr-2"></i>ma vaffanculo
-                            </div>
-                            <div>
-                                <i class="ni education_hat mr-2"></i>University della mafia
-                            </div>
-                            <hr class="my-4">
-                            <p>descrizione</p>
                         </div>
                     </div>
                 </div>
@@ -215,16 +197,6 @@
                                                    class="form-control form-control-alternative" placeholder="02013">
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <hr class="my-4">
-                            <!-- Description -->
-                            <h6 class="heading-small text-muted mb-4">Qualcosa sul l'interessante che sono io</h6>
-                            <div class="pl-lg-4">
-                                <div class="form-group focused">
-                                    <label>Su di me...</label>
-                                    <textarea rows="4" class="form-control form-control-alternative"
-                                              placeholder="A few words about you ...">scrivi se ti va.</textarea>
                                 </div>
                             </div>
                         </form>
