@@ -8,7 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class UtenteDAO {
@@ -46,7 +47,7 @@ public class UtenteDAO {
              PreparedStatement st = con.prepareStatement(SELECT_ALL_QUERY)) {
 
             try (ResultSet resultSet = st.executeQuery()) {
-                List<Utente> result = new Arraylist<Utente>();
+                List<Utente> result = new ArrayList<>();
                 while(resultSet.next()) {
                     Utente u = new Utente();
                     u.setEmail(resultSet.getString("email"));
