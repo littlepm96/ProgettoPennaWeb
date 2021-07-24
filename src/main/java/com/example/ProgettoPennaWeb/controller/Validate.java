@@ -1,28 +1,17 @@
 package com.example.ProgettoPennaWeb.controller;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import com.example.ProgettoPennaWeb.model.Utente;
+import com.example.ProgettoPennaWeb.persistenza.dao.UtenteDAO;
+
+import javax.naming.NamingException;
+import java.sql.SQLException;
+import java.util.Optional;
 
 public class Validate {
-    public static boolean checkUser(String email, String pass) {
+    public static boolean checkUser(String email, String pass) throws SQLException, NamingException{
         boolean st = false;
-        try {
-
-            //loading drivers for mysql
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            //creating connection with the database
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/pennaweb?ServerTimezone=UTC", "root", "Admin_96");
-            PreparedStatement ps = con.prepareStatement("select * from pennaweb.utente where email=? and password=?");
-            ps.setString(1, email);
-            ps.setString(2, pass);
-            ResultSet rs = ps.executeQuery();
-            st = rs.next();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return st;
+        UtenteDAO dao  = new UtenteDAO();
+        Optional<Utente> result = dao.getUtenteByEmailAndPassword(email, pass);
+        return result.isPresent();
     }
 }

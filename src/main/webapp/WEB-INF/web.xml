@@ -47,7 +47,7 @@
     
     <servlet>
         <servlet-name>login</servlet-name>
-        <servlet-class>com.example.ProgettoPennaWeb.Login</servlet-class>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.Login</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>login</servlet-name>
@@ -56,7 +56,7 @@
 
     <servlet>
         <servlet-name>Registrazione</servlet-name>
-        <servlet-class>com.example.ProgettoPennaWeb.Registrazione</servlet-class>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.Registrazione</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Registrazione</servlet-name>
@@ -64,12 +64,21 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>ActivateAccount</servlet-name>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.ActivateAccount</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ActivateAccount</servlet-name>
+        <url-pattern>/activate</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>Welcome</servlet-name>
-        <servlet-class>com.example.ProgettoPennaWeb.Welcome</servlet-class>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.Welcome</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Welcome</servlet-name>
-        <url-pattern>/Welcome</url-pattern>
+        <url-pattern>/welcome</url-pattern>
     </servlet-mapping>
 
     <servlet>
