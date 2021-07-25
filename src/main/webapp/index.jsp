@@ -35,7 +35,7 @@
     <nav>
         <div class="topnav">
             <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
-            <a href="${pageContext.request.contextPath}/fasce-orarie">Fasce orarie</a>
+            <a href="${pageContext.request.contextPath}/fasce-orarie.jsp">Fasce orarie</a>
             <a href="${pageContext.request.contextPath}/cerca">Cerca</a>
         </div>
     </nav>
