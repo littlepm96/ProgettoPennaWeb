@@ -3,6 +3,7 @@ package com.example.ProgettoPennaWeb.utility;
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
 import com.example.ProgettoPennaWeb.model.enums.ParametriDiRicerca;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -39,8 +40,8 @@ public class Ricerca {
         parametriSettati = contaParametriSettati();
     }
 
-    public void setCercaAltriGiorni(Boolean cercaAltriGiorni){
-        parametri.put(ParametriDiRicerca.CERCA_ALTRI_GIORNI, cercaAltriGiorni);
+    public void setDataTrasmissione(LocalDate[] dataTrasmissione){
+        parametri.put(ParametriDiRicerca.DATA_TRASMISSIONE, dataTrasmissione);
         parametriSettati = contaParametriSettati();
     }
 
@@ -60,8 +61,8 @@ public class Ricerca {
         return (String) parametri.get(ParametriDiRicerca.FASCIA_ORARIA);
     }
 
-    public Boolean getCercaAltriGiorni(){
-        return (Boolean) parametri.get(ParametriDiRicerca.CERCA_ALTRI_GIORNI);
+    public LocalDate[] getDataTrasmissione(){
+        return (LocalDate[]) parametri.get(ParametriDiRicerca.DATA_TRASMISSIONE);
     }
 
     public int getParametriSettati(){

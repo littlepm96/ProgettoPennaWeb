@@ -21,8 +21,9 @@ public class ProgrammaTelevisivoDAO {
     private final String INSERT_QUERY="Insert into pennaweb.programma_televisivo values(?,?,?,?,?,?,?,?,?,?,?,?)";
     private final String SELECT_BY_ID_QUERY = "select * from pennaweb.programma_televisivo WHERE ID = ?";
     private final String SELECT_BY_ID_JOIN_CANALE_QUERY = "select * from pennaweb.programma_televisivo JOIN pennaweb.p ON programma_televisivo.p = p.ID WHERE ID = ?";
-    private final String SELECT_BY_CANALE_TODAY_QUERY = "select * from pennaweb.programma_televisivo join pennaweb.canale on programma_televisivo.canale = canale.ID where canale = ? and data_trasmissione = ? order by ora_inizio";
+    private final String SELECT_BY_CANALE_TODAY_QUERY = "select * from pennaweb.programma_televisivo where canale = ? and data_trasmissione = ? order by data_trasmissione, ora_inizio, canale";
     private final String SELECT_ALL_QUERY = "select * from pennaweb.programma_televisivo";
+    private final String SELECT_ALL_WITH_LIMIT_QUERY = "select * from pennaweb.programma_televisivo limit ?";
     private final String UPDATE_BY_ID_QUERY = "Update pennaweb.programma_televisivo SET ID = ?, genere = ?, canale = ?, descrizione = ?, data_trasmissione = ?, ora_inizio = ?, ora_fine = ?, url_immagine = ?, " +
             "url_approfondimento =?, stagione = ?, episodio =? where ID = ?";
     private final String DELETE_BY_ID_QUERY = "Delete from pennaweb.programma_televisivo where ID = ?";
@@ -252,6 +253,43 @@ public class ProgrammaTelevisivoDAO {
                 risultato.add(p);
             }
             return risultato;
+        }
+    }
+
+    public List<ProgrammaTelevisivo> getAll(int limit) throws SQLException, NamingException{
+        try(Connection con = DatabaseManager.getInstance().getConnection();
+            PreparedStatement st = con.prepareStatement(SELECT_ALL_WITH_LIMIT_QUERY)) {
+            st.setInt(1,limit);
+            try (ResultSet resultSet = st.executeQuery()) {
+
+                List<ProgrammaTelevisivo> risultato = new ArrayList<>();
+                while (resultSet.next()) {
+                    ProgrammaTelevisivo p = new ProgrammaTelevisivo();
+                    p.setId(resultSet.getLong("ID"));
+                    p.setTitolo(resultSet.getString("titolo"));
+                    //ricaviamo il genere dalla rappresentazione in stringa
+                    p.setGenere(GenereProgramma.fromString(resultSet.getString("genere")));
+                    p.setDescrizione(resultSet.getString("descrizione"));
+                    //Convertiamo da sql.Date a LocalDate
+                    Date date = resultSet.getDate("data_trasmissione");
+                    LocalDate localD = date.toLocalDate();
+                    p.setDataTrasmissione(localD);
+                    //Convertiamo da sql.Time a LocalTime
+                    Time time = resultSet.getTime("ora_inizio");
+                    LocalTime localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
+                    p.setOrarioInizio(localT);
+                    time = resultSet.getTime("ora_fine");
+                    localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
+                    p.setOrarioFine(localT);
+                    p.setUrlRelativoImmagine(resultSet.getString("url_immagine"));
+                    p.setUrlApprofondimento(resultSet.getURL("url_approfondimento"));
+                    p.setStagione(resultSet.getShort("stagione"));
+                    p.setEpisodio(resultSet.getShort("episodio"));
+                    p.setIdCanale(resultSet.getLong("canale"));
+                    risultato.add(p);
+                }
+                return risultato;
+            }
         }
     }
 

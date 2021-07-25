@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public enum GenereProgramma {
-    NON_ASSEGNATO, NEWS, SHOW, SERIE, FILM, DOCUMENTARIO, RELIGIONE,
+    NON_ASSEGNATO, TUTTI, NEWS, SHOW, SERIE, FILM, DOCUMENTARIO, RELIGIONE,
     SPORT;
 
     private static final Map<String, GenereProgramma> dizionario = new TreeMap<>();
@@ -38,9 +38,12 @@ public enum GenereProgramma {
     @Override
     public String toString() {
         switch (this){
-            default:
+
             case NON_ASSEGNATO:
                 return "Non assegnato";
+            default:
+            case TUTTI:
+                return "Tutti";
             case NEWS:
                 return "Notizie";
             case SHOW:

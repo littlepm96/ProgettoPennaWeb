@@ -16,9 +16,6 @@
 <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
-<!--SCRIPTS-->
-<!--Autocompletamento (W3C)-->
-<link rel="script" href="${pageContext.request.contextPath}/js/autocomplete.js">
 <head>
   <title>Cerca programmi TV</title>
 </head>
@@ -75,23 +72,36 @@
         <label for="numero-canale">Canale: </label>
         <input type="number" id="numero-canale" name="numero_canale" placeholder="es.: 1" title="Titolo del programma da cercare">
       </div>
+      <!--Data trasmissione-->
+      <fieldset>
+        <legend>Cerca per data</legend>
+      <div class="form-column">
+        <div id="data-trasmissione-inizio-d">
+          <label for="data-trasmissione-inizio">Da: </label>
+          <input type="date" id="data-trasmissione-inizio" name="data_trasmissione_inizio" class="date-selector">
+        </div>
+        <div id="data-trasmissione-fine-d">
+          <label for="data-trasmissione-fine">Da: </label>
+          <input type="date" id="data-trasmissione-fine" name="data_trasmissione_fine" class="date-selector">
+        </div>
+      </div><!--form-column-->
+      </fieldset>
       <!--Fascia oraria-->
       <div class="form-column">
-        <input type="hidden" id="fascia-oraria" name="fascia_oraria"> <!--Campo effettivamente passato al server-->
         <div id="fascia-oraria-inizio">
+          <input type="hidden" name="fascia_oraria_inizio">
           <label for="fascia-oraria-inizio-ore">Da: </label>
           <input type="number" id="fascia-oraria-inizio-ore" placeholder="(0-23)" class="time-selector">
           <label for="fascia-oraria-inizio-minuti"><strong> : </strong></label>
           <input type="number" id="fascia-oraria-inizio-minuti" placeholder="(0-59)" class="time-selector">
         </div>
         <div id="fascia-oraria-fine">
+          <input type="hidden" name="fascia_oraria_fine">
           <label for="fascia-oraria-fine-ore">A:  </label>
           <input type="number" id="fascia-oraria-fine-ore" placeholder="(0-23)" class="time-selector">
           <label for="fascia-oraria-fine-minuti"><strong> : </strong></label>
           <input type="number" id="fascia-oraria-fine-minuti" placeholder="(0-59)" class="time-selector">
         </div>
-        <label for="cerca-altri-giorni">Cerca negli altri giorni</label>
-        <input type="checkbox" id="cerca-altri-giorni" name="cerca_altri_giorni" value="true" alt="">
       </div><!--form-column-->
       <button type="button" id="submit" onclick="validate()">Cerca</button>
     </div> <!--form-row-->
@@ -177,71 +187,103 @@
   function validate(){
     const INVALID_CLASS = "invalid";
     var form = document.forms[0];
-    var isValid = true;
-    var inizio_ore, inizio_minuti, fine_ore, fine_minuti;
+    var usingData = false, usingFascia = false;
+    var fasciaIsValid = true;
+    var dataIsValid = true;
+    var data_inizio, data_inizio_value, data_fine, data_fine_value, inizio_ore, inizio_ore_value, inizio_minuti, inizio_minuti_value, fine_ore, fine_ore_value, fine_minuti, fine_minuti_value;
     if(form) {
       var elems = form.elements;
-      var current;
 
-      //Inizio (ore)
-      current = elems.namedItem("fascia-oraria-inizio-ore");
-      inizio_ore = current.value;
-      if(inizio_ore < 0 || inizio_ore > 23){
-        current.classList.add(INVALID_CLASS);
-        isValid = false;
-      }else{
-        current.classList.remove(INVALID_CLASS);
+      //Data trasmissione
+      data_fine = elems.namedItem("data-trasmissione-fine");
+      data_inizio = elems.namedItem("data-trasmissione-inizio");
+      data_fine_value = new Date(current.value);
+      data_inizio_value = new Date(current.value);
+      if((data_inizio_value != null && data_inizio_value != "") || (data_fine_value != null && data_fine_value!= "")) {
+        usingData = true;
+        if (data_inizio > data_fine) {
+          data_inizio.classList.add(INVALID_CLASS);
+          data_fine.classList.add(INVALID_CLASS);
+          dataIsValid = false;
+        } else {
+          data_inizio.classList.remove(INVALID_CLASS);
+          data_fine.classList.remove(INVALID_CLASS);
+        }
       }
-      //Inizio (minuti)
-      current = elems.namedItem("fascia-oraria-inizio-minuti");
-      inizio_minuti = current.value;
-      if(inizio_minuti < 0 || inizio_minuti > 59){
-        current.classList.add(INVALID_CLASS);
-        isValid = false;
-      }else{
-        current.classList.remove(INVALID_CLASS);
-      }
-      //Fine(ore)
-      current = elems.namedItem("fascia-oraria-fine-ore");
-      fine_ore = current.value;
-      if(fine_ore < 0 || fine_ore > 23){
-        current.classList.add(INVALID_CLASS);
-        isValid = false;
-      }else{
-        current.classList.remove(INVALID_CLASS);
-      }
-      //Fine (minuti)
-      current = elems.namedItem("fascia-oraria-fine-minuti");
-      fine_minuti = current.value;
-      if(fine_minuti < 0 || fine_minuti > 59){
-        current.classList.add(INVALID_CLASS);
-        isValid = false;
-      }else{
-        current.classList.remove(INVALID_CLASS);
-      }
+
+      inizio_ore = elems.namedItem("fascia-oraria-inizio-ore");
+      inizio_ore_value = inizio.value;
+      inizio_minuti = elems.namedItem("fascia-oraria-inizio-minuti");
+      inizio_minuti_value = inizio_minuti.value;
+      fine_ore = elems.namedItem("fascia-oraria-fine-ore");
+      fine_ore_value = fine_ore.value;
+      fine_minuti = elems.namedItem("fascia-oraria-fine-minuti");
+      fine_minuti_value = fine_minuti.value;
+
+      if((inizio_ore_value != null && inizio_ore_value != "")||
+              (inizio_minuti_value != null && inizio_minuti_value != "")||
+              (fine_ore_value != null && fine_ore_value != "")||
+              (fine_minuti_value != null && fine_minuti_value != "")) {
+        usingFascia = true;
+        //Inizio (ore)
+        if (inizio_ore_value < 0 || inizio_ore_value > 23) {
+          current.classList.add(INVALID_CLASS);
+          fasciaIsValid = false;
+        } else {
+          current.classList.remove(INVALID_CLASS);
+        }
+        //Inizio (minuti)
+        if (inizio_minuti_value < 0 || inizio_minuti_value > 59) {
+          current.classList.add(INVALID_CLASS);
+          fasciaIsValid = false;
+        } else {
+          current.classList.remove(INVALID_CLASS);
+        }
+        //Fine(ore)
+        if (fine_ore_value < 0 || fine_ore_value > 23) {
+          current.classList.add(INVALID_CLASS);
+          fasciaIsValid = false;
+        } else {
+          current.classList.remove(INVALID_CLASS);
+        }
+        //Fine (minuti)
+        if (fine_minuti_value < 0 || fine_minuti_value > 59) {
+          current.classList.add(INVALID_CLASS);
+          fasciaIsValid = false;
+        } else {
+          current.classList.remove(INVALID_CLASS);
+        }
+      }//if(inizio_ore_value!=null...
       //Controllo che il form sia validato
-      if(isValid){
-        //controllo quali campi sono vuoti
+      if(dataIsValid && fasciaIsValid){
 
-        //compilo la fascia oraria da mandare al server usando il campo hidden
-        form.elements.namedItem("fascia_oraria").value = inizio_ore+":"+inizio_minuti+"-"+fine_ore+":"+fine_minuti;
-        alert(form.elements.namedItem("fascia_oraria").value);
+
+        //compilo la fascia oraria da mandare al server usando i campo hidden (solo se stiamo effettivamente usando la fascia oraria per filtrare)
+        if(usingFascia) {
+          form.elements.namedItem("fascia_oraria_inizio").value = inizio_ore + ":" + inizio_minuti;
+          alert(form.elements.namedItem("fascia_oraria_inizio").value);
+
+          form.elements.namedItem("fascia_oraria_fine").value = fine_ore + ":" + fine_minuti;
+          alert(form.elements.namedItem("fascia_oraria_fine").value);
+        }
         form.requestSubmit();
       }else{
         //Form invalido, mostra il messaggio di errore corrispondente
         let error_element = document.createElement("div");
         error_element.id = "error-message";
-        error_element.innerHTML = "Inserisca un orario valido.";
+        error_element.innerHTML = error_element.innerHTML + "<ul>";
+        if(!fasciaIsValid) {
+          error_element.innerHTML = error_element.innerHTML+"<li>Inserisca un orario valido.</li>";
+        }
+        if(!dataIsValid){
+          error_element.innerHTML = error_element.innerHTML+"<li>La data di inizio deve precedere quella di fine.</li>";
+
+        }
+        error_element.innerHTML = error_element.innerHTML +"</ul>";
         form.parentElement.insertBefore(error_element,form);
       }
     } //if(form)
   }
-
-//Inizializziamo l'autocompletamento sui campi che ne fanno uso
-  var titoli=["aaa","bb","prova","tg1","no","NOOOOO"];
-  var canali=[1,2,3,4,5,6,7,8,9,10,11,12];
-  autocomplete(document.getElementById("titolo"),titoli);
-  autocomplete(document.getElementById("numero-canale"),canali);
 </script>
 <!--Box animato di Marco-->
 <!--

@@ -4,9 +4,15 @@ import com.example.ProgettoPennaWeb.model.Canale;
 import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
 import com.example.ProgettoPennaWeb.model.comparators.TrasmissioneProgrammaComparator;
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
+import com.example.ProgettoPennaWeb.model.enums.ParametriDiRicerca;
+import com.example.ProgettoPennaWeb.persistenza.dao.CanaleDAO;
+import com.example.ProgettoPennaWeb.persistenza.dao.ProgrammaTelevisivoDAO;
 import com.example.ProgettoPennaWeb.utility.ErrorHandling;
+import com.example.ProgettoPennaWeb.utility.FasciaOraria;
 import com.example.ProgettoPennaWeb.utility.MalformedFasciaOrariaException;
+import com.example.ProgettoPennaWeb.utility.Ricerca;
 
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -15,13 +21,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 import java.util.regex.*;
 
 public class CercaController extends HttpServlet {
-    private final Map<String, Object> data = new TreeMap<>();
+    /*private final Map<String, Object> data = new TreeMap<>();
     private final List<Canale> canali = new ArrayList<>(2);
     private final List<ProgrammaTelevisivo> programmi = new ArrayList<ProgrammaTelevisivo>(20);
     private final Map<ProgrammaTelevisivo, Canale> canaleDiUnProgramma = new TreeMap<>();
@@ -65,7 +72,7 @@ public class CercaController extends HttpServlet {
         }
         programmi.sort(new TrasmissioneProgrammaComparator());
 
-    }
+    }*/
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -82,53 +89,53 @@ public class CercaController extends HttpServlet {
         String titolo = request.getParameter("titolo");
         String genere = request.getParameter("genere");
         String numeroCanale = request.getParameter("numero_canale");
-        String fasciaOraria = request.getParameter("fascia_oraria");
-        Boolean cercaAltriGiorni = request.getParameter("cerca_altri_giorni") != null;
-        List<ProgrammaTelevisivo> result = null; //risultato della ricerca
+        String dataTrasmissioneInizio = request.getParameter("data_trasmissione_inizio");
+        String dataTrasmissioneFine = request.getParameter("data_trasmissione_fine");
+        String fasciaOrariaInizio = request.getParameter("fascia_oraria_inizio");
+        String fasciaOrariaFine = request.getParameter("fascia_oraria_fine");
+        Map<ProgrammaTelevisivo, Canale> result = null; //risultato della ricerca
 
         //alleghiamo la lista dei generi selezionabili nel form
         GenereProgramma[] generiValues = GenereProgramma.values();
-        String[] generi = new String[generiValues.length];
-        generi[0] = "Tutti";
-        for (int i = 1; i < generi.length; i++) {
-            generi[i] = generiValues[i].toString(); //prendiamo i+1 così sostituamo "non assegnato" con "Tutti" tra i valori selezionabili nel form
+        String[] generi = new String[generiValues.length -1];
+
+        for (int i = 0; i < generi.length; i++) {
+            generi[i] = generiValues[i+1].toString(); //prendiamo i+1 così sostituamo "non assegnato" con "Tutti" tra i valori selezionabili nel form
         }
         request.setAttribute("generi_disponibili", generi);
 
         //verifichiamo se abbiamo parametri di ricerca in ingresso (abbiamo avviato la ricerca oppure siamo arrivati da una ricerca salvata)
-        if (titolo != null || genere != null || numeroCanale != null || fasciaOraria != null) {
+        if (titolo != null || genere != null || numeroCanale != null || dataTrasmissioneInizio != null || dataTrasmissioneFine != null || fasciaOrariaInizio != null || fasciaOrariaFine != null) {
             //Compiliamo una lista dei parametri in ingresso
-            Map<String, String> parametriDiRicerca = new TreeMap<>();
+            Ricerca parametriDiRicerca = new Ricerca();
             if (titolo != null && !titolo.isEmpty()) {
-                parametriDiRicerca.put("titolo", titolo);
-            }else{
-                parametriDiRicerca.put("titolo", null);
+                parametriDiRicerca.setTitolo(titolo);
             }
-            if (genere != null && !genere.isEmpty()) {
-                parametriDiRicerca.put("genere", genere);
-            }else{
-                parametriDiRicerca.put("genere", null);
-
-            }
-            if (numeroCanale != null && !numeroCanale.isEmpty()) {
-                parametriDiRicerca.put("numero_canale", numeroCanale);
-            }else{
-                parametriDiRicerca.put("numero_canale", null);
-            }
-            if (fasciaOraria != null && !"-".equals(fasciaOraria)) {
-                parametriDiRicerca.put("fascia_oraria", fasciaOraria);
-            }else{
-                parametriDiRicerca.put("fascia_oraria", null);
-
-            }
-            parametriDiRicerca.put("cerca_altri_giorni", cercaAltriGiorni.toString());
-            //allego la lista alla request
-            request.setAttribute("parametri_di_ricerca", parametriDiRicerca);
-            //riempiamo il form con i parametri forniti
-            //compileForm(request,response);
-            //ricerchiamo sul database i risultati (AD ORA USIAMO LISTE GENERATE)
-            try {
-                result = search(request, response);
+                if (genere != null && !genere.isEmpty()) {
+                    parametriDiRicerca.setGenere(GenereProgramma.fromString(genere));
+                }
+                    if (numeroCanale != null && !numeroCanale.isEmpty()) {
+                        parametriDiRicerca.setNumeroCanale(Short.parseShort(numeroCanale));
+                    }
+                    if (dataTrasmissioneInizio != null && dataTrasmissioneFine != null && !"".equals(dataTrasmissioneInizio) && !"".equals(dataTrasmissioneFine)) {
+                        parametriDiRicerca.setDataTrasmissione(new LocalDate[]{LocalDate.parse(dataTrasmissioneInizio), LocalDate.parse(dataTrasmissioneFine)});
+                    }
+                    if (fasciaOrariaInizio != null && fasciaOrariaFine != null && !"".equals(fasciaOrariaInizio) && !"".equals(fasciaOrariaFine)) {
+                        try {
+                            parametriDiRicerca.setFasciaOraria(FasciaOraria.encode(LocalTime.parse(fasciaOrariaInizio), LocalTime.parse(fasciaOrariaFine)));
+                        } catch (MalformedFasciaOrariaException mfoe) {
+                            request.setAttribute("exception", mfoe);
+                            ErrorHandling.handleError(request, response);
+                            return;
+                        }
+                    }
+                    //allego la lista alla request
+                    request.setAttribute("parametri_di_ricerca", parametriDiRicerca);
+                    //riempiamo il form con i parametri forniti
+                    //compileForm(request,response);
+                    //ricerchiamo sul database i risultati (AD ORA USIAMO LISTE GENERATE)
+                    try {
+                        result = search(request, response);
 
             } catch (MalformedFasciaOrariaException mfoe) {
                 request.setAttribute("exception", mfoe);
@@ -174,47 +181,65 @@ public class CercaController extends HttpServlet {
         }
     }
 
-    private List<ProgrammaTelevisivo> defaultSearch(HttpServletRequest request, HttpServletResponse response) throws MalformedFasciaOrariaException {
-        final int MAX_PROGRAMMI_IN_SEARCH_RESULT = 15; //Integer.parseInt(getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
-        //Ritorna una lista fasulla (vedi metodo Init()), da rimuovere quando implementiamo il dao
-        List<ProgrammaTelevisivo> result = programmi.subList(0, MAX_PROGRAMMI_IN_SEARCH_RESULT - 1);
-        return result;
+            private Map<ProgrammaTelevisivo, Canale> defaultSearch (HttpServletRequest request, HttpServletResponse
+            response) throws MalformedFasciaOrariaException, SQLException, NamingException {
+                final int MAX_PROGRAMMI_IN_SEARCH_RESULT = 15; //Integer.parseInt(getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
+                ProgrammaTelevisivoDAO programmaDao = new ProgrammaTelevisivoDAO();
+                CanaleDAO canaleDAO = new CanaleDAO();
 
-        //ProgrammaTelevisivoDAO dao = new ProgrammaTelevisivoDAO();
-        //...
-    }
+                List<ProgrammaTelevisivo> programmi = programmaDao.getAll(MAX_PROGRAMMI_IN_SEARCH_RESULT);
+                Canale[] canali = (Canale[]) canaleDAO.getAll().toArray();
 
-    private List<ProgrammaTelevisivo> search(HttpServletRequest request, HttpServletResponse response) throws MalformedFasciaOrariaException {
-        final int MAX_PROGRAMMI_IN_SEARCH_RESULT = 15; //Integer.parseInt(getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
-        Map<String,String> parametriDiRicerca = (Map<String,String>) request.getAttribute("parametri_di_ricerca");
-        if(parametriDiRicerca==null){
-            throw new NullPointerException("parametri di ricerca sono null");
-        }
-        //INSERIRE QUI LA RICERCA CON IL DAO
-        //ProgrammaTelevisivoDAO dao = new ProgrammaTelevisivoDAO();
-        //...
+                Map<ProgrammaTelevisivo, Canale> result = new TreeMap<>();
 
-        //codice stub da sostituire con il DAO
-        List<ProgrammaTelevisivo> result = new ArrayList(programmi);
+                for (ProgrammaTelevisivo p : programmi) {
 
-        for(Map.Entry<String,String> entry : parametriDiRicerca.entrySet()){
-            List<ProgrammaTelevisivo> temp = new ArrayList();
-            switch(entry.getKey()){
-                case "titolo":
-                    if (entry.getValue()!=null){
-                        //Filtriamo per titolo
-                        //Creamo il pattern
-                        Pattern titoloRegex = Pattern.compile(".*"+entry.getValue()+".*");
-                        //iteriamo sul result corrente per filtrare
-                        for(ProgrammaTelevisivo p : result){
-                            //creamo il matcher dell'espressione regolare
-                            Matcher titoloMatcher = titoloRegex.matcher(p.getTitolo());
-                            if(titoloMatcher.matches()){
-                                temp.add(p);
+                    result.put(p, canali[(int) p.getIdCanale()]);
+                }
+                return result;
+
+            }
+
+            private Map<ProgrammaTelevisivo, Canale> search (HttpServletRequest request, HttpServletResponse response) throws
+            MalformedFasciaOrariaException, SQLException, NamingException {
+                final int MAX_PROGRAMMI_IN_SEARCH_RESULT = 15; //Integer.parseInt(getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
+                Ricerca parametriDiRicerca = (Ricerca) request.getAttribute("parametri_di_ricerca");
+                if (parametriDiRicerca == null) {
+                    throw new NullPointerException("parametri di ricerca sono null");
+                }
+                //Ricaviamo i dati
+                ProgrammaTelevisivoDAO programmaDao = new ProgrammaTelevisivoDAO();
+                CanaleDAO canaleDAO = new CanaleDAO();
+
+                List<ProgrammaTelevisivo> programmi = programmaDao.getAll(MAX_PROGRAMMI_IN_SEARCH_RESULT);
+                Canale[] canali = (Canale[]) canaleDAO.getAll().toArray();
+
+                Map<ProgrammaTelevisivo, Canale> result = new TreeMap<>();
+
+                for (ProgrammaTelevisivo p : programmi) {
+
+                    result.put(p, canali[(int) p.getIdCanale()]);
+                }
+
+                //Filtriamo
+                for (ParametriDiRicerca parametro : ParametriDiRicerca.values()) {
+                    Map<ProgrammaTelevisivo,Canale> temp = new TreeMap<>();
+                    switch (parametro) {
+                        case TITOLO_PROGRAMMA:
+                            if (parametriDiRicerca.getTitolo() != null) {
+                                //Filtriamo per titolo
+                                //Creamo il pattern
+                                Pattern titoloRegex = Pattern.compile(".*" + parametriDiRicerca.getTitolo() + ".*");
+                                //iteriamo sul result corrente per filtrare
+                                for (Map.Entry<ProgrammaTelevisivo,Canale> entry : result.entrySet()) {
+                                    //creamo il matcher dell'espressione regolare
+                                    Matcher titoloMatcher = titoloRegex.matcher(entry.getKey().getTitolo());
+                                    if (titoloMatcher.matches()) {
+                                        temp.put(entry.getKey(), entry.getValue());
+                                    }
+                                }
+                                result = temp;
                             }
-                        }
-                        result = temp;
-                    }
 
                     break;
                 case "genere":
