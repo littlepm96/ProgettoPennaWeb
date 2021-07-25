@@ -19,9 +19,6 @@
     <nav>
         <div class="topnav">
             <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
-            <a href="${pageContext.request.contextPath}/fasce-orarie">Fasce orarie</a>
-            <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">login</a>
-            <a href="${pageContext.request.contextPath}/cerca">Cerca</a>
         </div>
     </nav>
     <!--<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">

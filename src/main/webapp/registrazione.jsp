@@ -9,6 +9,7 @@
     <h1 class="title"> Registrazione </h1>
     <!--INIZIO NAVIGAZIONE-->
     <nav>
+        <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
         <a href="${pageContext.request.contextPath}/login.jsp"> indietro </a>
     </nav>
     <!--FINE NAVIGAZIONE-->
