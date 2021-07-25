@@ -4,6 +4,7 @@ import com.example.ProgettoPennaWeb.model.Canale;
 import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
 import com.example.ProgettoPennaWeb.model.comparators.TrasmissioneProgrammaComparator;
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
+import com.example.ProgettoPennaWeb.utility.ErrorHandling;
 import com.example.ProgettoPennaWeb.utility.MalformedFasciaOrariaException;
 
 import javax.servlet.RequestDispatcher;
@@ -130,16 +131,18 @@ public class CercaController extends HttpServlet {
                 result = search(request, response);
 
             } catch (MalformedFasciaOrariaException mfoe) {
-                System.err.println(mfoe.getMessage());
-                mfoe.printStackTrace();
+                request.setAttribute("exception", mfoe);
+                ErrorHandling.handleError(request, response);
+                return;
             }
         } else {//default senza parametri
             //Mostra i primi 15 programmi presi dal database, ordinati rispetto all'ora di inizio (anche giorno di trasmissione se specificato nel form).
             try {
                 result = defaultSearch(request, response);
             } catch (MalformedFasciaOrariaException mfoe) {
-                System.err.println(mfoe.getMessage());
-                mfoe.printStackTrace();
+                request.setAttribute("exception", mfoe);
+                ErrorHandling.handleError(request, response);
+                return;
             }
         }
 
@@ -154,19 +157,19 @@ public class CercaController extends HttpServlet {
         RequestDispatcher dispatcher = context.getRequestDispatcher("/cerca.jsp");
         try {
             dispatcher.forward(request, response);
-        } catch (IOException ex) {
-            PrintWriter out = response.getWriter();
-            out.println("Si è verificato un errore nel trasferimento dei dati");
-            ex.printStackTrace();
+        } catch (IOException ie) {
+            request.setAttribute("exception", ie);
+            ErrorHandling.handleError(request, response);
+            return;
 
-        } catch (ServletException ex) {
-            PrintWriter out = response.getWriter();
-            out.println("Si è verificato un errore nella servlet");
-            ex.printStackTrace();
+        } catch (ServletException se) {
+            request.setAttribute("exception", se);
+            ErrorHandling.handleError(request, response);
+            return;
         } catch (Exception ex) {
-            PrintWriter out = response.getWriter();
-            out.println("Si è verificato un errore sconosciuto");
-            ex.printStackTrace();
+            request.setAttribute("exception", ex);
+            ErrorHandling.handleError(request, response);
+            return;
 
         }
     }

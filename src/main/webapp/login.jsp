@@ -1,4 +1,12 @@
+<%@ page import="com.example.ProgettoPennaWeb.utility.SecurityLayer" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+
+<%
+    if (SecurityLayer.checkSession(request) != null) {
+        response.sendRedirect("/profilo-utente.jsp");
+    }
+%>
+
 <html>
 <head>
     <title> Login Page </title>

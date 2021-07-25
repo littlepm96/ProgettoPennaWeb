@@ -1,26 +1,35 @@
+<%@ page import="com.example.ProgettoPennaWeb.utility.SecurityLayer" %>
+<%@ page import="com.example.ProgettoPennaWeb.model.Utente" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<% session = SecurityLayer.checkSession(request);%>
+<% if (session == null) {
+    response.sendRedirect("/login.jsp");
+}
+    Utente infoUtente = (Utente) session.getAttribute("infoUtente");
+%>
 <html>
 <head>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profilo-utente.css">
 </head>
 <body>
 <div class="main-content">
     <!-- Navigazione -->
-    <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
+    <nav>
+        <div class="topnav">
+            <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
+            <a href="${pageContext.request.contextPath}/fasce-orarie">Fasce orarie</a>
+            <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">login</a>
+            <a href="${pageContext.request.contextPath}/cerca">Cerca</a>
+        </div>
+    </nav>
+    <!--<nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
         <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
         <div class="container-fluid">
-            <!-- Brand -->
+            <\!-- Brand --\>
             <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" href="non c'è al momento"
                target="_blank">Mio Account</a>
-            <!-- Form -->
-            <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">
-                <div class="form-group mb-0">
-                    <div class="input-group input-group-alternative">
-                        <input class="form-control" placeholder="Cerca" type="text">
-                    </div>
-                </div>
-            </form>
-            <!-- Utente -->
+            <\!-- Utente --\>
             <ul class="navbar-nav align-items-center d-none d-md-flex">
                 <li class="nav-item dropdown">
                     <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -31,7 +40,7 @@
                        src="https://demos.creative-tim.com/argon-dashboard/assets/img/theme/team-4.jpg">
                 </span>
                             <div class="media-body ml-2 d-none d-lg-block">
-                                <span class="mb-0 text-sm  font-weight-bold">nome</span>
+                                <span class="mb-0 text-sm  font-weight-bold"><%=infoUtente.getNome()%></span>
                             </div>
                         </div>
                     </a>
@@ -64,7 +73,7 @@
                 </li>
             </ul>
         </div>
-    </nav>
+    </nav>-->
     <!-- Header -->
     <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
          style="min-height: 600px; background-image: url(https://romeartweek.com/images/artist/CA1545_0.jpg); background-size: cover; background-position: center top;">
@@ -74,7 +83,8 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white">Ciao nome</h1>
+                    <h1 class="display-2 text-white">Ciao <%=infoUtente.getNome()%>
+                    </h1>
                     <a href="#!" class="btn btn-info">modifica</a>
                 </div>
             </div>
@@ -147,7 +157,7 @@
                                             <label class="form-control-label" for="input-first-name">Nome</label>
                                             <input type="text" id="input-first-name"
                                                    class="form-control form-control-alternative"
-                                                   placeholder="First name" value="dio">
+                                                   placeholder="First name" value="<%=infoUtente.getNome()%>">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">

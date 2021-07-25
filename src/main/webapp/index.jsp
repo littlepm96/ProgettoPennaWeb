@@ -1,3 +1,4 @@
+<%@ page import="com.example.ProgettoPennaWeb.utility.SecurityLayer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -8,6 +9,22 @@
 <body>
 <!--INIZIO HEADER-->
 <header>
+    <div class="float-right">
+        <%
+            session = SecurityLayer.checkSession(request);
+            if(session!=null){
+        %>
+        <a href="${pageContext.request.contextPath}/profilo-utente.jsp">Profilo</a>
+        ||
+        <a href="${pageContext.request.contextPath}/logout">Logout</a>
+        <%
+        }else{
+        %>
+        <a href="${pageContext.request.contextPath}/login.jsp">Login</a>
+        <%
+            }
+        %>
+    </div>
     <div>
         <h1> Guida TV</h1>
     </div>
@@ -18,9 +35,8 @@
     <nav>
         <div class="topnav">
             <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
-            <a href="${pageContext.request.contextPath}/fasce-orarie.jsp">Fasce orarie</a>
-            <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">login</a>
-            <a href="${pageContext.request.contextPath}/cerca.jsp">Cerca</a>
+            <a href="${pageContext.request.contextPath}/fasce-orarie">Fasce orarie</a>
+            <a href="${pageContext.request.contextPath}/cerca">Cerca</a>
         </div>
     </nav>
     <!--FINE NAVIGAZIONE-->

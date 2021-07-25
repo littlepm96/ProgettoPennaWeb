@@ -1,5 +1,7 @@
 package com.example.ProgettoPennaWeb.utility;
 
+import com.example.ProgettoPennaWeb.model.Utente;
+
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -45,12 +47,12 @@ public class SecurityLayer {
 
         //check sulla validità della sessione
         //second, check is the session contains valid data
-        //nota: oltre a controllare se la sessione contiene un userid,
-        //dovremmo anche controllere che lo userid sia valido, probabilmente
+        //nota: oltre a controllare se la sessione contiene un utente,
+        //dovremmo anche controllere che l'utente sia valido, probabilmente
         //consultando il database utenti
-        //note: besides checking if the session contains an userid, we should
-        //check if the userid is valid, possibly querying the user database
-        if (s.getAttribute("userid") == null) {
+        //note: besides checking if the session contains an hash, we should
+        //check if the hash is valid, possibly querying the user database
+        if (s.getAttribute("infoUtente") == null) {
             check = false;
             //check sull'ip del client
             //check if the client ip chaged
@@ -103,15 +105,14 @@ public class SecurityLayer {
         }
     }
 
-    public static HttpSession createSession(HttpServletRequest request, String username, int userid) {
+    public static HttpSession createSession(HttpServletRequest request, Utente u) {
         //se una sessione è già attiva, rimuoviamola e creiamone una nuova
         //if a session already exists, remove it and recreate a new one
         disposeSession(request);
         HttpSession s = request.getSession(true);
-        s.setAttribute("username", username);
+        s.setAttribute("infoUtente",u);
         s.setAttribute("ip", request.getRemoteHost());
         s.setAttribute("inizio-sessione", Calendar.getInstance());
-        s.setAttribute("userid", userid);
         return s;
     }
 
