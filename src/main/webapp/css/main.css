@@ -7,8 +7,12 @@ header {
 }
 
 /*Pulsante per aprire la pagina di login*/
-.login-page-button {
-
+.float-right {
+    display: inline-block;
+    padding: 1em;
+    background-color: white;
+    text-align: right;
+    float: right;
 }
 
 /* Add a black background color to the top navigation */

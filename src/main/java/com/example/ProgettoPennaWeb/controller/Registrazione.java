@@ -91,14 +91,14 @@ public class Registrazione extends HttpServlet {
 
         //apriamo uno stream su un nuovo file, per simulare l'email
 
-        File pathEmail = new File(getServletContext().getContextPath()+File.separator+"test"+File.separator+email+".txt");
+        File pathEmail = new File( System.getProperty("user.dir")
+                +File.separator+"test"+File.separator+email+".txt");
         pathEmail = pathEmail.getAbsoluteFile();
         System.out.println(pathEmail);
         pathEmail.getParentFile().mkdirs();
         boolean isCreated = pathEmail.createNewFile();
         if(isCreated) {
             try(PrintWriter writer = new PrintWriter(pathEmail)) {
-                //OutputStream out = new FileOutputStream(pathEmail);
                 StringBuilder sb = new StringBuilder();
                 sb.append("Salve ");
                 sb.append(name);

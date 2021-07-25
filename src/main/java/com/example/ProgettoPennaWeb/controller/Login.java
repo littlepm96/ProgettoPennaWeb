@@ -1,14 +1,19 @@
 package com.example.ProgettoPennaWeb.controller;
 
+import com.example.ProgettoPennaWeb.model.Utente;
+import com.example.ProgettoPennaWeb.utility.SecurityLayer;
+
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class Login extends HttpServlet {
 
@@ -27,7 +32,12 @@ public class Login extends HttpServlet {
         String pass = request.getParameter("pass");
 
         try {
-            if (Validate.checkUser(email, pass)) {
+            Optional<Utente> container = Validate.checkUser(email, pass);
+            if (container.isPresent()) {
+                Utente utente = container.get();
+                //creo la sessione
+                HttpSession session = SecurityLayer.createSession(request, utente);
+                request.setAttribute("session", session);
                 RequestDispatcher rs = request.getRequestDispatcher("profilo-utente.jsp");
                 try {
                     rs.forward(request, response);
