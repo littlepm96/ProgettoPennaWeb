@@ -91,6 +91,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>ProfiloUtenteController</servlet-name>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.ProfiloUtenteController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProfiloUtenteController</servlet-name>
+        <url-pattern>/profilo-utente</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>DettaglioCanaleController</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.controller.DettaglioCanaleController</servlet-class>
     </servlet>

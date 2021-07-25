@@ -14,7 +14,7 @@
             session = SecurityLayer.checkSession(request);
             if(session!=null){
         %>
-        <a href="${pageContext.request.contextPath}/profilo-utente.jsp">Profilo</a>
+        <a href="${pageContext.request.contextPath}/profilo-utente">Profilo</a>
         ||
         <a href="${pageContext.request.contextPath}/logout">Logout</a>
         <%

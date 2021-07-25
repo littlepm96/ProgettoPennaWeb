@@ -1,6 +1,7 @@
 package com.example.ProgettoPennaWeb.controller;
 
 import com.example.ProgettoPennaWeb.model.Utente;
+import com.example.ProgettoPennaWeb.utility.ErrorHandling;
 import com.example.ProgettoPennaWeb.utility.SecurityLayer;
 
 import javax.naming.NamingException;
@@ -41,24 +42,38 @@ public class Login extends HttpServlet {
                 RequestDispatcher rs = request.getRequestDispatcher("profilo-utente.jsp");
                 try {
                     rs.forward(request, response);
-                } catch (ServletException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (ServletException se) {
+                    request.setAttribute("exception", se);
+                    ErrorHandling.handleError(request, response);
+                    return;
+                } catch (IOException ie) {
+                    request.setAttribute("exception", ie);
+                    ErrorHandling.handleError(request, response);
+                    return;
                 }
             } else {
-                PrintWriter out = null;
+                request.setAttribute("errore", "Username e/o password incorretto");
+                RequestDispatcher rs = request.getRequestDispatcher("login.jsp");
                 try {
-                    out = response.getWriter();
-                    out.println("Username or Password incorretto");
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    rs.forward(request, response);
+                } catch (ServletException se) {
+                    request.setAttribute("exception", se);
+                    ErrorHandling.handleError(request, response);
+                    return;
+                } catch (IOException ie) {
+                    request.setAttribute("exception", ie);
+                    ErrorHandling.handleError(request, response);
+                    return;
                 }
             }
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            request.setAttribute("exception", sqe);
+            ErrorHandling.handleError(request, response);
+            return;
         } catch (NamingException ne) {
-            ne.printStackTrace();
+            request.setAttribute("exception", ne);
+            ErrorHandling.handleError(request, response);
+            return;
         }
     }
 }

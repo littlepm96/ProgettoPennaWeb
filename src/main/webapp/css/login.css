@@ -44,6 +44,16 @@ div.space {
     width: 40%;
 }
 
+.error{
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 5px;
+    background: pink;
+    border: indianred solid 2px;
+    font-weight: bold;
+}
+
 .flex-container {
     display: flex;
     flex-flow: row nowrap;

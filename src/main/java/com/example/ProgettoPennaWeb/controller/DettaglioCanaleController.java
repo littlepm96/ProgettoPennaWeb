@@ -2,6 +2,7 @@ package com.example.ProgettoPennaWeb.controller;
 
 import com.example.ProgettoPennaWeb.model.Canale;
 import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
+import com.example.ProgettoPennaWeb.utility.ErrorHandling;
 import com.example.ProgettoPennaWeb.utility.FasciaOraria;
 import com.example.ProgettoPennaWeb.utility.MalformedFasciaOrariaException;
 import com.example.ProgettoPennaWeb.persistenza.dao.CanaleDAO;
@@ -42,7 +43,8 @@ public class DettaglioCanaleController extends HttpServlet {
             idCanale = Integer.parseInt(request.getParameter("id"));
         }catch (NumberFormatException nfe){
             System.err.println("L'id passato non è valido");
-            nfe.printStackTrace();
+            request.setAttribute("exception", nfe);
+            ErrorHandling.handleError(request,response);
             return;
         }
         //Inizializziamo i dao
@@ -72,11 +74,17 @@ public class DettaglioCanaleController extends HttpServlet {
 
 
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
+            request.setAttribute("exception", sqe);
+            ErrorHandling.handleError(request,response);
+            return;
         } catch (NamingException ne) {
-            ne.printStackTrace();
-        } catch (MalformedFasciaOrariaException e) {
-            e.printStackTrace();
+            request.setAttribute("exception", ne);
+            ErrorHandling.handleError(request,response);
+            return;
+        } catch (MalformedFasciaOrariaException mfoe) {
+            request.setAttribute("exception", mfoe);
+            ErrorHandling.handleError(request,response);
+            return;
         }
 
 
@@ -86,34 +94,22 @@ public class DettaglioCanaleController extends HttpServlet {
         try {
             System.out.println("Sto effettuando il dispatch");
             dispatcher.forward(request, response);
-        } catch (IOException ex) {
-            PrintWriter out = null;
-            try {
-                out = response.getWriter();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            out.println("Si è verificato un errore nel trasferimento dei dati");
-            ex.printStackTrace();
+        } catch (IOException ie) {
+            System.err.println("Si è verificato un errore nel trasferimento dei dati");
+            request.setAttribute("exception", ie);
+            ErrorHandling.handleError(request,response);
+            return;
 
-        } catch (ServletException ex) {
-            PrintWriter out = null;
-            try {
-                out = response.getWriter();
-            } catch (IOException e) {
-                //niente
-            }
-            out.println("Si è verificato un errore nella servlet");
-            ex.printStackTrace();
-        } catch (Exception ex) {
-            PrintWriter out = null;
-            try {
-                out = response.getWriter();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            out.println("Si è verificato un errore sconosciuto");
-            ex.printStackTrace();
+        } catch (ServletException se) {
+            System.err.println("Si è verificato un errore nella servlet");
+            request.setAttribute("exception", se);
+            ErrorHandling.handleError(request,response);
+            return;
+        } catch (Exception e) {
+            System.err.println("Si è verificato un errore sconosciuto");
+            request.setAttribute("exception", e);
+            ErrorHandling.handleError(request,response);
+            return;
 
         }
     }
