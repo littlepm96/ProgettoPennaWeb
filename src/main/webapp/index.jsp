@@ -29,7 +29,7 @@
         <h1> Guida TV</h1>
     </div>
     <div>
-        <h1><a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0"> bella zì </a></h1>
+        <h1><a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0"> Disim </a></h1>
     </div>
     <!--INIZIO NAVIGAZIONE-->
     <nav>
@@ -56,11 +56,13 @@
             </div>
             <div class="programma-in-onda">
                 <a href="${pageContext.request.contextPath}/dettaglio-programma?id=2353">
-                    <h2>TG1</h2>
+                    <h2>Dettagli Programmi</h2>
                     <img src="images/info.jpg" alt="info" width="125" height="111">
                 </a>
             </div>
-            <div class="descrizione-programma">Informazione delle 20:00</div>
+            <div class="descrizione-programma">Rai 1 è il primo canale televisivo della Rai, l'azienda pubblica italiana concessionaria in esclusiva
+                del servizio pubblico radiotelevisivo italiano. È il primo canale italiano in assoluto in termini di ascolti e si presenta con una
+                programmazione generalista per le famiglie.</div>
         </div>
         <div class="canale">
             <div class="info-canale">
@@ -71,11 +73,15 @@
             </div>
             <div class="programma-in-onda">
                 <a href="${pageContext.request.contextPath}/dettaglio-programma?id=2354">
-                    <h2>NCIS</h2>
+                    <h2>Dettagli Programmi</h2>
                     <img src="images/info.jpg" alt="info" width="125" height="111">
                 </a>
             </div>
-            <div class="descrizione-programma">NCIS Stagione 8 Episodio 35</div>
+            <div class="descrizione-programma">Rai 2 è il secondo canale televisivo della Rai,
+                l'azienda pubblica concessionaria in esclusiva del servizio pubblico radiotelevisivo
+                italiano. Ha una programmazione di tipo generalista rivolta ad un pubblico giovane,
+                proponendo reality show, intrattenimento, telefilm, docufiction, informazione, cartoni animati,
+                divulgazione scientifica e sport.</div>
         </div>
         <div class="canale">
             <div class="info-canale">
@@ -84,13 +90,17 @@
                     <img src="images/tg3.jpg" alt="tg3" width="125" height="111">
                 </a>
             </div>
-            <div class="programma-in-onda">
+
+            <div class="immagine">
                 <a href="${pageContext.request.contextPath}/dettaglio-programma?id=2355">
-                    <h2>Report</h2>
+                    <h2>Dettagli Programmi</h2>
                     <img src="images/info.jpg" alt="info" width="125" height="111">
                 </a>
             </div>
-            <div class="descrizione-programma">Sappiamo quello che stiamo facendo?</div>
+            <div class="descrizione-programma">Rai 3 è il terzo canale televisivo della Rai, l'azienda
+                concessionaria del servizio pubblico radiotelevisivo italiano. Il canale è di tipo generalista e
+                propone una programmazione improntata all'approfondimento giornalistico e alla cultura, caratterizzata
+                da ampi spazi dedicati alle autonomie locali italiane.</div>
         </div>
     </div>
     <!--FINE LISTA CANALI-->

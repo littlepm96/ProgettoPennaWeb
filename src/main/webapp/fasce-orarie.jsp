@@ -12,7 +12,7 @@
         <h1> Elenco programmi</h1>
     </div>
     <div>
-        <h1><a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0"> bella zì </a></h1>
+        <h1><a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0"> Disim </a></h1>
     </div>
     <!--INIZIO NAVIGAZIONE-->
     <nav>
@@ -48,7 +48,7 @@
             <div class="info-canale">
                 <a href="${pageContext.request.contextPath}/dettaglio-canale.jsp?numero=1">
                     <h1>Rai 1</h1>
-                    <img src="images/lolle.jpg" alt="lolle" width="125" height="111">
+                    <img src="images/tg1.jpg" alt="lolle" width="125" height="111">
                 </a>
             </div>
             <div class="orario-programma">

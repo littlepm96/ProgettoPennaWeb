@@ -17,7 +17,7 @@
         <h1> Guida TV</h1>
     </div>
     <div>
-        <h1><a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0"> bella zì </a></h1>
+        <h1><a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0">Disim </a></h1>
     </div>
     <!--INIZIO NAVIGAZIONE-->
     <nav>
@@ -43,6 +43,12 @@
                             class=" lazyloaded" title="<%=request.getAttribute("nomeCanale")%>"
                             alt="<%=request.getAttribute("nomeCanale")%>" width="30" height="30"></picture></span><span
                             class="channel-name"><%=request.getAttribute("nomeCanale")%></span></a>
+
+                    <div class="channel-logo">
+                        <img src="images/detail.jpg" alt="detail" width="125" height="111">
+                    </div>
+
+
                 </header>
 
                 <div class="programs">
@@ -96,11 +102,6 @@
 
                             <div class="program-category"><%=genereProgramma%>
                             </div>
-
-                            <!--<div class="program-rating">
-                                <span class="stars"></span>
-
-                            </div>-->
 
                             <div class="program-title"><%=titoloProgramma%>>
                             </div>
