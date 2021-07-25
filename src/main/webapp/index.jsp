@@ -51,13 +51,13 @@
             <div class="info-canale">
                 <a href="${pageContext.request.contextPath}/dettaglio-canale?id=1">
                     <h1>Rai 1</h1>
-                    <img src="images/lolle.jpg" alt="lolle" width="125" height="111">
+                    <img src="images/tg1.jpg" alt="tg1" width="125" height="111">
                 </a>
             </div>
             <div class="programma-in-onda">
                 <a href="${pageContext.request.contextPath}/dettaglio-programma?id=2353">
                     <h2>TG1</h2>
-                    <img src="images/tg1.jpg" alt="TG1" width="125" height="111">
+                    <img src="images/info.jpg" alt="info" width="125" height="111">
                 </a>
             </div>
             <div class="descrizione-programma">Informazione delle 20:00</div>
@@ -66,13 +66,13 @@
             <div class="info-canale">
                 <a href="${pageContext.request.contextPath}/dettaglio-canale?id=2">
                     <h1>Rai 2</h1>
-                    <img src="images/lolle.jpg" alt="lolle" width="125" height="111">
+                    <img src="images/tg2.jpg" alt="tg2" width="125" height="111">
                 </a>
             </div>
             <div class="programma-in-onda">
                 <a href="${pageContext.request.contextPath}/dettaglio-programma?id=2354">
                     <h2>NCIS</h2>
-                    <img src="images/ncis.jpg" alt="NCIS">
+                    <img src="images/info.jpg" alt="info" width="125" height="111">
                 </a>
             </div>
             <div class="descrizione-programma">NCIS Stagione 8 Episodio 35</div>
@@ -81,13 +81,13 @@
             <div class="info-canale">
                 <a href="${pageContext.request.contextPath}/dettaglio-canale?id=3">
                     <h1>Rai 3</h1>
-                    <img src="images/lolle.jpg" alt="lolle" width="125" height="111">
+                    <img src="images/tg3.jpg" alt="tg3" width="125" height="111">
                 </a>
             </div>
             <div class="programma-in-onda">
                 <a href="${pageContext.request.contextPath}/dettaglio-programma?id=2355">
                     <h2>Report</h2>
-                    <img src="images/report.jpg" alt="Report">
+                    <img src="images/info.jpg" alt="info" width="125" height="111">
                 </a>
             </div>
             <div class="descrizione-programma">Sappiamo quello che stiamo facendo?</div>
