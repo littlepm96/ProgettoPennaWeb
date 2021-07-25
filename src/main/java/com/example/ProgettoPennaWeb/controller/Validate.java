@@ -13,6 +13,7 @@ public class Validate {
         boolean st = false;
         UtenteDAO dao  = new UtenteDAO();
         Optional<Utente> result = dao.getUtenteByEmailAndPassword(email, DigestUtils.sha256Hex(pass));
-        return result.isPresent();
+        return result;
+
     }
 }
