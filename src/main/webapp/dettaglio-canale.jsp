@@ -1,6 +1,6 @@
 <%@ page import="com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.ProgettoPennaWeb.model.utility.FasciaOraria" %>
+<%@ page import="com.example.ProgettoPennaWeb.utility.FasciaOraria" %>
 <%@ page import="java.time.LocalTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>

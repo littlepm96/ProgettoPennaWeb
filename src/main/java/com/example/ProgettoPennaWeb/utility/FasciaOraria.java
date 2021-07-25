@@ -1,4 +1,4 @@
-package com.example.ProgettoPennaWeb.model.utility;
+package com.example.ProgettoPennaWeb.utility;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;

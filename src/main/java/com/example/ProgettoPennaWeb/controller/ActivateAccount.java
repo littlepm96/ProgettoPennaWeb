@@ -2,6 +2,7 @@ package com.example.ProgettoPennaWeb.controller;
 
 import com.example.ProgettoPennaWeb.model.Utente;
 import com.example.ProgettoPennaWeb.persistenza.dao.UtenteDAO;
+import com.example.ProgettoPennaWeb.utility.ErrorHandling;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -39,7 +40,7 @@ public class ActivateAccount extends HttpServlet {
                     u.setVerificato(true);
                     dao.update(u);
 
-                    //Faccio una redirect alla pagina di benvenuto
+                    //Faccio una redirect alla pagina di benvenuto con il messaggio di avvenuta attivazione
                     StringBuilder sb = new StringBuilder(getServletContext().getContextPath());
                     sb.append("/welcome?email=");
                     sb.append(email);
@@ -48,15 +49,21 @@ public class ActivateAccount extends HttpServlet {
                     response.sendRedirect(sb.toString());
                 }
             } else {
-                System.err.println("Attivazione fallita: UTENTE NON TROVATO");
-                return;
+                //Faccio una redirect alla pagina di benvenuto con il messaggio di errore
+                response.sendRedirect(getServletContext().getContextPath()+"/welcome?not_found=1");
             }
         } catch (SQLException sqe) {
-            sqe.printStackTrace();
-        } catch (NamingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            request.setAttribute("exception", sqe);
+            ErrorHandling.handleError(request,response);
+            return;
+        } catch (NamingException ne) {
+            request.setAttribute("exception", ne);
+            ErrorHandling.handleError(request,response);
+            return;
+        } catch (IOException ie) {
+            request.setAttribute("exception", ie);
+            ErrorHandling.handleError(request,response);
+            return;
         }
     }
 }

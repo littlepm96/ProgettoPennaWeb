@@ -2,8 +2,8 @@ package com.example.ProgettoPennaWeb.controller;
 
 import com.example.ProgettoPennaWeb.model.Canale;
 import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
-import com.example.ProgettoPennaWeb.model.utility.FasciaOraria;
-import com.example.ProgettoPennaWeb.model.utility.MalformedFasciaOrariaException;
+import com.example.ProgettoPennaWeb.utility.FasciaOraria;
+import com.example.ProgettoPennaWeb.utility.MalformedFasciaOrariaException;
 import com.example.ProgettoPennaWeb.persistenza.dao.CanaleDAO;
 import com.example.ProgettoPennaWeb.persistenza.dao.ProgrammaTelevisivoDAO;
 

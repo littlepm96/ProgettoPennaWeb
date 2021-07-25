@@ -1,4 +1,4 @@
-package com.example.ProgettoPennaWeb.model.utility;
+package com.example.ProgettoPennaWeb.utility;
 
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
 import com.example.ProgettoPennaWeb.model.enums.ParametriDiRicerca;

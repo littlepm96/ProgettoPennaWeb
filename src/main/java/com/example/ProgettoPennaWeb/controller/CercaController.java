@@ -4,7 +4,7 @@ import com.example.ProgettoPennaWeb.model.Canale;
 import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
 import com.example.ProgettoPennaWeb.model.comparators.TrasmissioneProgrammaComparator;
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
-import com.example.ProgettoPennaWeb.model.utility.MalformedFasciaOrariaException;
+import com.example.ProgettoPennaWeb.utility.MalformedFasciaOrariaException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;

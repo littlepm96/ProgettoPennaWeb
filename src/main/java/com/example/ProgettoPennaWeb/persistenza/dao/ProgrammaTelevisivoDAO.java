@@ -3,9 +3,9 @@ package com.example.ProgettoPennaWeb.persistenza.dao;
 import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
 import com.example.ProgettoPennaWeb.model.enums.ParametriDiRicerca;
-import com.example.ProgettoPennaWeb.model.utility.FasciaOraria;
-import com.example.ProgettoPennaWeb.model.utility.MalformedFasciaOrariaException;
-import com.example.ProgettoPennaWeb.model.utility.Ricerca;
+import com.example.ProgettoPennaWeb.utility.FasciaOraria;
+import com.example.ProgettoPennaWeb.utility.MalformedFasciaOrariaException;
+import com.example.ProgettoPennaWeb.utility.Ricerca;
 import com.example.ProgettoPennaWeb.persistenza.DatabaseManager;
 
 import javax.naming.NamingException;

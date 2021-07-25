@@ -1,4 +1,4 @@
-package com.example.ProgettoPennaWeb.model.utility;
+package com.example.ProgettoPennaWeb.utility;
 
 public class MalformedFasciaOrariaException extends Exception{
     public MalformedFasciaOrariaException() {
