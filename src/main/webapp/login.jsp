@@ -25,6 +25,17 @@
 <!--FINE HEADER-->
 <!--INIZIO CONTENUTO PRINCIPALE-->
 <main>
+    <%
+        //Se ho un errore, mostralo
+        String errore = (String) request.getAttribute("errore");
+        if(errore != null){
+    %>
+        <div class="error">
+            <%=errore%>
+        </div>
+    <%
+        }
+    %>
     <div class="flex-container">
         <div class="space"></div>
         <form method="POST" action="login">

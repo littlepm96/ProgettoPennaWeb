@@ -1,5 +1,7 @@
 package com.example.ProgettoPennaWeb.controller;
 
+import com.example.ProgettoPennaWeb.utility.ErrorHandling;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -45,20 +47,21 @@ public class FasceOrarieController extends HttpServlet {
         RequestDispatcher dispatcher = context.getRequestDispatcher("/fasce-orarie.jsp");
         try {
             dispatcher.forward(request, response);
-        } catch (IOException ex) {
-            PrintWriter out = response.getWriter();
-            out.println("Si è verificato un errore nel trasferimento dei dati");
-            ex.printStackTrace();
-
-        } catch (ServletException ex) {
-            PrintWriter out = response.getWriter();
-            out.println("Si è verificato un errore nella servlet");
-            ex.printStackTrace();
-        } catch (Exception ex) {
-            PrintWriter out = response.getWriter();
-            out.println("Si è verificato un errore sconosciuto");
-            ex.printStackTrace();
-
+        } catch (IOException ie) {
+            System.err.println("Si è verificato un errore nel trasferimento dei dati");
+            request.setAttribute("exception", ie);
+            ErrorHandling.handleError(request, response);
+            return;
+        } catch (ServletException se) {
+            System.err.println("Si è verificato un errore nella servlet");
+            request.setAttribute("exception", se);
+            ErrorHandling.handleError(request, response);
+            return;
+        } catch (Exception e) {
+            System.err.println("Si è verificato un errore sconosciuto");
+            request.setAttribute("exception", e);
+            ErrorHandling.handleError(request, response);
+            return;
         }
 
     }

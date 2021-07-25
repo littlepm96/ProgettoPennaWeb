@@ -1,11 +1,12 @@
 <%@ page import="com.example.ProgettoPennaWeb.utility.SecurityLayer" %>
 <%@ page import="com.example.ProgettoPennaWeb.model.Utente" %>
+<%@ page import="com.example.ProgettoPennaWeb.utility.ErrorHandling" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
-<% session = SecurityLayer.checkSession(request);%>
-<% if (session == null) {
-    response.sendRedirect("/login.jsp");
-}
-    Utente infoUtente = (Utente) session.getAttribute("infoUtente");
+<%
+    try{
+
+        HttpSession sessione = (HttpSession) request.getAttribute("sessione");
+        Utente infoUtente = (Utente) sessione.getAttribute("infoUtente");
 %>
 <html>
 <head>
@@ -171,3 +172,9 @@
 </div>
 </body>
 </html>
+<%
+    }catch (Exception e){
+        request.setAttribute("exception", e);
+        ErrorHandling.handleError(request,response);
+    }
+%>
