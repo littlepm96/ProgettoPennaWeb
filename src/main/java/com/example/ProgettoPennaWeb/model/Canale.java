@@ -1,6 +1,6 @@
 package com.example.ProgettoPennaWeb.model;
 
-public class Canale {
+public class Canale implements Comparable<Canale>{
     private Long id;
     private Short numero;
     private String nome;
@@ -30,5 +30,13 @@ public class Canale {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    @Override
+    public int compareTo(Canale other) {
+        if(other == null || other.id == null) return -1;
+        if(this.id == null) return 1;
+
+        return this.id.compareTo(other.id);
     }
 }

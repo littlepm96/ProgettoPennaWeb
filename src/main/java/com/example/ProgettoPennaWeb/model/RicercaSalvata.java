@@ -3,20 +3,21 @@ package com.example.ProgettoPennaWeb.model;
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
 
 public class RicercaSalvata {
-    private long id;
+    private Long id;
     private String emailUtente;
     private String titolo;
-    private GenereProgramma genere;
-    private short numeroCanale;
+    private String genere;
+    private Short numeroCanale;
+    private String dataTrasmissione;
     private String fasciaOraria;
 
     public RicercaSalvata(){}
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -36,20 +37,28 @@ public class RicercaSalvata {
         this.titolo = titolo;
     }
 
-    public GenereProgramma getGenere() {
+    public String getGenere() {
         return genere;
     }
 
-    public void setGenere(GenereProgramma genere) {
+    public void setGenere(String genere) {
         this.genere = genere;
     }
 
-    public short getNumeroCanale() {
+    public Short getNumeroCanale() {
         return numeroCanale;
     }
 
-    public void setNumeroCanale(short numeroCanale) {
+    public void setNumeroCanale(Short numeroCanale) {
         this.numeroCanale = numeroCanale;
+    }
+
+    public String getDataTrasmissione() {
+        return dataTrasmissione;
+    }
+
+    public void setDataTrasmissione(String dataTrasmissione) {
+        this.dataTrasmissione = dataTrasmissione;
     }
 
     public String getFasciaOraria() {

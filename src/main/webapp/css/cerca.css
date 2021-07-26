@@ -42,6 +42,16 @@ form.hidden{
     font-weight: bold;
 }
 
+#form-container #success-message{
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 5px;
+    background: lightgreen;
+    border: lawngreen solid 2px;
+    font-weight: bold;
+}
+
 form .form-row{
     padding-top: 5px;
     height: 95px;

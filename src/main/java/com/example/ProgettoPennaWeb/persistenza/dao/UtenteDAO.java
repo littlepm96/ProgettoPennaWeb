@@ -16,9 +16,9 @@ public class UtenteDAO {
     private final String INSERT_QUERY = "Insert into pennaweb.utente values(?,?,?,?,?,?)";
     private final String UPDATE_QUERY = "Update pennaweb.utente SET email = ?, nome = ?, cognome = ?, password = ?, hash = ?, verificato = ? WHERE email = ?";
     private final String DELETE_QUERY = "Delete from pennaweb.utente where email = ?";
+    private final String SELECT_ALL_QUERY = "select * from pennaweb.utente";
     private final String SELECT_QUERY_CON_EMAIL = "select * from pennaweb.utente WHERE email = ?";
     private final String SELECT_QUERY_CON_EMAIL_E_PASSWORD = "select * from pennaweb.utente WHERE email = ? and password = ?";
-    private final String SELECT_ALL_QUERY = "select * from pennaweb.utente";
 
     public Optional<Utente> getUtenteByEmail(String email) throws SQLException, NamingException {
 
