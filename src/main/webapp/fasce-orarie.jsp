@@ -1,6 +1,5 @@
 <%@ page import="com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo" %>
 <%@ page import="com.example.ProgettoPennaWeb.model.Canale" %>
-<%@ page import="com.example.ProgettoPennaWeb.utility.SecurityLayer" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -94,6 +93,7 @@
 
 
             %>
+            <div class="info-programma">
             <div class="orario-programma">
             <h2><%=p.getOrarioInizio()%>-<%=p.getOrarioFine()%></h2>
             </div>
@@ -102,6 +102,7 @@
                     <h2><%=p.getTitolo()%></h2>
                     <img src="<%=p.getUrlRelativoImmagine()%>" alt="<%=p.getTitolo()%>" width="125" height="111">
                 </a>
+            </div>
             </div>
             <%
                 }//for(ProgrammaTelevisivo...
