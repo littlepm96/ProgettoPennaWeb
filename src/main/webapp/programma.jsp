@@ -6,6 +6,16 @@
 
 </head>
 <body>
+<!--INIZIO HEADER-->
+<%@ include file="header.jsp" %>
+<!--FINE HEADER-->
+<!--INIZIO CONTENUTO PRINCIPALE-->
+<main>
 
+</main>
+<!--FINE CONTENUTO PRINCIPALE-->
+<!--INIZIO FOOTER-->
+<%@ include file="footer.jsp" %>
+<!--FINE FOOTER-->
 </body>
 </html>

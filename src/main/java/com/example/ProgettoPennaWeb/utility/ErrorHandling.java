@@ -17,7 +17,8 @@ public class ErrorHandling {
      */
     public static void handleError(HttpServletRequest request, HttpServletResponse response){
         Exception e = (Exception) request.getAttribute("exception");
-        System.err.println(e.getMessage());
+        System.err.println("Si è verificata un'eccezione! Messaggio: \""+ e.getMessage()+"\"");
+        System.err.println("Eccezione all'origine: "+e.getCause());
         e.printStackTrace();
         try {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

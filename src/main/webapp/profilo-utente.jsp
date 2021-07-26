@@ -3,9 +3,12 @@
 <%@ page import="com.example.ProgettoPennaWeb.utility.ErrorHandling" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
-    try{
 
-        HttpSession sessione = (HttpSession) request.getAttribute("sessione");
+    HttpSession sessione = SecurityLayer.checkSession(request); //(HttpSession) request.getAttribute("mySession");
+    if(sessione==null){
+        response.sendRedirect(application.getContextPath()+"/login.jsp");
+        return;
+    }
         Utente infoUtente = (Utente) sessione.getAttribute("infoUtente");
 %>
 <html>
@@ -169,9 +172,3 @@
 </div>
 </body>
 </html>
-<%
-    }catch (Exception e){
-        request.setAttribute("exception", e);
-        ErrorHandling.handleError(request,response);
-    }
-%>

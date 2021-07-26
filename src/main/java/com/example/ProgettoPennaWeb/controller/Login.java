@@ -38,7 +38,8 @@ public class Login extends HttpServlet {
                 Utente utente = container.get();
                 //creo la sessione
                 HttpSession session = SecurityLayer.createSession(request, utente);
-                request.setAttribute("session", session);
+                System.out.println(session.getAttribute("infoUtente"));
+                //request.setAttribute("mySession", session);
                 RequestDispatcher rs = request.getRequestDispatcher("profilo-utente.jsp");
                 try {
                     rs.forward(request, response);

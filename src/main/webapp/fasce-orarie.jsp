@@ -7,21 +7,7 @@
 </head>
 <body>
 <!--INIZIO HEADER-->
-<header>
-    <div>
-        <h1> Elenco programmi</h1>
-    </div>
-    <div>
-        <h1><a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0"> Disim </a></h1>
-    </div>
-    <!--INIZIO NAVIGAZIONE-->
-    <nav>
-        <div class="topnav">
-            <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
-        </div>
-    </nav>
-    <!--FINE NAVIGAZIONE-->
-</header>
+<%@ include file="header.jsp" %>
 <!--FINE HEADER-->
 <!--INIZIO CONTENUTO PRINCIPALE-->
 <main>
@@ -66,7 +52,7 @@
 </main>
 <!--FINE CONTENUTO PRINCIPALE-->
 <!--INIZIO FOOTER-->
-<footer></footer>
+<%@ include file="footer.jsp" %>
 <!--FINE FOOTER-->
 </body>
 </html>

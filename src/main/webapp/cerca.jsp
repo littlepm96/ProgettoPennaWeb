@@ -8,7 +8,12 @@
 <%@ page import="com.example.ProgettoPennaWeb.utility.MalformedFasciaOrariaException" %>
 <%@ page import="java.util.TreeMap" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="com.example.ProgettoPennaWeb.utility.SecurityLayer" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+
+<%
+  HttpSession sessione = SecurityLayer.checkSession(request);
+%>
 <html>
 <!--CSS-->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
@@ -21,30 +26,13 @@
 </head>
 <body>
 <!--INIZIO HEADER-->
-<header>
-  <div>
-    <h1>Ricerca programmi</h1>
-  </div>
-  <div>
-    <h1><a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0"> bella zì </a></h1>
-  </div>
-  <!--INIZIO NAVIGAZIONE-->
-  <nav>
-    <div class="topnav">
-      <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
-      <a href="${pageContext.request.contextPath}/fasce-orarie.jsp">Fasce orarie</a>
-      <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">login</a>
-      <a href="${pageContext.request.contextPath}/cerca.jsp">Cerca</a>
-    </div>
-  </nav>
-  <!--FINE NAVIGAZIONE-->
-</header>
+<%@ include file="header.jsp" %>
 <!--FINE HEADER-->
 <!--INIZIO CONTENUTO PRINCIPALE-->
 <main>
   <div id="form-container">
   <!--Form con i parametri di ricerca-->
-  <form autocomplete="off" id="form-ricerca" action="${pageContext.request.contextPath}/cerca" method="get">
+  <form id="form-ricerca" action="${pageContext.request.contextPath}/cerca" method="get">
     <div class="form-row">
       <!--Titolo programma-->
       <div class="autocomplete">
@@ -70,7 +58,7 @@
       <!--Numero canale-->
       <div class="autocomplete">
         <label for="numero-canale">Canale: </label>
-        <input type="number" id="numero-canale" name="numero_canale" placeholder="es.: 1" title="Titolo del programma da cercare">
+        <input type="number" id="numero-canale" name="numero_canale" placeholder="es.: 1" title="Numero del canale">
       </div>
       <!--Data trasmissione-->
       <fieldset>
@@ -87,6 +75,8 @@
       </div><!--form-column-->
       </fieldset>
       <!--Fascia oraria-->
+      <fieldset>
+        <legend>Cerca per ora di inizio</legend>
       <div class="form-column">
         <div id="fascia-oraria-inizio">
           <input type="hidden" name="fascia_oraria_inizio">
@@ -103,7 +93,41 @@
           <input type="number" id="fascia-oraria-fine-minuti" placeholder="(0-59)" class="time-selector">
         </div>
       </div><!--form-column-->
+      </fieldset>
+      <div class="form-column">
       <button type="button" id="submit" onclick="validate()">Cerca</button>
+      <%//inseriamo il link per salvare la ricerca se siamo loggati e abbiamo parametri
+        if(sessione != null && request.getAttribute("esistono_parametri") != null){
+          //prendo tutti i parametri (stringhe vuote per quelli assenti)
+          String paramTitolo = request.getParameter("titolo")!=null ? (String) request.getParameter("titolo") : "";
+          String paramGenere = request.getParameter("genere")!=null ? (String) request.getParameter("genere") : "";
+          String paramNumeroCanale = request.getParameter("numero_canale")!=null ? (String) request.getParameter("numero_canale") : "";
+          String paramDataTrasmissioneInizio = request.getParameter("data_trasmissione_inizio")!=null ? (String) request.getParameter("data_trasmissione_inizio") : "";
+          String paramDataTrasmissioneFine = request.getParameter("data_trasmissione_fine")!=null ? (String) request.getParameter("data_trasmissione_fine") : "";
+          String paramFasciaOrariaInizio = request.getParameter("fascia_oraria_inizio")!=null ? (String) request.getParameter("fascia_oraria_inizio") : "";
+          String paramFasciaOrariaFine = request.getParameter("fascia_oraria_fine")!=null ? (String) request.getParameter("fascia_oraria_fine") : "";
+          //costruisco il link
+          StringBuilder sb = new StringBuilder(application.getContextPath());
+          sb.append("/salva-ricerca?");
+          sb.append("titolo=");
+          sb.append(paramTitolo);
+          sb.append("&genere=");
+          sb.append(paramGenere);
+          sb.append("&numero_canale=");
+          sb.append(paramNumeroCanale);
+          sb.append("&data_trasmissione=");
+          sb.append(paramDataTrasmissioneInizio);
+          sb.append("/");
+          sb.append(paramDataTrasmissioneFine);
+          sb.append("&fascia_oraria=");
+          sb.append(FasciaOraria.encode(LocalTime.parse(paramFasciaOrariaInizio),LocalTime.parse(paramFasciaOrariaFine)));
+          String linkDiSalvataggio = sb.toString();
+      %>
+        <a href="<%=linkDiSalvataggio%>">Salva la ricerca corrente</a>
+        <%
+        }
+        %>
+      </div>
     </div> <!--form-row-->
   </form>
   <!--Fine del form-->
@@ -166,8 +190,7 @@
 </main>
 <!--FINE CONTENUTO PRINCIPALE-->
 <!--INIZIO FOOTER-->
-<footer>
-</footer>
+<%@ include file="footer.jsp" %>
 <!--FINE FOOTER-->
 <!--SCRIPT-->
 <script type="text/javascript">

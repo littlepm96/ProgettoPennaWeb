@@ -20,8 +20,8 @@ public class ProgrammaTelevisivoDAO {
 
     private final String INSERT_QUERY="Insert into pennaweb.programma_televisivo values(?,?,?,?,?,?,?,?,?,?,?,?)";
     private final String SELECT_BY_ID_QUERY = "select * from pennaweb.programma_televisivo WHERE ID = ?";
-    private final String SELECT_BY_ID_JOIN_CANALE_QUERY = "select * from pennaweb.programma_televisivo JOIN pennaweb.p ON programma_televisivo.p = p.ID WHERE ID = ?";
     private final String SELECT_BY_CANALE_TODAY_QUERY = "select * from pennaweb.programma_televisivo where canale = ? and data_trasmissione = ? order by data_trasmissione, ora_inizio, canale";
+    private final String SELECT_BY_CANALE_ALL_DAYS_QUERY = "select * from pennaweb.programma_televisivo where canale = ? order by data_trasmissione, ora_inizio, canale";
     private final String SELECT_ALL_QUERY = "select * from pennaweb.programma_televisivo";
     private final String SELECT_ALL_WITH_LIMIT_QUERY = "select * from pennaweb.programma_televisivo limit ?";
     private final String UPDATE_BY_ID_QUERY = "Update pennaweb.programma_televisivo SET ID = ?, genere = ?, canale = ?, descrizione = ?, data_trasmissione = ?, ora_inizio = ?, ora_fine = ?, url_immagine = ?, " +
@@ -30,14 +30,18 @@ public class ProgrammaTelevisivoDAO {
 
 
     //Query di select usata nella pagina di ricerca: viene costruita dinamicamente in base ai parametri di ricerca usati
-    private final String SELECT_SEARCH_PAGE_QUERY_BASE = "select * from pennaweb.programma_televisivo join pennaweb.canale on programma_televisivo.canale = canale.ID";
+    private final String SELECT_SEARCH_PAGE_QUERY_BASE = "select programma_televisivo.ID,programma_televisivo.titolo,programma_televisivo.genere," +
+            "programma_televisivo.descrizione,programma_televisivo.data_trasmissione,programma_televisivo.ora_inizio," +
+            "programma_televisivo.ora_fine,programma_televisivo.url_immagine,programma_televisivo.url_approfondimento,programma_televisivo.stagione," +
+            "programma_televisivo.episodio,programma_televisivo.canale" +
+            " from pennaweb.programma_televisivo join pennaweb.canale on programma_televisivo.canale = canale.ID";
     //mappa con gli spezzoni della clausola WHERE della query
     private final Map<ParametriDiRicerca,String> SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES = new TreeMap<>(){{
         put(ParametriDiRicerca.TITOLO_PROGRAMMA, "programma_televisivo.titolo LIKE ?");
         put(ParametriDiRicerca.GENERE_PROGRAMMA, "programma_televisivo.genere = ?");
         put(ParametriDiRicerca.NUMERO_CANALE, "canale.numero = ?");
+        put(ParametriDiRicerca.DATA_TRASMISSIONE, "programma_televisivo.data_trasmissione >= ? and programma_televisivo.data_trasmissione <= ?");
         put(ParametriDiRicerca.FASCIA_ORARIA, "programma_televisivo.ora_inizio >= ? and programma_televisivo.ora_inizio <= ?");
-        put(ParametriDiRicerca.CERCA_ALTRI_GIORNI, "programma_televisivo.data_trasmissione = ?");
     }};
 
 
@@ -80,13 +84,15 @@ public class ProgrammaTelevisivoDAO {
     }
 
     public List<ProgrammaTelevisivo> getByCanale(long idCanale, boolean soloProgrammiOdierni) throws NamingException, SQLException {
-        try (Connection con = DatabaseManager.getInstance().getConnection()){
+        try (Connection con = DatabaseManager.getInstance().getConnection()) {
             List<ProgrammaTelevisivo> risultato = new ArrayList<>();
-             if(soloProgrammiOdierni){
-             try(PreparedStatement st = con.prepareStatement(SELECT_BY_CANALE_TODAY_QUERY)){
-                st.setLong(1,idCanale);
-                st.setDate(2,Date.valueOf(LocalDate.now()));
-                try(ResultSet resultSet = st.executeQuery()){
+            String querySelezionata = soloProgrammiOdierni ? SELECT_BY_CANALE_TODAY_QUERY : SELECT_BY_CANALE_ALL_DAYS_QUERY;
+            try (PreparedStatement st = con.prepareStatement(querySelezionata)) {
+                st.setLong(1, idCanale);
+                if (soloProgrammiOdierni) {
+                    st.setDate(2, Date.valueOf(LocalDate.now()));
+                }
+                try (ResultSet resultSet = st.executeQuery()) {
                     while (resultSet.next()) {
                         ProgrammaTelevisivo p = new ProgrammaTelevisivo();
                         p.setId(resultSet.getLong("ID"));
@@ -114,22 +120,20 @@ public class ProgrammaTelevisivoDAO {
                     }
 
                 }
-             }
-            }else{
-                 /*try(PreparedStatement st = con.prepareStatement(SELECT_BY_CANALE_ALL_DAYS_QUERY)){
+            }
 
-                 }*/
-             }
-             return risultato;
+            return risultato;
         }
     }
 
     /**
      * Ritorna i canali che soddisfano i parametri passati.
      * @param params i parametri di ricerca
+     * @param limit numero di righe massime da ritornare
      * @return una lista (eventualmente vuota) che contiene tutti i programmi televisivi che hanno soddisfatto i parametri di ricerca.
      */
-    public List<ProgrammaTelevisivo> getBySearchParameters(Ricerca params) throws NamingException, SQLException, MalformedFasciaOrariaException {
+    public List<ProgrammaTelevisivo> getBySearchParameters(Ricerca params, int limit) throws NamingException, SQLException, MalformedFasciaOrariaException {
+        List<ProgrammaTelevisivo> risultato = new ArrayList<>();
         //Costruiamo la query al database in base ai parametri passati.
         int parametriRimanenti = params.getParametriSettati();
         StringBuilder sb = new StringBuilder(SELECT_SEARCH_PAGE_QUERY_BASE);
@@ -167,38 +171,54 @@ public class ProgrammaTelevisivoDAO {
             }
         }
 
+        //Data di trasmissione
+        LocalDate[] dataTrasmissione = params.getDataTrasmissione();
+        if(dataTrasmissione!=null){
+            sb.append(" ");
+            sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.DATA_TRASMISSIONE));
+            if(parametriRimanenti > 0){
+                sb.append(" and");
+                parametriRimanenti--;
+            }
+        }
+
         //Fascia oraria
         String fasciaOraria = params.getFasciaOraria();
         if(fasciaOraria!=null){
             sb.append(" ");
             sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.FASCIA_ORARIA));
 
-            //"and" nella query viene aggiunto dal controllo sul flag "cercaAltriGiorni" se serve
-        }
-
-        //Flag per ottenere anche i programmi degli altri giorni
-        Boolean cercaAltriGiorni = params.getCercaAltriGiorni();
-        if(cercaAltriGiorni){
-            sb.append(" and ");
-            sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.CERCA_ALTRI_GIORNI));
         }
 
 
         //Ora possiamo procedere con la preparazione dello statement
+        sb.append(" order by programma_televisivo.data_trasmissione,programma_televisivo.ora_inizio,canale.numero limit ?"); //Appendiamo la order by e limit
         String queryCompleta = sb.toString();
         try(Connection con = DatabaseManager.getInstance().getConnection();
         PreparedStatement st = con.prepareStatement(queryCompleta)){
             //Ora settiamo i parametri giusti
             int nextParameter = 1;
+            //titolo
             if(titolo!=null){
                 st.setString(nextParameter++,titolo);
             }
+            //genere
             if(genere!=null){
                 st.setString(nextParameter++,genere.toString());
             }
+            //numero canale
             if(numeroCanale!=null){
                 st.setShort(nextParameter++,numeroCanale);
             }
+            //data trasmissione
+            if(dataTrasmissione!=null){
+                //inizio
+                st.setDate(nextParameter++, Date.valueOf(dataTrasmissione[0]));
+
+                //fine
+                st.setDate(nextParameter++, Date.valueOf(dataTrasmissione[1]));
+            }
+            //fascia oraria
             if(fasciaOraria!=null){
                 //decodifichiamo, convertiamo e settiamo
                 LocalTime[] fascia = FasciaOraria.decode(fasciaOraria);
@@ -207,18 +227,40 @@ public class ProgrammaTelevisivoDAO {
                 t = Time.valueOf(fascia[1]);
                 st.setTime(nextParameter++, t);
             }
-            //Se l'utente vuole solo i programmi odierni
-            if(!cercaAltriGiorni){
-                //settiamo la data di oggi per parametro
-                st.setDate(nextParameter++, Date.valueOf(LocalDate.now()));
-            }
+
+            //Limit
+            st.setInt(nextParameter++, limit);
 
             //Finalmente possiamo eseguire la query
             try(ResultSet resultSet = st.executeQuery()){
-
+                while (resultSet.next()) {
+                    ProgrammaTelevisivo p = new ProgrammaTelevisivo();
+                    p.setId(resultSet.getLong("ID"));
+                    p.setTitolo(resultSet.getString("titolo"));
+                    //ricaviamo il genere dalla rappresentazione in stringa
+                    p.setGenere(GenereProgramma.fromString(resultSet.getString("genere")));
+                    p.setDescrizione(resultSet.getString("descrizione"));
+                    //Convertiamo da sql.Date a LocalDate
+                    Date date = resultSet.getDate("data_trasmissione");
+                    LocalDate localD = date.toLocalDate();
+                    p.setDataTrasmissione(localD);
+                    //Convertiamo da sql.Time a LocalTime
+                    Time time = resultSet.getTime("ora_inizio");
+                    LocalTime localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
+                    p.setOrarioInizio(localT);
+                    time = resultSet.getTime("ora_fine");
+                    localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
+                    p.setOrarioFine(localT);
+                    p.setUrlRelativoImmagine(resultSet.getString("url_immagine"));
+                    p.setUrlApprofondimento(resultSet.getURL("url_approfondimento"));
+                    p.setStagione(resultSet.getShort("stagione"));
+                    p.setEpisodio(resultSet.getShort("episodio"));
+                    p.setIdCanale(resultSet.getLong("canale"));
+                    risultato.add(p);
+                }
             }
         }
-        return null;
+        return risultato;
     }
 
     public List<ProgrammaTelevisivo> getAll() throws SQLException, NamingException{

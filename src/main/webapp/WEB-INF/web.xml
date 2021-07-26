@@ -6,7 +6,7 @@
 
     <context-param>
         <param-name>MAX_PROGRAMMI_IN_SEARCH_RESULT</param-name>
-        <param-value>15</param-value>
+        <param-value>30</param-value>
     </context-param>
 
     <servlet>

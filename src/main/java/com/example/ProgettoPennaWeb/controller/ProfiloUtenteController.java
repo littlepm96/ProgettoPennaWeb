@@ -34,7 +34,6 @@ public class ProfiloUtenteController extends HttpServlet {
         else{
 
             //dispatch al jsp
-            request.setAttribute("sessione", s);
             ServletContext context = getServletContext();
             RequestDispatcher rd = context.getRequestDispatcher("/profilo-utente.jsp");
             try {

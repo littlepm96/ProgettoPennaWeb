@@ -28,51 +28,7 @@ import java.util.*;
 import java.util.regex.*;
 
 public class CercaController extends HttpServlet {
-    /*private final Map<String, Object> data = new TreeMap<>();
-    private final List<Canale> canali = new ArrayList<>(2);
-    private final List<ProgrammaTelevisivo> programmi = new ArrayList<ProgrammaTelevisivo>(20);
-    private final Map<ProgrammaTelevisivo, Canale> canaleDiUnProgramma = new TreeMap<>();
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        //canali
-        Canale c1 = new Canale();
-        c1.setId(0);
-        c1.setNome("Rai1");
-        c1.setNumero((short) 1);
-        Canale c2 = new Canale();
-        c2.setId(1);
-        c2.setNome("Rai2");
-        c1.setNumero((short) 2);
-        canali.add(c1);
-        canali.add(c2);
-        //Genero dei programmi fasulli per il testing (Da rimuovere dopo aver implementato il Dao)
-        Random r = new Random();
-        String[] names = new String[]{"Programma1", "Programma2", "Programma3", "Programma4"};
-        String[] descriptions = new String[]{"ass", "gtrhrg", "efuweoad", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "ooooooooooooooooooooooooo"};
-
-        for (int i = 0; i < 20; i++) {
-            LocalTime curr_fine = LocalTime.of(r.nextInt(24), r.nextInt(60));
-            int bound = curr_fine.getHour() == 0 ? 23 : curr_fine.getHour();
-            LocalTime curr_inizio = LocalTime.of(r.nextInt(bound), r.nextInt(60));
-            Canale canaleAssegnato = canali.get(r.nextInt(canali.size()));
-            ProgrammaTelevisivo p = new ProgrammaTelevisivo(
-                    r.nextLong(),
-                    names[r.nextInt(names.length)],
-                    GenereProgramma.values()[r.nextInt(GenereProgramma.values().length)],
-                    canaleAssegnato.getId(),
-                    descriptions[r.nextInt(descriptions.length)],
-                    LocalDate.now(),
-                    curr_inizio,
-                    curr_fine);
-            programmi.add(p);
-            canaleDiUnProgramma.put(p, canaleAssegnato); //associo il programma ad un canale casuale
-
-        }
-        programmi.sort(new TrasmissioneProgrammaComparator());
-
-    }*/
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -106,6 +62,8 @@ public class CercaController extends HttpServlet {
 
         //verifichiamo se abbiamo parametri di ricerca in ingresso (abbiamo avviato la ricerca oppure siamo arrivati da una ricerca salvata)
         if (titolo != null || genere != null || numeroCanale != null || dataTrasmissioneInizio != null || dataTrasmissioneFine != null || fasciaOrariaInizio != null || fasciaOrariaFine != null) {
+            //segnalo al .jsp che ci sono parametri in ingresso (lo uso per decidere se mostrare o meno il link che permette il salvataggio di una ricerca)
+            request.setAttribute("esistono_parametri", true);
             //Compiliamo una lista dei parametri in ingresso
             Ricerca parametriDiRicerca = new Ricerca();
             if (titolo != null && !titolo.isEmpty()) {
@@ -183,12 +141,13 @@ public class CercaController extends HttpServlet {
 
             private Map<ProgrammaTelevisivo, Canale> defaultSearch (HttpServletRequest request, HttpServletResponse
             response) throws MalformedFasciaOrariaException, SQLException, NamingException {
-                final int MAX_PROGRAMMI_IN_SEARCH_RESULT = 15; //Integer.parseInt(getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
+                final int MAX_PROGRAMMI_IN_SEARCH_RESULT = Integer.parseInt(getServletContext().getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
                 ProgrammaTelevisivoDAO programmaDao = new ProgrammaTelevisivoDAO();
                 CanaleDAO canaleDAO = new CanaleDAO();
 
                 List<ProgrammaTelevisivo> programmi = programmaDao.getAll(MAX_PROGRAMMI_IN_SEARCH_RESULT);
-                Canale[] canali = (Canale[]) canaleDAO.getAll().toArray();
+                List<Canale> canaliList = canaleDAO.getAll();
+                Canale[] canali = canaliList.toArray(new Canale[canaliList.size()]);
 
                 Map<ProgrammaTelevisivo, Canale> result = new TreeMap<>();
 
@@ -202,7 +161,7 @@ public class CercaController extends HttpServlet {
 
             private Map<ProgrammaTelevisivo, Canale> search (HttpServletRequest request, HttpServletResponse response) throws
             MalformedFasciaOrariaException, SQLException, NamingException {
-                final int MAX_PROGRAMMI_IN_SEARCH_RESULT = 15; //Integer.parseInt(getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
+                final int MAX_PROGRAMMI_IN_SEARCH_RESULT = Integer.parseInt(getServletContext().getInitParameter("MAX_PROGRAMMI_IN_SEARCH_RESULT"));
                 Ricerca parametriDiRicerca = (Ricerca) request.getAttribute("parametri_di_ricerca");
                 if (parametriDiRicerca == null) {
                     throw new NullPointerException("parametri di ricerca sono null");
@@ -211,7 +170,7 @@ public class CercaController extends HttpServlet {
                 ProgrammaTelevisivoDAO programmaDao = new ProgrammaTelevisivoDAO();
                 CanaleDAO canaleDAO = new CanaleDAO();
 
-                List<ProgrammaTelevisivo> programmi = programmaDao.getAll(MAX_PROGRAMMI_IN_SEARCH_RESULT);
+                List<ProgrammaTelevisivo> programmi = programmaDao.getBySearchParameters(parametriDiRicerca, MAX_PROGRAMMI_IN_SEARCH_RESULT);
                 Canale[] canali = (Canale[]) canaleDAO.getAll().toArray();
 
                 Map<ProgrammaTelevisivo, Canale> result = new TreeMap<>();
@@ -221,8 +180,8 @@ public class CercaController extends HttpServlet {
                     result.put(p, canali[(int) p.getIdCanale()]);
                 }
 
-                //Filtriamo
-                for (ParametriDiRicerca parametro : ParametriDiRicerca.values()) {
+                //Filtriamo (Dovrebbe essere stato già filtrato dalla query al DB (vedi ProgrammaDAO.getBySearchParameters))
+                /*for (ParametriDiRicerca parametro : ParametriDiRicerca.values()) {
                     Map<ProgrammaTelevisivo,Canale> temp = new TreeMap<>();
                     switch (parametro) {
                         case TITOLO_PROGRAMMA:

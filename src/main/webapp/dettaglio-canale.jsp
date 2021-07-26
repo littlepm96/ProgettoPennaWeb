@@ -12,24 +12,8 @@
 </head>
 <body>
 <!--INIZIO HEADER-->
-<header>
-    <div>
-        <h1> Guida TV</h1>
-    </div>
-    <div>
-        <h1><a href="https://www.disim.univaq.it/didattica/content.php?corso=77&pid=86&did=0">Disim </a></h1>
-    </div>
-    <!--INIZIO NAVIGAZIONE-->
-    <nav>
-        <div class="topnav">
-            <a href="${pageContext.request.contextPath}/index.jsp">Home</a>
-            <a href="${pageContext.request.contextPath}/fasce-orarie.jsp">Fasce orarie</a>
-            <a href="${pageContext.request.contextPath}/login.jsp" class="login-page-button">login</a>
-            <a href="${pageContext.request.contextPath}/cerca.jsp">Cerca</a>
-        </div>
-    </nav>
-    <!--FINE NAVIGAZIONE-->
-</header>
+<%@ include file="header.jsp" %>
+<!--FINE HEADER-->
 <main>
     <h1>Programmi odierni di <%=request.getAttribute("nomeCanale")%>
         <!--INIZIO LISTA PROGRAMMI-->
@@ -295,5 +279,8 @@
         </div>
         <!--FINE LISTA PROGRAMMI-->
 </main>
+<!--INIZIO FOOTER-->
+<%@ include file="footer.jsp" %>
+<!--FINE FOOTER-->
 </body>
 </html>
