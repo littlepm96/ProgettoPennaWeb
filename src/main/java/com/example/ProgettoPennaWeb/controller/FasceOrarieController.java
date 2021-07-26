@@ -1,18 +1,26 @@
 package com.example.ProgettoPennaWeb.controller;
 
+import com.example.ProgettoPennaWeb.model.Canale;
+import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
+import com.example.ProgettoPennaWeb.model.enums.FasciaOrariaPredefinita;
+import com.example.ProgettoPennaWeb.persistenza.dao.CanaleDAO;
+import com.example.ProgettoPennaWeb.persistenza.dao.ProgrammaTelevisivoDAO;
 import com.example.ProgettoPennaWeb.utility.ErrorHandling;
+import com.example.ProgettoPennaWeb.utility.MalformedFasciaOrariaException;
 
+import javax.naming.NamingException;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.io.*;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 public class FasceOrarieController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println(request.getParameter("fascia-oraria"));
         processRequest(request, response);
     }
 
@@ -24,24 +32,37 @@ public class FasceOrarieController extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("text/html;charset=utf-8");
-        String parametroGet = request.getParameter("fascia-oraria");
-        String fasciaSelezionata;
-        switch (parametroGet) {
-            default:
-            case "mattina":
-                fasciaSelezionata = "mattina";
-                break;
-            case "pomeriggio":
-                fasciaSelezionata = "pomeriggio";
-                break;
-            case "sera":
-                fasciaSelezionata = "sera";
-                break;
-            case "notte":
-                fasciaSelezionata = "notte";
+        String fasciaOraria =  request.getParameter("fascia_oraria");
+        if(fasciaOraria == null){
+            fasciaOraria = "mattina";
         }
 
-        request.setAttribute("fascia-selezionata", fasciaSelezionata);
+        //Prendiamo le informazioni su canali e programmi della fascia oraria selezionata dal DB
+        CanaleDAO canaleDao = new CanaleDAO();
+        ProgrammaTelevisivoDAO programmaTelevisivoDao = new ProgrammaTelevisivoDAO();
+
+        Map<Canale, List<ProgrammaTelevisivo>> risultato = new TreeMap<>();
+        try {
+            List<Canale> canali = canaleDao.getAll();
+
+            for (Canale c : canali) {
+                risultato.put(c, programmaTelevisivoDao.getByCanaleAndFasciaOraria(c.getId(),fasciaOraria, true));
+            }
+        } catch (SQLException sqe) {
+            request.setAttribute("exception", sqe);
+            ErrorHandling.handleError(request, response);
+            return;
+        } catch (NamingException ne) {
+            request.setAttribute("exception", ne);
+            ErrorHandling.handleError(request, response);
+            return;
+        } catch (MalformedFasciaOrariaException mfoe) {
+            request.setAttribute("exception", mfoe);
+            ErrorHandling.handleError(request, response);
+            return;
+        }
+
+        request.setAttribute("risultato", risultato);
 
         ServletContext context = getServletContext();
         RequestDispatcher dispatcher = context.getRequestDispatcher("/fasce-orarie.jsp");

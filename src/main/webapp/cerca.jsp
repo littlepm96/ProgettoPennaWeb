@@ -58,6 +58,23 @@
 <!--INIZIO CONTENUTO PRINCIPALE-->
 <main>
   <div id="form-container">
+    <%
+      //Controllo se sono di ritorno dalla servlet di salvataggio di una ricerca e mostro il messaggio
+      if(sessione!= null){
+        String error = (String) request.getAttribute("error");
+        String success = (String) request.getAttribute("success");
+
+        if(error != null){
+    %>
+        <div class="error-message"><%=error%></div>
+    <%
+        }else if(success != null){
+    %>
+    <div class="success-message"><%=success%></div>
+    <%
+        }
+      }
+    %>
   <!--Form con i parametri di ricerca-->
   <form id="form-ricerca" action="${pageContext.request.contextPath}/cerca" method="get">
     <div class="form-row">

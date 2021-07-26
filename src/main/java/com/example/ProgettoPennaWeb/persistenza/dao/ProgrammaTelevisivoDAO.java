@@ -1,6 +1,7 @@
 package com.example.ProgettoPennaWeb.persistenza.dao;
 
 import com.example.ProgettoPennaWeb.model.ProgrammaTelevisivo;
+import com.example.ProgettoPennaWeb.model.enums.FasciaOrariaPredefinita;
 import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
 import com.example.ProgettoPennaWeb.model.enums.ParametriDiRicerca;
 import com.example.ProgettoPennaWeb.utility.FasciaOraria;
@@ -22,6 +23,8 @@ public class ProgrammaTelevisivoDAO {
     private final String SELECT_BY_ID_QUERY = "select * from pennaweb.programma_televisivo WHERE ID = ?";
     private final String SELECT_BY_CANALE_TODAY_QUERY = "select * from pennaweb.programma_televisivo where canale = ? and data_trasmissione = ? order by data_trasmissione, ora_inizio, canale";
     private final String SELECT_BY_CANALE_ALL_DAYS_QUERY = "select * from pennaweb.programma_televisivo where canale = ? order by data_trasmissione, ora_inizio, canale";
+    private final String SELECT_BY_CANALE_AND_FASCIA_TODAY_QUERY = "select * from pennaweb.programma_televisivo where canale = ? and data_trasmissione = ? and ora_inizio >= ? and ora_inizio <= ? order by data_trasmissione, ora_inizio, canale";
+    private final String SELECT_BY_CANALE_AND_FASCIA_ALL_DAYS_QUERY = "select * from pennaweb.programma_televisivo where canale = ? and ora_inizio >= ? and ora_inizio <= ? order by data_trasmissione, ora_inizio, canale";
     private final String SELECT_ALL_QUERY = "select * from pennaweb.programma_televisivo";
     private final String SELECT_ALL_WITH_LIMIT_QUERY = "select * from pennaweb.programma_televisivo limit ?";
     private final String UPDATE_BY_ID_QUERY = "Update pennaweb.programma_televisivo SET ID = ?, genere = ?, canale = ?, descrizione = ?, data_trasmissione = ?, ora_inizio = ?, ora_fine = ?, url_immagine = ?, " +
@@ -122,6 +125,56 @@ public class ProgrammaTelevisivoDAO {
                 }
             }
 
+            return risultato;
+        }
+    }
+
+    public List<ProgrammaTelevisivo> getByCanaleAndFasciaOraria(long idCanale, String fasciaOraria, boolean soloProgrammiOdierni) throws NamingException, SQLException, MalformedFasciaOrariaException {
+        try (Connection con = DatabaseManager.getInstance().getConnection()) {
+            List<ProgrammaTelevisivo> risultato = new ArrayList<>();
+            String querySelezionata = soloProgrammiOdierni ? SELECT_BY_CANALE_AND_FASCIA_TODAY_QUERY : SELECT_BY_CANALE_AND_FASCIA_ALL_DAYS_QUERY;
+            try (PreparedStatement st = con.prepareStatement(querySelezionata)) {
+                st.setLong(1, idCanale);
+                System.out.println(FasciaOrariaPredefinita.fromString(fasciaOraria));
+                System.out.println(FasciaOrariaPredefinita.fromString(fasciaOraria).getStringa());
+                System.out.println(FasciaOraria.decode(FasciaOrariaPredefinita.fromString(fasciaOraria).getStringa()));
+
+                LocalTime[] fascia = FasciaOraria.decode(FasciaOrariaPredefinita.fromString(fasciaOraria).getStringa());
+                st.setTime(2, Time.valueOf(fascia[0]));
+                st.setTime(3, Time.valueOf(fascia[1]));
+                if (soloProgrammiOdierni) {
+                    st.setDate(4, Date.valueOf(LocalDate.now()));
+                }
+                try (ResultSet resultSet = st.executeQuery()) {
+                    while (resultSet.next()) {
+                        ProgrammaTelevisivo p = new ProgrammaTelevisivo();
+                        p.setId(resultSet.getLong("ID"));
+                        p.setTitolo(resultSet.getString("titolo"));
+                        //ricaviamo il genere dalla rappresentazione in stringa
+                        p.setGenere(GenereProgramma.fromString(resultSet.getString("genere")));
+                        p.setDescrizione(resultSet.getString("descrizione"));
+                        //Convertiamo da sql.Date a LocalDate
+                        Date date = resultSet.getDate("data_trasmissione");
+                        LocalDate localD = date.toLocalDate();
+                        p.setDataTrasmissione(localD);
+                        //Convertiamo da sql.Time a LocalTime
+                        Time time = resultSet.getTime("ora_inizio");
+                        LocalTime localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
+                        p.setOrarioInizio(localT);
+                        time = resultSet.getTime("ora_fine");
+                        localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
+                        p.setOrarioFine(localT);
+                        p.setUrlRelativoImmagine(resultSet.getString("url_immagine"));
+                        p.setUrlApprofondimento(resultSet.getURL("url_approfondimento"));
+                        p.setStagione(resultSet.getShort("stagione"));
+                        p.setEpisodio(resultSet.getShort("episodio"));
+                        p.setIdCanale(resultSet.getLong("canale"));
+                        risultato.add(p);
+                    }
+
+                }
+            }
+            System.out.println(risultato.size());
             return risultato;
         }
     }
