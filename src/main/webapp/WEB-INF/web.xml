@@ -117,6 +117,15 @@
         <url-pattern>/cerca</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SalvataggioRicercheController</servlet-name>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.SalvataggioRicercheController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SalvataggioRicercheController</servlet-name>
+        <url-pattern>/salva-ricerca</url-pattern>
+    </servlet-mapping>
+
     <!--riferimento al pooler configurato in META-INF/context.xml-->
     <resource-ref>
         <res-ref-name>jdbc/pennaweb</res-ref-name>

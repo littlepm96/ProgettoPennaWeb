@@ -68,6 +68,44 @@ public class FasciaOraria {
         }
     }
 
+    /**
+     * Corregge la formattazione di questa stringa (aggiunge gli zeri davanti a ore e minuti inferiori a 10)
+     * @param orario
+     * @return La stringa correttamente formattata
+     * @throws MalformedFasciaOrariaException se la stringa passata non rappresenta un orario valido
+     */
+    public static String formatOrario(String orario) throws IllegalArgumentException{
+        int lunghezzaIniziale = orario.length();
+        int posizioneSeparatore = orario.indexOf(":");
+        if(posizioneSeparatore < 1 || posizioneSeparatore > 2){
+            throw new IllegalArgumentException("La stringa che si sta tentando di formattare non è valida (Stringa: "+orario+").");
+        }
+        if(lunghezzaIniziale - posizioneSeparatore < 2 || lunghezzaIniziale - posizioneSeparatore > 3){//hh:mm len=5, ind=2; h:mm len=4, ind=1; hh:m len=4, ind=2; h:m len=3, ind=1 QUESTI SONO OK
+            throw new IllegalArgumentException("La stringa che si sta tentando di formattare non è valida (Stringa: "+orario+").");
+        }
+
+        //Ora siamo sicuri che la stringa è formattabile
+        StringBuilder sb = new StringBuilder();
+        String ore = orario.substring(0,posizioneSeparatore);
+        String minuti = orario.substring(posizioneSeparatore+1);
+
+        if(ore.length()==1){
+            sb.append("0"); sb.append(ore);
+        }else{
+            sb.append(ore);
+        }
+
+        sb.append(":");
+
+        if(minuti.length()==1){
+            sb.append("0"); sb.append(minuti);
+        }else{
+            sb.append(minuti);
+        }
+
+        return sb.toString();
+    }
+
     public static boolean isContained(LocalTime orario, String fasciaOrariaCodificata) throws MalformedFasciaOrariaException {
         //decodifichiamo la fascia oraria in inizio e fine
         LocalTime[] fasciaOraria = decode(fasciaOrariaCodificata);

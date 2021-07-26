@@ -7,10 +7,7 @@ import com.example.ProgettoPennaWeb.model.enums.GenereProgramma;
 import com.example.ProgettoPennaWeb.model.enums.ParametriDiRicerca;
 import com.example.ProgettoPennaWeb.persistenza.dao.CanaleDAO;
 import com.example.ProgettoPennaWeb.persistenza.dao.ProgrammaTelevisivoDAO;
-import com.example.ProgettoPennaWeb.utility.ErrorHandling;
-import com.example.ProgettoPennaWeb.utility.FasciaOraria;
-import com.example.ProgettoPennaWeb.utility.MalformedFasciaOrariaException;
-import com.example.ProgettoPennaWeb.utility.Ricerca;
+import com.example.ProgettoPennaWeb.utility.*;
 
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
@@ -60,14 +57,17 @@ public class CercaController extends HttpServlet {
         }
         request.setAttribute("generi_disponibili", generi);
 
-        //verifichiamo se abbiamo parametri di ricerca in ingresso (abbiamo avviato la ricerca oppure siamo arrivati da una ricerca salvata)
-        if (titolo != null || genere != null || numeroCanale != null || dataTrasmissioneInizio != null || dataTrasmissioneFine != null || fasciaOrariaInizio != null || fasciaOrariaFine != null) {
+        //verifichiamo se abbiamo parametri di ricerca in ingresso (abbiamo avviato la ricerca con almeno un campo riempito oppure siamo arrivati da una ricerca salvata)
+        if ((titolo != null && !titolo.isEmpty()) || (genere != null && !genere.isEmpty()) || (numeroCanale != null && !numeroCanale.isEmpty())
+                || (dataTrasmissioneInizio != null && !dataTrasmissioneInizio.isEmpty()) || (dataTrasmissioneFine != null && !dataTrasmissioneFine.isEmpty())
+                || (fasciaOrariaInizio != null && !fasciaOrariaInizio.isEmpty()) || (fasciaOrariaFine != null && !fasciaOrariaFine.isEmpty())) {
             //segnalo al .jsp che ci sono parametri in ingresso (lo uso per decidere se mostrare o meno il link che permette il salvataggio di una ricerca)
             request.setAttribute("esistono_parametri", true);
             //Compiliamo una lista dei parametri in ingresso
             Ricerca parametriDiRicerca = new Ricerca();
+            //Per il titolo controlliamo che non siano stato inseriti caratteri speciali (nel caso javascript sia disattivato o la validazione sia raggirata)
             if (titolo != null && !titolo.isEmpty()) {
-                parametriDiRicerca.setTitolo(titolo);
+                parametriDiRicerca.setTitolo(SecurityLayer.addSlashes(titolo));
             }
                 if (genere != null && !genere.isEmpty()) {
                     parametriDiRicerca.setGenere(GenereProgramma.fromString(genere));
@@ -75,12 +75,14 @@ public class CercaController extends HttpServlet {
                     if (numeroCanale != null && !numeroCanale.isEmpty()) {
                         parametriDiRicerca.setNumeroCanale(Short.parseShort(numeroCanale));
                     }
-                    if (dataTrasmissioneInizio != null && dataTrasmissioneFine != null && !"".equals(dataTrasmissioneInizio) && !"".equals(dataTrasmissioneFine)) {
+                    if (dataTrasmissioneInizio != null && dataTrasmissioneFine != null && !dataTrasmissioneInizio.isEmpty() && !dataTrasmissioneFine.isEmpty()) {
                         parametriDiRicerca.setDataTrasmissione(new LocalDate[]{LocalDate.parse(dataTrasmissioneInizio), LocalDate.parse(dataTrasmissioneFine)});
                     }
-                    if (fasciaOrariaInizio != null && fasciaOrariaFine != null && !"".equals(fasciaOrariaInizio) && !"".equals(fasciaOrariaFine)) {
+                    if (fasciaOrariaInizio != null && fasciaOrariaFine != null && !fasciaOrariaInizio.isEmpty() && !fasciaOrariaFine.isEmpty()) {
                         try {
-                            parametriDiRicerca.setFasciaOraria(FasciaOraria.encode(LocalTime.parse(fasciaOrariaInizio), LocalTime.parse(fasciaOrariaFine)));
+                            //Chiamo FasciaOraria.formatOrario per aggiustare stringhe del tipo 0:13 o 12:7 che solleverebbero eccezioni a 00:13 e 12:07
+                            parametriDiRicerca.setFasciaOraria(FasciaOraria.encode(LocalTime.parse(FasciaOraria.formatOrario(fasciaOrariaInizio)),
+                                    LocalTime.parse(FasciaOraria.formatOrario(fasciaOrariaFine))));
                         } catch (MalformedFasciaOrariaException mfoe) {
                             request.setAttribute("exception", mfoe);
                             ErrorHandling.handleError(request, response);
@@ -89,55 +91,67 @@ public class CercaController extends HttpServlet {
                     }
                     //allego la lista alla request
                     request.setAttribute("parametri_di_ricerca", parametriDiRicerca);
-                    //riempiamo il form con i parametri forniti
-                    //compileForm(request,response);
-                    //ricerchiamo sul database i risultati (AD ORA USIAMO LISTE GENERATE)
+                    //ricerchiamo sul database i risultati, limitandoci ai primi 30 risultati
                     try {
                         result = search(request, response);
 
-            } catch (MalformedFasciaOrariaException mfoe) {
-                request.setAttribute("exception", mfoe);
-                ErrorHandling.handleError(request, response);
-                return;
-            }
+                    } catch (MalformedFasciaOrariaException mfoe) {
+                        request.setAttribute("exception", mfoe);
+                        ErrorHandling.handleError(request, response);
+                        return;
+                    } catch (SQLException sqe) {
+                        request.setAttribute("exception", sqe);
+                        ErrorHandling.handleError(request, response);
+                        return;
+                    } catch (NamingException ne) {
+                        request.setAttribute("exception",ne);
+                        ErrorHandling.handleError(request, response);
+                        return;
+                    }
         } else {//default senza parametri
-            //Mostra i primi 15 programmi presi dal database, ordinati rispetto all'ora di inizio (anche giorno di trasmissione se specificato nel form).
-            try {
-                result = defaultSearch(request, response);
-            } catch (MalformedFasciaOrariaException mfoe) {
-                request.setAttribute("exception", mfoe);
-                ErrorHandling.handleError(request, response);
-                return;
+                    //Mostra i primi 30 programmi presi dal database, ordinati rispetto all'ora di inizio (anche giorno di trasmissione se specificato nel form).
+                    try {
+                        result = defaultSearch(request, response);
+                    } catch (MalformedFasciaOrariaException mfoe) {
+                        request.setAttribute("exception", mfoe);
+                        ErrorHandling.handleError(request, response);
+                        return;
+                    } catch (SQLException sqe) {
+                        request.setAttribute("exception", sqe);
+                        ErrorHandling.handleError(request, response);
+                        return;
+                    } catch (NamingException ne) {
+                        request.setAttribute("exception", ne);
+                        ErrorHandling.handleError(request, response);
+                        return;
+                    }
+        }
+
+                //alleghiamo i dati dei programmi e dei canali alla request
+
+                request.setAttribute("risultato_ricerca", result);
+
+                //DISPATCH AL JSP
+                ServletContext context = getServletContext();
+                RequestDispatcher dispatcher = context.getRequestDispatcher("/cerca.jsp");
+                try {
+                    dispatcher.forward(request, response);
+                } catch (IOException ie) {
+                    request.setAttribute("exception", ie);
+                    ErrorHandling.handleError(request, response);
+                    return;
+
+                } catch (ServletException se) {
+                    request.setAttribute("exception", se);
+                    ErrorHandling.handleError(request, response);
+                    return;
+                } catch (Exception ex) {
+                    request.setAttribute("exception", ex);
+                    ErrorHandling.handleError(request, response);
+                    return;
+
+                }
             }
-        }
-
-        //alleghiamo i dati dei programmi e dei canali alla request
-        data.put("risultati_ricerca", result);
-        data.put("canali", canali);
-        data.put("canale_di_un_programma", canaleDiUnProgramma);
-        request.setAttribute("data", data);
-
-        //DISPATCH AL JSP
-        ServletContext context = getServletContext();
-        RequestDispatcher dispatcher = context.getRequestDispatcher("/cerca.jsp");
-        try {
-            dispatcher.forward(request, response);
-        } catch (IOException ie) {
-            request.setAttribute("exception", ie);
-            ErrorHandling.handleError(request, response);
-            return;
-
-        } catch (ServletException se) {
-            request.setAttribute("exception", se);
-            ErrorHandling.handleError(request, response);
-            return;
-        } catch (Exception ex) {
-            request.setAttribute("exception", ex);
-            ErrorHandling.handleError(request, response);
-            return;
-
-        }
-    }
 
             private Map<ProgrammaTelevisivo, Canale> defaultSearch (HttpServletRequest request, HttpServletResponse
             response) throws MalformedFasciaOrariaException, SQLException, NamingException {
@@ -153,7 +167,7 @@ public class CercaController extends HttpServlet {
 
                 for (ProgrammaTelevisivo p : programmi) {
 
-                    result.put(p, canali[(int) p.getIdCanale()]);
+                    result.put(p, canali[(int) p.getIdCanale()-1]);//gli id partono da 1 in DB
                 }
                 return result;
 
@@ -171,13 +185,15 @@ public class CercaController extends HttpServlet {
                 CanaleDAO canaleDAO = new CanaleDAO();
 
                 List<ProgrammaTelevisivo> programmi = programmaDao.getBySearchParameters(parametriDiRicerca, MAX_PROGRAMMI_IN_SEARCH_RESULT);
-                Canale[] canali = (Canale[]) canaleDAO.getAll().toArray();
+                System.out.println("programmi trovati: "+programmi.size());
+                List<Canale> canaliList = canaleDAO.getAll();
+                Canale[] canali = canaliList.toArray(new Canale[canaliList.size()]);
 
                 Map<ProgrammaTelevisivo, Canale> result = new TreeMap<>();
 
                 for (ProgrammaTelevisivo p : programmi) {
 
-                    result.put(p, canali[(int) p.getIdCanale()]);
+                    result.put(p, canali[(int) p.getIdCanale()-1]); //gli id partono da 1 in DB
                 }
 
                 //Filtriamo (Dovrebbe essere stato già filtrato dalla query al DB (vedi ProgrammaDAO.getBySearchParameters))
@@ -200,42 +216,63 @@ public class CercaController extends HttpServlet {
                                 result = temp;
                             }
 
-                    break;
-                case "genere":
-                    if (entry.getValue()!=null){
-                        //Filtriamo per genere
-                        String genereSelezionato = entry.getValue();
-                        if("Tutti".equalsIgnoreCase(genereSelezionato)){
                             break;
-                        }
-                        for(ProgrammaTelevisivo p : result){
-                            if(p.getGenere().toString().equalsIgnoreCase(genereSelezionato)){
-                                temp.add(p);
+                        case GENERE_PROGRAMMA:
+                            if (parametriDiRicerca.getGenere() != null) {
+                                //Filtriamo per genere
+                                GenereProgramma genereSelezionato = parametriDiRicerca.getGenere();
+                                if (GenereProgramma.TUTTI.equals(genereSelezionato)) {
+                                    break;
+                                }
+                                for (Map.Entry<ProgrammaTelevisivo,Canale> entry : result.entrySet()) {
+                                    if (entry.getKey().getGenere().equals(genereSelezionato)) {
+                                        temp.put(entry.getKey(), entry.getValue());
+                                    }
+                                }
+                                result = temp;
                             }
-                        }
-                        result = temp;
-                    }
 
-                    break;
-                /*case "numero_canale":
-                    if(entry.getValue()!=null){
-                        for(ProgrammaTelevisivo p : result){
-                            if(p.){
-                                temp.add(p);
+                            break;
+                        case NUMERO_CANALE:
+                            if(parametriDiRicerca.getNumeroCanale()!=null){
+                                for(Map.Entry<ProgrammaTelevisivo,Canale> entry : result.entrySet()){
+                                    if(entry.getValue().getNumero().equals(parametriDiRicerca.getNumeroCanale())){
+                                        temp.put(entry.getKey(), entry.getValue());
+                                    }
+                                }
+                                result = temp;
                             }
-                        }
+                            break;
+                        case DATA_TRASMISSIONE:
+                            if(parametriDiRicerca.getDataTrasmissione() != null){
+                                for(Map.Entry<ProgrammaTelevisivo,Canale> entry : result.entrySet()){
+                                    boolean isAfterStart = entry.getKey().getDataTrasmissione().isAfter(parametriDiRicerca.getDataTrasmissione()[0]);
+                                    boolean isBeforeEnd = entry.getKey().getDataTrasmissione().isBefore(parametriDiRicerca.getDataTrasmissione()[1]);
+                                    if(isAfterStart && isBeforeEnd){
+                                        temp.put(entry.getKey(), entry.getValue());
+                                    }
+                                }
+                                result = temp;
+                            }
+                            break;
+                        case FASCIA_ORARIA:
+                            if(parametriDiRicerca.getFasciaOraria() != null){
+                                for(Map.Entry<ProgrammaTelevisivo,Canale> entry : result.entrySet()){
+                                    LocalTime[] fasciaOraria = FasciaOraria.decode(parametriDiRicerca.getFasciaOraria());
+                                    boolean isAfterStart = entry.getKey().getOrarioInizio().isAfter(fasciaOraria[0]);
+                                    boolean isBeforeEnd = entry.getKey().getOrarioInizio().isBefore(fasciaOraria[1]);
+                                    if(isAfterStart && isBeforeEnd){
+                                        temp.put(entry.getKey(), entry.getValue());
+                                    }
+                                }
+                                result = temp;
+                            }
+                            break;
                     }
+                }*/
 
-                    break;*/
+            return result;
+
             }
         }
 
-        /*if("TG1".equalsIgnoreCase(request.getParameter("titolo"))
-                ||GenereProgramma.NEWS.toString().equalsIgnoreCase(request.getParameter("genere"))
-                ||1==Integer.parseInt(request.getParameter("numero_canale"))
-                ||LocalTime.of(8,0).compareTo(inizio)){
-            programmi.add(new ProgrammaTelevisivo(0,"Tg1", GenereProgramma.NEWS,"Informazione delle ore 8:00", LocalDate.now(), LocalTime.of(8,0), LocalTime.of(8,15)));
-        }*/
-        return result;
-    }
-}

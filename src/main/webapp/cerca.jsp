@@ -9,17 +9,23 @@
 <%@ page import="java.util.TreeMap" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.example.ProgettoPennaWeb.utility.SecurityLayer" %>
+<%@ page import="java.net.URLDecoder" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.nio.charset.StandardCharsets" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<%
-  HttpSession sessione = SecurityLayer.checkSession(request);
-%>
 <html>
 <!--CSS-->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cerca.css">
 <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+<!--nascondo il bottone di submit che usa javascript se è disabilitato-->
+<noscript>
+  <style>
+    #submit-with-script {display:none;}
+  </style>
+</noscript>
 
 <head>
   <title>Cerca programmi TV</title>
@@ -27,6 +33,27 @@
 <body>
 <!--INIZIO HEADER-->
 <%@ include file="header.jsp" %>
+<%
+  //Variabili usate per riempire il form e generare il link di salvataggio della ricerca
+  String paramTitolo = null;
+  String paramGenere = null;
+  String paramNumeroCanale = null;
+  String paramDataTrasmissioneInizio = null;
+  String paramDataTrasmissioneFine = null;
+  String paramFasciaOrariaInizio = null;
+  String paramFasciaOrariaFine = null;
+
+  if(request.getAttribute("esistono_parametri") != null) {
+    //prendo tutti i parametri (stringhe vuote per quelli assenti)
+    paramTitolo = request.getParameter("titolo") != null ? request.getParameter("titolo") : "";
+    paramGenere = request.getParameter("genere") != null ? request.getParameter("genere") : "";
+    paramNumeroCanale = request.getParameter("numero_canale") != null ? request.getParameter("numero_canale") : "";
+    paramDataTrasmissioneInizio = request.getParameter("data_trasmissione_inizio") != null ? request.getParameter("data_trasmissione_inizio") : "";
+    paramDataTrasmissioneFine = request.getParameter("data_trasmissione_fine") != null ? request.getParameter("data_trasmissione_fine") : "";
+    paramFasciaOrariaInizio = request.getParameter("fascia_oraria_inizio") != null ? request.getParameter("fascia_oraria_inizio") : "";
+    paramFasciaOrariaFine = request.getParameter("fascia_oraria_fine") != null ? request.getParameter("fascia_oraria_fine") : "";
+  }
+%>
 <!--FINE HEADER-->
 <!--INIZIO CONTENUTO PRINCIPALE-->
 <main>
@@ -37,7 +64,7 @@
       <!--Titolo programma-->
       <div class="autocomplete">
         <label for="titolo">Titolo: </label>
-        <input type="text" id="titolo" name="titolo" placeholder="titolo programma" title="Titolo del programma da cercare">
+        <input type="text" id="titolo" name="titolo" placeholder="titolo programma" title="Titolo del programma da cercare" pattern="([0-9]|[a-z]|[A-Z]|\(|\)|\[|\]|/|\s)*" value="<%=paramTitolo!=null ? paramTitolo : ""%>">
       </div>
       <!--Genere programma-->
       <div id="genere-select">
@@ -46,11 +73,19 @@
           <!--Generiamo la lista degli option-->
           <%String[] generi = (String[]) request.getAttribute("generi_disponibili");
           for(int i = 0; i<generi.length; i++){
+            //Controllo se c'è il genere corrente è da selezionare (ricerca salvata o ripopolamento del form)
+            if(paramGenere!=null && paramGenere.equals(generi[i])){
+
+              //Seleziona questo genere
           %>
-          <!--CODICE HTML DEL FOR LOOP QUI-->
-          <option value="<%=generi[i]%>"><%=generi[i]%></option>
-          <!--FINE HTML DEL FOR LOOP-->
+          <option value="<%=generi[i]%>" selected><%=generi[i]%></option>
           <%
+            }else{ //non selezionare questo genere
+          %>
+          <option value="<%=generi[i]%>"><%=generi[i]%></option>
+
+          <%
+              }
             }
           %>
         </select>
@@ -58,7 +93,7 @@
       <!--Numero canale-->
       <div class="autocomplete">
         <label for="numero-canale">Canale: </label>
-        <input type="number" id="numero-canale" name="numero_canale" placeholder="es.: 1" title="Numero del canale">
+        <input type="number" id="numero-canale" name="numero_canale" placeholder="es.: 1" title="Numero del canale" value="<%=paramNumeroCanale%>">
       </div>
       <!--Data trasmissione-->
       <fieldset>
@@ -66,46 +101,47 @@
       <div class="form-column">
         <div id="data-trasmissione-inizio-d">
           <label for="data-trasmissione-inizio">Da: </label>
-          <input type="date" id="data-trasmissione-inizio" name="data_trasmissione_inizio" class="date-selector">
+          <input type="date" id="data-trasmissione-inizio" name="data_trasmissione_inizio" class="date-selector" value="<%=paramDataTrasmissioneInizio%>">
         </div>
         <div id="data-trasmissione-fine-d">
-          <label for="data-trasmissione-fine">Da: </label>
-          <input type="date" id="data-trasmissione-fine" name="data_trasmissione_fine" class="date-selector">
+          <label for="data-trasmissione-fine">A: </label>
+          <input type="date" id="data-trasmissione-fine" name="data_trasmissione_fine" class="date-selector" value="<%=paramDataTrasmissioneFine%>">
         </div>
       </div><!--form-column-->
       </fieldset>
       <!--Fascia oraria-->
+      <%
+        //Ricavo i LocalTime se bisogna popolare i campi (Chiamata FasciaOraria.formatOrario necessaria per evitare eccezioni su stringhe tipo 0:17 e 12:7 (vengono convertiti a 00:17 e 12:07)
+        LocalTime inizio = paramFasciaOrariaInizio!=null && !paramFasciaOrariaInizio.isEmpty() ? LocalTime.parse(FasciaOraria.formatOrario(paramFasciaOrariaInizio)) : null;
+        LocalTime fine = paramFasciaOrariaFine!=null && !paramFasciaOrariaFine.isEmpty() ? LocalTime.parse(FasciaOraria.formatOrario(paramFasciaOrariaFine)) : null;
+      %>
       <fieldset>
         <legend>Cerca per ora di inizio</legend>
       <div class="form-column">
         <div id="fascia-oraria-inizio">
           <input type="hidden" name="fascia_oraria_inizio">
           <label for="fascia-oraria-inizio-ore">Da: </label>
-          <input type="number" id="fascia-oraria-inizio-ore" placeholder="(0-23)" class="time-selector">
+          <input type="number" id="fascia-oraria-inizio-ore" placeholder="(0-23)" class="time-selector" value="<%=inizio != null ? inizio.getHour() : ""%>">
           <label for="fascia-oraria-inizio-minuti"><strong> : </strong></label>
-          <input type="number" id="fascia-oraria-inizio-minuti" placeholder="(0-59)" class="time-selector">
+          <input type="number" id="fascia-oraria-inizio-minuti" placeholder="(0-59)" class="time-selector" value="<%=inizio != null ? inizio.getMinute() : ""%>">
         </div>
         <div id="fascia-oraria-fine">
           <input type="hidden" name="fascia_oraria_fine">
           <label for="fascia-oraria-fine-ore">A:  </label>
-          <input type="number" id="fascia-oraria-fine-ore" placeholder="(0-23)" class="time-selector">
+          <input type="number" id="fascia-oraria-fine-ore" placeholder="(0-23)" class="time-selector" value="<%=fine != null ? fine.getHour() : ""%>">
           <label for="fascia-oraria-fine-minuti"><strong> : </strong></label>
-          <input type="number" id="fascia-oraria-fine-minuti" placeholder="(0-59)" class="time-selector">
+          <input type="number" id="fascia-oraria-fine-minuti" placeholder="(0-59)" class="time-selector" value="<%=fine != null ? fine.getMinute() : ""%>">
         </div>
       </div><!--form-column-->
       </fieldset>
       <div class="form-column">
-      <button type="button" id="submit" onclick="validate()">Cerca</button>
+        <!--In caso di script disabilitati usa un bottone di tipo submit-->
+        <noscript>
+          <button type="submit" id="submit-no-script" class="submit"onclick="validate()">Cerca</button>
+        </noscript>
+      <button type="button" id="submit-with-script" class="submit" onclick="validate()">Cerca</button>
       <%//inseriamo il link per salvare la ricerca se siamo loggati e abbiamo parametri
         if(sessione != null && request.getAttribute("esistono_parametri") != null){
-          //prendo tutti i parametri (stringhe vuote per quelli assenti)
-          String paramTitolo = request.getParameter("titolo")!=null ? (String) request.getParameter("titolo") : "";
-          String paramGenere = request.getParameter("genere")!=null ? (String) request.getParameter("genere") : "";
-          String paramNumeroCanale = request.getParameter("numero_canale")!=null ? (String) request.getParameter("numero_canale") : "";
-          String paramDataTrasmissioneInizio = request.getParameter("data_trasmissione_inizio")!=null ? (String) request.getParameter("data_trasmissione_inizio") : "";
-          String paramDataTrasmissioneFine = request.getParameter("data_trasmissione_fine")!=null ? (String) request.getParameter("data_trasmissione_fine") : "";
-          String paramFasciaOrariaInizio = request.getParameter("fascia_oraria_inizio")!=null ? (String) request.getParameter("fascia_oraria_inizio") : "";
-          String paramFasciaOrariaFine = request.getParameter("fascia_oraria_fine")!=null ? (String) request.getParameter("fascia_oraria_fine") : "";
           //costruisco il link
           StringBuilder sb = new StringBuilder(application.getContextPath());
           sb.append("/salva-ricerca?");
@@ -116,11 +152,16 @@
           sb.append("&numero_canale=");
           sb.append(paramNumeroCanale);
           sb.append("&data_trasmissione=");
-          sb.append(paramDataTrasmissioneInizio);
-          sb.append("/");
-          sb.append(paramDataTrasmissioneFine);
+          //Codifichiamo il range di date nella ricerca salvata come <data inizio>/<data fine>
+          if(paramDataTrasmissioneInizio!=null && !paramDataTrasmissioneInizio.isEmpty() && paramDataTrasmissioneFine!=null && !paramDataTrasmissioneFine.isEmpty()) {
+            sb.append(paramDataTrasmissioneInizio);
+            sb.append("/");
+            sb.append(paramDataTrasmissioneFine);
+          }
           sb.append("&fascia_oraria=");
-          sb.append(FasciaOraria.encode(LocalTime.parse(paramFasciaOrariaInizio),LocalTime.parse(paramFasciaOrariaFine)));
+          if(paramFasciaOrariaInizio!=null && !paramFasciaOrariaInizio.isEmpty() && paramFasciaOrariaFine!=null && !paramFasciaOrariaFine.isEmpty()) {
+            sb.append(FasciaOraria.encode(LocalTime.parse(paramFasciaOrariaInizio), LocalTime.parse(paramFasciaOrariaFine)));
+          }
           String linkDiSalvataggio = sb.toString();
       %>
         <a href="<%=linkDiSalvataggio%>">Salva la ricerca corrente</a>
@@ -139,26 +180,29 @@
   <!--Pagina dei risultati.-->
   <div id="risultati-ricerca" class="canale-flex-container">
       <%
-        Map<String,Object> data = (Map<String,Object>) request.getAttribute("data");
-        List<ProgrammaTelevisivo> risultatiRicerca = (List<ProgrammaTelevisivo>) data.get("risultati_ricerca");
-        List<Canale> canali = (List<Canale>) data.get("canali");
-        Map<ProgrammaTelevisivo,Canale> canaleDiUnProgramma = (Map<ProgrammaTelevisivo, Canale>) data.get("canale_di_un_programma");
-        for(ProgrammaTelevisivo programma : risultatiRicerca){
-          Canale canaleDelProgramma = canaleDiUnProgramma.get(programma);
+        Map<ProgrammaTelevisivo,Canale> risultato = (Map<ProgrammaTelevisivo,Canale>) request.getAttribute("risultato_ricerca");
+        for(Map.Entry<ProgrammaTelevisivo,Canale> entry : risultato.entrySet()){
+          Canale canaleDelProgramma = entry.getValue(); //Info canale
           Long idCanale = canaleDelProgramma.getId(); //Ci serve per ottenere il riferimento all'immagine del canale
           String nomeCanale = canaleDelProgramma.getNome();
-          Long idProgramma = programma.getId(); //Ci server per ottenere il riferimento all'immagine del programma (se c'è)
+
+          ProgrammaTelevisivo programma = entry.getKey(); //Info programma
+          Long idProgramma = programma.getId(); //Ci serve per ottenere il riferimento all'immagine del programma (se c'è)
           String titolo = programma.getTitolo();
           String genere =  programma.getGenere().toString();
-          LocalDate dataTrasmissione = programma.getDataTrasmissione();
+          String dataTrasmissione = programma.getDataTrasmissione().toString();
           LocalTime oraInizio = programma.getOrarioInizio();
           LocalTime oraFine = programma.getOrarioFine();
-          String fasciaOraria = "ERRORE";
+          String fasciaOraria = "ERRORE_FASCIA";
           try {
              fasciaOraria = FasciaOraria.encode(oraInizio,oraFine);
           } catch (MalformedFasciaOrariaException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
+            /*request.setAttribute("exception", e);
+            ErrorHandling.handleError(request,response);
+            return;
+            */
           }
           String descrizione = programma.getDescrizione();
 
@@ -173,11 +217,11 @@
       </div>
       <div class="info-programma">
         <a href="${pageContext.request.contextPath}/dettaglio-programma?id=<%=idProgramma%>>">
-          <h2><%=titolo%>></h2>
+          <h2><%=titolo%></h2>
           <img src="images/programma_<%=idProgramma%>.jpg" alt="programma_<%=idProgramma%>.jpg" width="125" height="111">
         </a>
         <a class="tag-genere" href="cerca?genere=<%=genere%>"><%=genere%></a>
-        <span class="data-trasmissione"><%=dataTrasmissione.toString()%></span>
+        <span class="data-trasmissione"><%=dataTrasmissione%></span>
         <span class="ora-trasmissione"><%=fasciaOraria%></span>
       </div>
       <div class="descrizione-programma"><%=descrizione%></div>
@@ -220,11 +264,12 @@
       //Data trasmissione
       data_fine = elems.namedItem("data-trasmissione-fine");
       data_inizio = elems.namedItem("data-trasmissione-inizio");
-      data_fine_value = new Date(current.value);
-      data_inizio_value = new Date(current.value);
+      data_fine_value = new Date(data_fine.value);
+      data_inizio_value = new Date(data_inizio.value);
       if((data_inizio_value != null && data_inizio_value != "") || (data_fine_value != null && data_fine_value!= "")) {
+        console.log(data_inizio_value > data_fine_value);
         usingData = true;
-        if (data_inizio > data_fine) {
+        if (data_inizio_value > data_fine_value) {
           data_inizio.classList.add(INVALID_CLASS);
           data_fine.classList.add(INVALID_CLASS);
           dataIsValid = false;
@@ -235,7 +280,7 @@
       }
 
       inizio_ore = elems.namedItem("fascia-oraria-inizio-ore");
-      inizio_ore_value = inizio.value;
+      inizio_ore_value = inizio_ore.value;
       inizio_minuti = elems.namedItem("fascia-oraria-inizio-minuti");
       inizio_minuti_value = inizio_minuti.value;
       fine_ore = elems.namedItem("fascia-oraria-fine-ore");
@@ -249,32 +294,32 @@
               (fine_minuti_value != null && fine_minuti_value != "")) {
         usingFascia = true;
         //Inizio (ore)
-        if (inizio_ore_value < 0 || inizio_ore_value > 23) {
-          current.classList.add(INVALID_CLASS);
+        if (inizio_ore_value == null || inizio_ore_value == "" || inizio_ore_value < 0 || inizio_ore_value > 23) {
+          inizio_ore.classList.add(INVALID_CLASS);
           fasciaIsValid = false;
         } else {
-          current.classList.remove(INVALID_CLASS);
+          inizio_ore.classList.remove(INVALID_CLASS);
         }
         //Inizio (minuti)
-        if (inizio_minuti_value < 0 || inizio_minuti_value > 59) {
-          current.classList.add(INVALID_CLASS);
+        if (inizio_minuti_value == null || inizio_minuti_value == "" || inizio_minuti_value < 0 || inizio_minuti_value > 59) {
+          inizio_minuti.classList.add(INVALID_CLASS);
           fasciaIsValid = false;
         } else {
-          current.classList.remove(INVALID_CLASS);
+          inizio_minuti.classList.remove(INVALID_CLASS);
         }
         //Fine(ore)
-        if (fine_ore_value < 0 || fine_ore_value > 23) {
-          current.classList.add(INVALID_CLASS);
+        if (fine_ore_value == null || fine_ore_value == "" || fine_ore_value < 0 || fine_ore_value > 23) {
+          fine_ore.classList.add(INVALID_CLASS);
           fasciaIsValid = false;
         } else {
-          current.classList.remove(INVALID_CLASS);
+          fine_ore.classList.remove(INVALID_CLASS);
         }
         //Fine (minuti)
-        if (fine_minuti_value < 0 || fine_minuti_value > 59) {
-          current.classList.add(INVALID_CLASS);
+        if (fine_minuti_value == null || fine_minuti_value == "" || fine_minuti_value < 0 || fine_minuti_value > 59) {
+          fine_minuti.classList.add(INVALID_CLASS);
           fasciaIsValid = false;
         } else {
-          current.classList.remove(INVALID_CLASS);
+          fine_minuti.classList.remove(INVALID_CLASS);
         }
       }//if(inizio_ore_value!=null...
       //Controllo che il form sia validato
@@ -283,16 +328,22 @@
 
         //compilo la fascia oraria da mandare al server usando i campo hidden (solo se stiamo effettivamente usando la fascia oraria per filtrare)
         if(usingFascia) {
-          form.elements.namedItem("fascia_oraria_inizio").value = inizio_ore + ":" + inizio_minuti;
+          form.elements.namedItem("fascia_oraria_inizio").value = inizio_ore_value + ":" + inizio_minuti_value;
           alert(form.elements.namedItem("fascia_oraria_inizio").value);
 
-          form.elements.namedItem("fascia_oraria_fine").value = fine_ore + ":" + fine_minuti;
+          form.elements.namedItem("fascia_oraria_fine").value = fine_ore_value + ":" + fine_minuti_value;
           alert(form.elements.namedItem("fascia_oraria_fine").value);
         }
         form.requestSubmit();
       }else{
         //Form invalido, mostra il messaggio di errore corrispondente
-        let error_element = document.createElement("div");
+        //Rimuovi eventualmente messaggi di errori precedenti
+        let error_element= document.getElementById("error-message");
+        if(error_element) {
+        error_element.remove();
+        }
+        //creane il nuovo messaggio di errore
+        error_element = document.createElement("div");
         error_element.id = "error-message";
         error_element.innerHTML = error_element.innerHTML + "<ul>";
         if(!fasciaIsValid) {

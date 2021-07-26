@@ -28,7 +28,12 @@ public class Ricerca {
     }
 
     public void setGenere(GenereProgramma genere){
-        parametri.put(ParametriDiRicerca.GENERE_PROGRAMMA,genere);
+        //Non filtrare se si seleziona "Tutti"
+        if(genere == GenereProgramma.TUTTI) {
+            parametri.put(ParametriDiRicerca.GENERE_PROGRAMMA,null);
+        }else {
+            parametri.put(ParametriDiRicerca.GENERE_PROGRAMMA, genere);
+        }
         parametriSettati = contaParametriSettati();
     }
     public void setNumeroCanale(Short numeroCanale){

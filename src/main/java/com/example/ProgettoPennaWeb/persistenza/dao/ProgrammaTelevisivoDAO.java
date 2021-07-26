@@ -136,6 +136,14 @@ public class ProgrammaTelevisivoDAO {
         List<ProgrammaTelevisivo> risultato = new ArrayList<>();
         //Costruiamo la query al database in base ai parametri passati.
         int parametriRimanenti = params.getParametriSettati();
+        System.out.println(parametriRimanenti);
+
+        //Se non stiamo filtrando, chiama getAll()
+        if(parametriRimanenti == 0){
+            return getAll(limit);
+        }
+
+        //Se siamo qui, stiamo filtrando
         StringBuilder sb = new StringBuilder(SELECT_SEARCH_PAGE_QUERY_BASE);
         sb.append(" where"); //appendo la clausola where
         //titolo programma
@@ -143,9 +151,9 @@ public class ProgrammaTelevisivoDAO {
         if(titolo!=null){
             sb.append(" ");
             sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.TITOLO_PROGRAMMA));
+            parametriRimanenti--;
             if(parametriRimanenti > 0){
                 sb.append(" and");
-                parametriRimanenti--;
             }
         }
 
@@ -154,9 +162,9 @@ public class ProgrammaTelevisivoDAO {
         if(genere!=null){
             sb.append(" ");
             sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.GENERE_PROGRAMMA));
+            parametriRimanenti--;
             if(parametriRimanenti > 0){
                 sb.append(" and");
-                parametriRimanenti--;
             }
         }
 
@@ -165,9 +173,9 @@ public class ProgrammaTelevisivoDAO {
         if(numeroCanale!=null){
             sb.append(" ");
             sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.NUMERO_CANALE));
+            parametriRimanenti--;
             if(parametriRimanenti > 0){
                 sb.append(" and");
-                parametriRimanenti--;
             }
         }
 
@@ -176,9 +184,9 @@ public class ProgrammaTelevisivoDAO {
         if(dataTrasmissione!=null){
             sb.append(" ");
             sb.append(SELECT_SEARCH_PAGE_QUERY_WHERE_CLAUSES.get(ParametriDiRicerca.DATA_TRASMISSIONE));
+            parametriRimanenti--;
             if(parametriRimanenti > 0){
                 sb.append(" and");
-                parametriRimanenti--;
             }
         }
 
@@ -194,13 +202,14 @@ public class ProgrammaTelevisivoDAO {
         //Ora possiamo procedere con la preparazione dello statement
         sb.append(" order by programma_televisivo.data_trasmissione,programma_televisivo.ora_inizio,canale.numero limit ?"); //Appendiamo la order by e limit
         String queryCompleta = sb.toString();
+        System.out.println(queryCompleta);
         try(Connection con = DatabaseManager.getInstance().getConnection();
         PreparedStatement st = con.prepareStatement(queryCompleta)){
             //Ora settiamo i parametri giusti
             int nextParameter = 1;
-            //titolo
+            //titolo: Usiamo un'espressione regolare!
             if(titolo!=null){
-                st.setString(nextParameter++,titolo);
+                st.setString(nextParameter++, "%"+titolo+"%");
             }
             //genere
             if(genere!=null){
