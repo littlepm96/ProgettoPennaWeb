@@ -1,4 +1,5 @@
 <header>
+    <%@ page import="com.example.ProgettoPennaWeb.utility.SecurityLayer" %>
     <div class="float-right">
         <%
             HttpSession sessione = SecurityLayer.checkSession(request);

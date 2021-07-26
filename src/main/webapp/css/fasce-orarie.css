@@ -30,17 +30,8 @@
     font-size: 30px;
 }
 
-/*Nome e icona del programma in onda*/
-.canale > .programma-in-onda {
-    background-color: lightgreen;
-    min-width: 145px;
-    width: 20%;
-}
+.info-programma{
+    display: flex;
+    flex-direction: column;
 
-/*Descrizione programma in onda*/
-.canale > .descrizione-programma {
-    width: 60%;
-    min-width: 200px;
-    background-color: #707edb;
-    font-size: 20px;
 }

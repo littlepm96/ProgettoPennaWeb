@@ -134,17 +134,23 @@ public class ProgrammaTelevisivoDAO {
             List<ProgrammaTelevisivo> risultato = new ArrayList<>();
             String querySelezionata = soloProgrammiOdierni ? SELECT_BY_CANALE_AND_FASCIA_TODAY_QUERY : SELECT_BY_CANALE_AND_FASCIA_ALL_DAYS_QUERY;
             try (PreparedStatement st = con.prepareStatement(querySelezionata)) {
+                //Canale (id)
                 st.setLong(1, idCanale);
+
+                //Data trasmissione
+                if (soloProgrammiOdierni) {
+                    st.setDate(2, Date.valueOf(LocalDate.now()));
+                }
+
+                //Fascia oraria
                 System.out.println(FasciaOrariaPredefinita.fromString(fasciaOraria));
                 System.out.println(FasciaOrariaPredefinita.fromString(fasciaOraria).getStringa());
                 System.out.println(FasciaOraria.decode(FasciaOrariaPredefinita.fromString(fasciaOraria).getStringa()));
 
                 LocalTime[] fascia = FasciaOraria.decode(FasciaOrariaPredefinita.fromString(fasciaOraria).getStringa());
-                st.setTime(2, Time.valueOf(fascia[0]));
-                st.setTime(3, Time.valueOf(fascia[1]));
-                if (soloProgrammiOdierni) {
-                    st.setDate(4, Date.valueOf(LocalDate.now()));
-                }
+                st.setTime(3, Time.valueOf(fascia[0]));
+                st.setTime(4, Time.valueOf(fascia[1]));
+
                 try (ResultSet resultSet = st.executeQuery()) {
                     while (resultSet.next()) {
                         ProgrammaTelevisivo p = new ProgrammaTelevisivo();
