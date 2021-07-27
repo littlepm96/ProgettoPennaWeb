@@ -77,8 +77,6 @@
     <div class="canale-flex-container">
         <%
             for(Canale c : risultato.keySet()){
-
-
         %>
         <div class="canale">
             <div class="info-canale">
@@ -90,8 +88,6 @@
             <!--INIZIO LISTA PROGRAMMI DEL CANALE-->
             <%
                 for(ProgrammaTelevisivo p : risultato.get(c)){
-
-
             %>
             <div class="info-programma">
             <div class="orario-programma">
