@@ -23,15 +23,10 @@
                 <header class="channel-header">
                     <a href="${pageContext.request.contextPath}/dettaglio-canale?id=<%=request.getParameter("id")%>"
                        title="Programmi <%=request.getAttribute("nomeCanale")%>>"><span class="channel-logo"><picture><img
-                            src="${pageContext.request.contextPath}/images/img_canale_<%=request.getParameter("id")%>>.jpg"
+                            src="${pageContext.request.contextPath}/images/img_canale_<%=request.getParameter("id")%>.jpg"
                             class=" lazyloaded" title="<%=request.getAttribute("nomeCanale")%>"
                             alt="<%=request.getAttribute("nomeCanale")%>" width="30" height="30"></picture></span><span
                             class="channel-name"><%=request.getAttribute("nomeCanale")%></span></a>
-
-                    <div class="channel-logo">
-                        <img src="images/detail.jpg" alt="detail" width="125" height="111">
-                    </div>
-
 
                 </header>
 
