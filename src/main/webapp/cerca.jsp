@@ -15,6 +15,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <html>
+<head>
 <!--CSS-->
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cerca.css">
@@ -27,7 +28,7 @@
   </style>
 </noscript>
 
-<head>
+
   <title>Cerca programmi TV</title>
 </head>
 <body>
