@@ -15,7 +15,7 @@ public class Logout extends HttpServlet {
         response.setContentType("text/html");
 
         SecurityLayer.disposeSession(request);
-        response.sendRedirect(getServletContext().getContextPath()+"/index.jsp");
+        response.sendRedirect(getServletContext().getContextPath()+"/");
 
     }
 

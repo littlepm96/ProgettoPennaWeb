@@ -8,25 +8,17 @@
         <param-name>MAX_PROGRAMMI_IN_SEARCH_RESULT</param-name>
         <param-value>30</param-value>
     </context-param>
-
+    
+    
     <servlet>
-        <servlet-name>TemplateServlet</servlet-name>
-        <servlet-class>com.example.ProgettoPennaWeb.TemplateServlet</servlet-class>
+        <servlet-name>HomePageController</servlet-name>
+        <servlet-class>com.example.ProgettoPennaWeb.controller.HomePageController</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>TemplateServlet</servlet-name>
-        <url-pattern>/template-test-servlet</url-pattern>
+        <servlet-name>HomePageController</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>HelloServlet</servlet-name>
-        <servlet-class>com.example.ProgettoPennaWeb.HelloServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>HelloServlet</servlet-name>
-        <url-pattern>/hello-servlet</url-pattern>
-    </servlet-mapping>
-
+    
     <servlet>
         <servlet-name>FasceOrarieController</servlet-name>
         <servlet-class>com.example.ProgettoPennaWeb.controller.FasceOrarieController</servlet-class>

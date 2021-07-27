@@ -1,13 +1,48 @@
 #container-programma{
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 }
 
+#titolo-programma{
+    background-color: lightslategray;
+    width: 100%;
+    margin: 1px auto 1px auto;
+    text-align: center;
+}
+
 #info-programma{
+    background-color: darkgrey;
+    width: 100%;
+    padding-top: 1em;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+
 }
 
-#titolo-programma
+#info-programma *{
+    text-align: center;
+}
+
+#descrizione-programma{
+    background-color: lightskyblue;
+    width: 100%;
+    height: 100%;
+    min-height: 10em;
+}
+
+#info-serie{
+    background-color: sandybrown;
+    width: 100%;
+    max-height: 10em;
+}
+#info-serie p{
+    width: 100%;
+}
+
+#lista-puntate{
+    display: flex;
+    flex-flow: column wrap;
+}
