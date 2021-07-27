@@ -28,9 +28,16 @@
             <div id="sezione-immagine">
                 <img id="immagine-programma" src="${pageContext.request.contextPath}/<%=programma.getUrlRelativoImmagine()%>" alt="<%=programma.getTitolo()%>" height="200" width="300">
 
-                <p><%=programma.getGenere()%></p>
-                <p><%=programma.getDataTrasmissione()%></p>
-                <p><%=programma.getOrarioInizio()%>-<%=programma.getOrarioFine()%></p>
+                <p>Genere: <a href="/cerca?genere=<%=programma.getGenere()%>"><%=programma.getGenere()%></a></p>
+                <p>Trasmette il: <%=programma.getDataTrasmissione()%></p>
+                <p>alle <%=programma.getOrarioInizio()%>-<%=programma.getOrarioFine()%></p>
+                <%
+                    if(programma.getUrlApprofondimento()!=null && !programma.getUrlApprofondimento().toString().isEmpty()){
+                %>
+                    <p>Sito web: <a href="<%=programma.getUrlApprofondimento()%>"><%=programma.getUrlApprofondimento()%></a></p>
+                <%
+                    }
+                %>
             </div>
             <div id="descrizione-programma"><%= episodi== null ? "" : "ST. "+programma.getStagione()+", EP. "+programma.getEpisodio()+"- " %><%=programma.getDescrizione()%></div>
         </div>

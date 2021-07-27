@@ -23,7 +23,7 @@
                 <header class="channel-header">
                     <a href="${pageContext.request.contextPath}/dettaglio-canale?id=<%=request.getParameter("id")%>"
                        title="Programmi <%=request.getAttribute("nomeCanale")%>>"><span class="channel-logo"><picture><img
-                            src="${pageContext.request.contextPath}/images/img_canale_<%=request.getAttribute("nomeCanale")%>.jpg"
+                            src="${pageContext.request.contextPath}/images/img_canale_<%=((String)request.getAttribute("nomeCanale")).toLowerCase()%>.jpg"
                             class=" lazyloaded" title="<%=request.getAttribute("nomeCanale")%>"
                             alt="<%=request.getAttribute("nomeCanale")%>" width="30" height="30"></picture></span><span
                             class="channel-name"><%=request.getAttribute("nomeCanale")%></span></a>
@@ -82,7 +82,7 @@
                             <div class="program-category"><%=genereProgramma%>
                             </div>
 
-                            <div class="program-title"><%=titoloProgramma%>>
+                            <div class="program-title"><%=titoloProgramma%>
                             </div>
                         </div>
                     </a>
@@ -198,7 +198,7 @@
 
                             </div>-->
 
-                            <div class="program-title"><%=titoloProgramma%>>
+                            <div class="program-title"><%=titoloProgramma%>
                             </div>
                         </div>
                     </a>
@@ -257,7 +257,7 @@
 
                             </div>-->
 
-                            <div class="program-title"><%=titoloProgramma%>>
+                            <div class="program-title"><%=titoloProgramma%>
                             </div>
                         </div>
                     </a>

@@ -1,4 +1,6 @@
 body {
+    min-height: 400px;
+    height: 100vw;
     font-family: Calibri, Helvetica, sans-serif;
     background-color: #c0e8ff;
     bgcolor: "Lightskyblue"

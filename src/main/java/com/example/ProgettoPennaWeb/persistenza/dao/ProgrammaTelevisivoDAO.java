@@ -21,6 +21,7 @@ public class ProgrammaTelevisivoDAO {
 
     private final String INSERT_QUERY="Insert into pennaweb.programma_televisivo values(?,?,?,?,?,?,?,?,?,?,?,?)";
     private final String SELECT_BY_ID_QUERY = "select * from pennaweb.programma_televisivo WHERE ID = ?";
+    private final String SELECT_BY_CANALE_ON_AIR_QUERY = "select * from pennaweb.programma_televisivo WHERE canale = ? and ora_inizio <= ? and ora_fine >= ? limit 1";
     private final String SELECT_BY_CANALE_TODAY_QUERY = "select * from pennaweb.programma_televisivo where canale = ? and data_trasmissione = ? order by data_trasmissione, ora_inizio, canale";
     private final String SELECT_BY_CANALE_ALL_DAYS_QUERY = "select * from pennaweb.programma_televisivo where canale = ? order by data_trasmissione, ora_inizio, canale";
     private final String SELECT_BY_CANALE_AND_FASCIA_TODAY_QUERY = "select * from pennaweb.programma_televisivo where canale = ? and data_trasmissione = ? and ora_inizio >= ? and ora_inizio <= ? order by data_trasmissione, ora_inizio, canale";
@@ -85,6 +86,49 @@ public class ProgrammaTelevisivoDAO {
             }
         }
     }
+
+    public Optional<ProgrammaTelevisivo> getProgrammaInOndaByCanale(long idCanale) throws SQLException, NamingException {
+        try (Connection con = DatabaseManager.getInstance().getConnection();
+             PreparedStatement st = con.prepareStatement(SELECT_BY_CANALE_ON_AIR_QUERY)) {
+            st.setLong(1, idCanale);
+            Time questoIstante = Time.valueOf(LocalTime.now());
+            st.setTime(2, questoIstante);
+            st.setTime(3, questoIstante);
+
+            try (ResultSet resultSet = st.executeQuery()) {
+                if (resultSet.next()) {
+                    ProgrammaTelevisivo p = new ProgrammaTelevisivo();
+                    p.setId(resultSet.getLong("ID"));
+                    p.setTitolo(resultSet.getString("titolo"));
+                    //ricaviamo il genere dalla rappresentazione in stringa
+                    p.setGenere(GenereProgramma.fromString(resultSet.getString("genere")));
+                    p.setDescrizione(resultSet.getString("descrizione"));
+                    //Convertiamo da sql.Date a LocalDate
+                    Date date = resultSet.getDate("data_trasmissione");
+                    LocalDate localD = date.toLocalDate();
+                    p.setDataTrasmissione(localD);
+                    //Convertiamo da sql.Time a LocalTime
+                    Time time = resultSet.getTime("ora_inizio");
+                    LocalTime localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
+                    p.setOrarioInizio(localT);
+                    time = resultSet.getTime("ora_fine");
+                    localT = time.toLocalTime().truncatedTo(ChronoUnit.MINUTES); //tronco via i secondi
+                    p.setOrarioFine(localT);
+                    p.setUrlRelativoImmagine(resultSet.getString("url_immagine"));
+                    p.setUrlApprofondimento(resultSet.getURL("url_approfondimento"));
+                    p.setStagione(resultSet.getShort("stagione"));
+                    p.setEpisodio(resultSet.getShort("episodio"));
+                    p.setIdCanale(resultSet.getLong("canale"));
+                    return Optional.of(p);
+                } else {
+                    return Optional.empty();
+                }
+
+            }
+        }
+    }
+
+
 
     public List<ProgrammaTelevisivo> getByCanale(long idCanale, boolean soloProgrammiOdierni) throws NamingException, SQLException {
         try (Connection con = DatabaseManager.getInstance().getConnection()) {

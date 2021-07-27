@@ -19,7 +19,7 @@
     <h1 class="title">Login Test</h1>
     <!--INIZIO NAVIGAZIONE-->
     <nav>
-        <a href="${pageContext.request.contextPath}/index.jsp"> Home </a>
+        <a href="${pageContext.request.contextPath}/"> Home </a>
     </nav>
 </header>
 <!--FINE HEADER-->

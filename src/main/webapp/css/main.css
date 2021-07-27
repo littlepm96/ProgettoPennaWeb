@@ -1,7 +1,7 @@
 * { box-sizing: border-box; }
 
-/*Header pagina*/
-header {
+/*Colore header e footer pagina*/
+header, footer {
     background-color: khaki;
 
 }
@@ -43,4 +43,12 @@ header {
     color: white;
 }
 
+footer{
+    width: 100%;
+    padding: 1em;
+}
+
+footer #produced-by{
+    font: 16px bold Arial;
+}
 
