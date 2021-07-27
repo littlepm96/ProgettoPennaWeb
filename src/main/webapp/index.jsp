@@ -19,7 +19,7 @@
             <div class="info-canale">
                 <a href="${pageContext.request.contextPath}/dettaglio-canale?id=1">
                     <h1>Rai 1</h1>
-                    <img src="images/tg1.jpg" alt="tg1" width="125" height="111">
+                    <img src="images/img_programma_tg1.jpg" alt="tg1" width="125" height="111">
                 </a>
             </div>
             <div class="programma-in-onda">
@@ -36,7 +36,7 @@
             <div class="info-canale">
                 <a href="${pageContext.request.contextPath}/dettaglio-canale?id=2">
                     <h1>Rai 2</h1>
-                    <img src="images/tg2.jpg" alt="tg2" width="125" height="111">
+                    <img src="images/img_programma_tg2.jpg" alt="tg2" width="125" height="111">
                 </a>
             </div>
             <div class="programma-in-onda">
@@ -55,7 +55,7 @@
             <div class="info-canale">
                 <a href="${pageContext.request.contextPath}/dettaglio-canale?id=3">
                     <h1>Rai 3</h1>
-                    <img src="images/tg3.jpg" alt="tg3" width="125" height="111">
+                    <img src="images/img_programma_tg3.jpg" alt="tg3" width="125" height="111">
                 </a>
             </div>
 

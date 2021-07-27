@@ -229,13 +229,13 @@
       <div class="info-canale">
         <a href="${pageContext.request.contextPath}/dettaglio-canale?id=<%=idCanale%>">
           <h1><%=nomeCanale%></h1>
-          <img src="${pageContext.request.contextPath}/images/canale_<%=idCanale%>.jpg" alt="canale_<%=idCanale%>.jpg" width="125" height="111">
+          <img src="${pageContext.request.contextPath}/images/img_canale_<%=nomeCanale%>.jpg" alt="img_canale_<%=nomeCanale%>.jpg" width="125" height="111">
         </a>
       </div>
       <div class="info-programma">
-        <a href="${pageContext.request.contextPath}/dettaglio-programma?id=<%=idProgramma%>>">
+        <a href="${pageContext.request.contextPath}/dettaglio-programma?id=<%=idProgramma%>">
           <h2><%=titolo%></h2>
-          <img src="images/programma_<%=idProgramma%>.jpg" alt="programma_<%=idProgramma%>.jpg" width="125" height="111">
+          <img src="images/img_programma_<%=titolo%>.jpg" alt="img_programma_<%=titolo%>.jpg" width="125" height="111">
         </a>
         <a class="tag-genere" href="cerca?genere=<%=genere%>"><%=genere%></a>
         <span class="data-trasmissione"><%=dataTrasmissione%></span>

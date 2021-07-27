@@ -1,0 +1,13 @@
+#container-programma{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+#info-programma{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+#titolo-programma

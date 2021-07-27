@@ -48,7 +48,7 @@ public class ProgrammaTelevisivoDAO {
     }};
 
 
-    public Optional<ProgrammaTelevisivo> getCanaleById(long id) throws SQLException, NamingException {
+    public Optional<ProgrammaTelevisivo> getProgrammaById(long id) throws SQLException, NamingException {
         try (Connection con = DatabaseManager.getInstance().getConnection();
              PreparedStatement st = con.prepareStatement(SELECT_BY_ID_QUERY)) {
             st.setLong(1, id);

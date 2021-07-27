@@ -82,7 +82,7 @@
             <div class="info-canale">
                 <a href="${pageContext.request.contextPath}/dettaglio-canale.jsp?id=<%=c.getId()%>">
                     <h1><%=c.getNome()%></h1>
-                    <img src="images/img_canale_<%=c.getNumero()%>.jpg" alt="<%=c.getNome()%>" width="125" height="111">
+                    <img src="images/img_canale_<%=c.getNome()%>.jpg" alt="<%=c.getNome()%>" width="125" height="111">
                 </a>
             </div>
             <!--INIZIO LISTA PROGRAMMI DEL CANALE-->
